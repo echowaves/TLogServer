@@ -30,7 +30,7 @@ module.exports = require('koa-router')()
 
     console.log('generating token: ' + SECRET);
         // We are sending the profile inside the token
-        var token = jwt.sign(profile, SECRET, { expiresIn: '1d' });
+        var token = jwt.sign(profile, SECRET, { expiresIn: '7d' });
 
         this.response.status = 200;
         this.body = {token: token};

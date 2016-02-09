@@ -9,4 +9,4 @@ require('koa')()
 .use(jwt({ secret: SECRET }))
 //protected routes below this line
 .use(require('./routes/user_private'))
-.listen(3000);
+.listen(process.env.PORT || 3000);

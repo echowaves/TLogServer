@@ -2,5 +2,5 @@
 
 module.exports = Object.freeze({
     SECRET: 'tradeogsha-secret',
-    ANOTHER_CONSTANT: 'another value'
+    DB_CONNECTION: process.env.DB_CONNECTION || "postgres://username:password@localhost/database"
 });
