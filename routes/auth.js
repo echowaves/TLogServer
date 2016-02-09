@@ -3,6 +3,8 @@
 var jwt = require('koa-jwt');
 let parse = require('co-body');
 
+var SECRET = require('../consts').SECRET;
+
 module.exports = require('koa-router')()
 
 .post('/authenticate', function *(next) {
@@ -17,22 +19,25 @@ module.exports = require('koa-router')()
     this.response.status = 401;
     this.body = 'Wrong user or password';
     yield next;
+  } else {
+    //authenticated
+        var profile = {
+          first_name: 'John',
+          last_name: 'Doe',
+          email: 'john@doe.com',
+          id: 123
+        };
+
+    console.log('generating token: ' + SECRET);
+        // We are sending the profile inside the token
+        var token = jwt.sign(profile, SECRET, { expiresIn: '1d' });
+
+        this.response.status = 200;
+        this.body = {token: token};
+        console.log('authenticated');
+
   }
 
-  var profile = {
-    first_name: 'John',
-    last_name: 'Doe',
-    email: 'john@doe.com',
-    id: 123
-  };
-
-  var secret  = "shared-secret";
-  // We are sending the profile inside the token
-  var token = jwt.sign(profile, secret, { expiresIn: '1m' });
-
-  this.response.status = 200;
-  this.body = {token: token};
-  console.log('authenticated');
   // yield next;
 })
 .routes();
