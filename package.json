@@ -6,11 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "",
+  "author": "Dmitry Amelchenko",
+  "license": "echowaves",
   "dependencies": {
+    "co-body": "^4.0.0",
     "koa": "^1.1.2",
     "koa-jwt": "^1.1.2",
     "koa-router": "^5.3.0"
+  },
+  "devDependencies": {
+    "co-mocha": "^1.1.2",
+    "co-supertest": "0.0.10",
+    "mocha": "^2.4.5",
+    "supertest": "^1.1.0"
   }
 }
