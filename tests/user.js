@@ -8,5 +8,11 @@ describe('User model testing', function() {
     var user = new User();
     assert.equal(typeof user, 'object');
   })
-  
+
+  it('should store properties passed when instantiated', function *() {
+    var userName, iser;
+    userName = 'james';
+    user = new User({userName: userName});
+    assert.equal(user.userName, userName);
+  })
 });
