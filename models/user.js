@@ -2,7 +2,7 @@ var _ = require('lodash');
 var massive = require("massive");
 // var pg = require('pg');
 
-var DB_CONNECTION = require('../consts').DB_CONNECTION;
+var db = require('../consts').DB;
 
 
 var SCHEMA = ['userName' , 'password', 'email'];
@@ -15,12 +15,7 @@ User.prototype.save = function *() {
   var results = [],
       data    = _.pick(this, SCHEMA);
 
-console.log('connection: ' + DB_CONNECTION);
-
   // if(this.id) {
-
-  var db = massive.connectSync({connectionString: DB_CONNECTION});
-
   console.log('connected: ' + db);
   db.users.save({email : "new@example.com"}, function(err,inserted){
     console.log("error: " + err);
