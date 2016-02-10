@@ -1,6 +1,7 @@
 'use strict'
 
 var jwt = require('koa-jwt');
+
 var SECRET = require('./consts').SECRET;
 
 require('koa')()
@@ -10,3 +11,9 @@ require('koa')()
 //protected routes below this line
 .use(require('./routes/user_private'))
 .listen(process.env.PORT || 3000);
+
+
+
+// setting up posgresql on mac http://www.tunnelsup.com/setting-up-postgres-on-mac-osx
+// psql -U root -W tlog_dev
+// http://blog.tomnod.com/nodejs-database-queries/

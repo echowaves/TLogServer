@@ -1,4 +1,20 @@
 {
+  "dev": {
+    "driver": "pg",
+    "user": "root",
+    "password": "root",
+    "host": "localhost",
+    "database": "tlog_dev",
+    "schema": "tlog"
+  },
+  "test": {
+    "driver": "pg",
+    "user": "root",
+    "password": "root",
+    "host": "localhost",
+    "database": "tlog_test",
+    "schema": "tlog"
+  },
   "prod": {
     "driver": "pg",
     "user": {"ENV": "DB_USER"},
@@ -6,5 +22,5 @@
     "host": {"ENV": "DB_HOST"},
     "database": "tlog",
     "schema": "tlog"
-  },
+  }
 }

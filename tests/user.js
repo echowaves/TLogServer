@@ -15,4 +15,14 @@ describe('User model testing', function() {
     user = new User({userName: userName});
     assert.equal(user.userName, userName);
   })
+
+  it('should assign as id after being saved', function *() {
+    var userName, password, user;
+    userName = 'james';
+    password = 'secret';
+    var user = new User({userName: userName, password: password});
+    yield user.save();
+    assert(user.id);
+  })
+
 });
