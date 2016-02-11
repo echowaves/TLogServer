@@ -25,6 +25,7 @@ User.prototype.save = function () {
     if(!this.id) {
       this.id = inserted.id; // assign newly generated id to the object
     }
+  // yield;
 }
 
 module.exports = User;

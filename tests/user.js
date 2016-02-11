@@ -36,4 +36,17 @@ describe('User model testing', function() {
     user.hashPassword();
     assert(user.comparePassword('secret'));
   });
+
+  it('should validate correct password', function *() {
+    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    user.save();
+    assert(user.comparePassword('secret'));
+  });
+
+  it('should not validate wrong password', function *() {
+    var user = new User({userName: 'james', password: 'secretwrong', email: 'e@example.com'});
+    user.save();
+    assert(!user.comparePassword('secret'));
+  });
+
 });
