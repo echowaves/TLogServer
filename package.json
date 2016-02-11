@@ -9,6 +9,7 @@
   "author": "Dmitry Amelchenko",
   "license": "echowaves",
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "co-body": "^4.0.0",
     "db-migrate": "^0.9.23",
     "koa": "^1.1.2",
