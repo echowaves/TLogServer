@@ -53,4 +53,14 @@ describe('User model testing', function() {
     user.delete();
   });
 
+  it('should validate user by email and password', function *() {
+    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    user.save();
+
+    assert(new User().validateUser('e@example.com', 'secret'));
+    assert(!new User().validateUser('e1@example.com', 'secret'));
+    assert(!new User().validateUser('e@example.com', 'secret1'));
+
+    user.delete();
+  });
 });

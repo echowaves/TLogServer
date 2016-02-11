@@ -20,9 +20,12 @@ User.prototype.comparePassword = function (password) {
 }
 
 User.prototype.validateUser = function (email, password) {
-  var foundUser = db.users.saveSync(this);
-
-  return this.email === email && this.comparePassword
+  var foundUser = db.users.findOneSync({email: email});
+  if(!foundUser) {
+    return false;
+  }
+  this.password = foundUser.password;
+  return this.comparePassword(password);
 }
 
 User.prototype.save = function () {
