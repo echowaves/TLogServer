@@ -57,10 +57,28 @@ describe('User model testing', function() {
     var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
     user.save();
 
-    assert(new User().validateUser('e@example.com', 'secret'));
-    assert(!new User().validateUser('e1@example.com', 'secret'));
-    assert(!new User().validateUser('e@example.com', 'secret1'));
+    assert.notEqual(new User().validateUserAndGenerateToken('e@example.com', 'secret'), null);
+    assert.equal(new User().validateUserAndGenerateToken('e1@example.com', 'secret'), null);
+    assert.equal(new User().validateUserAndGenerateToken('e@example.com', 'secret1'), null);
 
     user.delete();
   });
+
+  it('should generate jwt while validating user by email and password', function *() {
+    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    user.save();
+
+    var token = new User().validateUserAndGenerateToken('e@example.com', 'secret');
+
+    assert(token.length > 10);
+
+    var userByToken = new User();
+    userByToken.findByToken(token);
+
+    assert.equal(userByToken.email, user.email);
+    assert.equal(userByToken.password, user.password);
+
+    user.delete();
+  });
+
 });

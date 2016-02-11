@@ -1,4 +1,5 @@
 'use strict'
+var User   = require('../models/user');
 
 var jwt = require('koa-jwt');
 let parse = require('co-body');
@@ -28,7 +29,6 @@ module.exports = require('koa-router')()
           id: 123
         };
 
-    console.log('generating token: ' + SECRET);
         // We are sending the profile inside the token
         var token = jwt.sign(profile, SECRET, { expiresIn: '7d' });
 
