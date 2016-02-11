@@ -77,8 +77,8 @@ describe('User model testing', function() {
 
     assert.equal(userByToken.email, user.email);
     assert.equal(userByToken.password, user.password);
-    assert.equal(userByToken.jwt, user.jwt);
-    
+    assert.equal(userByToken.jwt, token);
+
     user.delete();
   });
 
