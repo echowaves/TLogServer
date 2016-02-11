@@ -19,13 +19,22 @@ User.prototype.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 }
 
+User.prototype.validateUser = function (email, password) {
+  var foundUser = db.users.saveSync(this);
+
+  return this.email === email && this.comparePassword
+}
+
 User.prototype.save = function () {
   this.hashPassword();
   var inserted = db.users.saveSync(this);
     if(!this.id) {
       this.id = inserted.id; // assign newly generated id to the object
     }
-  // yield;
+}
+
+User.prototype.delete = function () {
+  db.users.destroySync(this);
 }
 
 module.exports = User;

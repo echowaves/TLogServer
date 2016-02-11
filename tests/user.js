@@ -20,12 +20,14 @@ describe('User model testing', function() {
     var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
     user.save();
     assert(user.id);
+    user.delete();
   });
 
   it('should hash a password after save', function *() {
-    var user = new User({userName: 'james', password: 'secret'});
+    var user = new User({userName: 'james', password: 'secret', email: "blank@example.com"});
     user.save();
     assert.notEqual(user.password, 'secret');
+    user.delete();
   });
 
   it('should not hash already hasshed password', function *() {
@@ -41,12 +43,14 @@ describe('User model testing', function() {
     var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
     user.save();
     assert(user.comparePassword('secret'));
+    user.delete();
   });
 
   it('should not validate wrong password', function *() {
     var user = new User({userName: 'james', password: 'secretwrong', email: 'e@example.com'});
     user.save();
     assert(!user.comparePassword('secret'));
+    user.delete();
   });
 
 });
