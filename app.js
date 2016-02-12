@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 var jwt = require('koa-jwt');
 
 var SECRET = require('./consts').SECRET;
 
-require('koa')()
+const app = module.exports = require('koa')()
 .use(require('./routes/auth'))
 .use(require('./routes/user_public'))
 .use(jwt({ secret: SECRET }))

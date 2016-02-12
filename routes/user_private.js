@@ -1,8 +1,9 @@
-'use strict'
+'use strict';
 
 module.exports = require('koa-router')()
 
-.put('/user', function *(next) {
+//update a user
+.post('/user', function *(next) {
 
 })
 

@@ -4,7 +4,7 @@
   "description": "Trades Log API",
   "main": "server.js",
   "scripts": {
-    "test": "mocha ./tests/*.js"
+    "test": "mocha $(find tests -name \"*.js\")"
   },
   "author": "Dmitry Amelchenko",
   "license": "echowaves",
@@ -19,9 +19,10 @@
     "massive": "^2.1.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "co-mocha": "^1.1.2",
     "co-supertest": "0.0.10",
     "mocha": "^2.4.5",
-    "supertest": "^1.1.0"
+    "supertest": "^1.2.0"
   }
 }

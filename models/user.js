@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var massive = require("massive");
 var bcrypt  = require('bcrypt');

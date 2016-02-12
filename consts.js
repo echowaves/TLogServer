@@ -1,4 +1,5 @@
-'use strict'
+'use strict';
+
 var massive = require("massive");
 
 module.exports = Object.freeze({

@@ -1,4 +1,5 @@
-'use strict'
+'use strict';
+
 var User   = require('../models/user');
 
 var jwt = require('koa-jwt');
@@ -8,15 +9,15 @@ var SECRET = require('../consts').SECRET;
 
 module.exports = require('koa-router')()
 
-.post('/authenticate', function *(next) {
+.post('/auth', function *(next) {
   let data = yield parse.form(this);
 
   //TODO validate req.body.username and req.body.password
   //if is invalid, return 401
-  console.log('username: ' + data.username);
-  console.log('password: ' + data.password);
+  // console.log('username: ' + data.username);
+  // console.log('password: ' + data.password);
   if (!(data.username === 'john.doe' && data.password === 'foobar')) {
-    console.log('Username or password not matched.');
+    // console.log('Username or password not matched.');
     this.response.status = 401;
     this.body = 'Wrong user or password';
     yield next;
@@ -34,8 +35,7 @@ module.exports = require('koa-router')()
 
         this.response.status = 200;
         this.body = {token: token};
-        console.log('authenticated');
-
+        // console.log('authenticated');
   }
 
   // yield next;

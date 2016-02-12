@@ -1,3 +1,5 @@
+'use strict';
+
 var dbm = global.dbm || require('db-migrate');
 var type = dbm.dataType;
 

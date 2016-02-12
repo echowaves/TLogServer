@@ -1,5 +1,8 @@
+'use strict';
+
+
 var assert = require('assert'),
-    User   = require('../models/user');
+    User   = require('../../models/user');
 
 require('co-mocha');
 
