@@ -16,7 +16,7 @@ module.exports = require('koa-router')()
   //if is invalid, return 401
   // console.log('username: ' + data.username);
   // console.log('password: ' + data.password);
-  if (!(data.username === 'john.doe' && data.password === 'foobar')) {
+  if (!(data.email === 'john.doe' && data.password === 'foobar')) {
     // console.log('Username or password not matched.');
     this.response.status = 401;
     this.body = 'Wrong user or password';

@@ -15,7 +15,7 @@ var assert = require('assert'),
     User   = require('../../models/user');
 
 
-describe('/auth', function() {
+describe('/auth route testing', function() {
 
   beforeEach(function(done) {
     var user = new User();
@@ -28,11 +28,20 @@ describe('/auth', function() {
     const response =
     yield request.post('/auth')
     .set('Content-Type', 'application/x-www-form-urlencoded')
-    .send({username: 'asdasd', password: 'qweqwe' })
+    .send({email: 'qwe@example.com', password: 'qweqwe' })
     .end();
     expect(response.status).to.equal(401, response.text);
     expect(response.body).to.be.an('object');
   });
 
-  it('should be able to register a user and authenticate')
+  it('should be able to register a user and authenticate', function*() {
+    const response =
+    yield request.put('/user')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send({email: 'asdasd@example.com', password: 'password' })
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body).to.be.an('object');
+
+  });
 });

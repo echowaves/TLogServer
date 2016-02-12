@@ -1,5 +1,10 @@
 'use strict';
 
+var User   = require('../models/user');
+let parse = require('co-body');
+
+var SECRET = require('../consts').SECRET;
+
 module.exports = require('koa-router')()
 
 //register a user
@@ -7,12 +12,14 @@ module.exports = require('koa-router')()
   let data = yield parse.form(this);
 
     // console.log('Username or password not matched.');
-    this.response.status = 200;
-    this.body = 'siggn up successfull';
     var user = new User({email: data.email, password: data.email});
+
     user.save();
 
-    yield next;
+    this.response.status = 200;
+    this.body = 'sign up successfull';
+
+    // yield next;
 
 
 })
