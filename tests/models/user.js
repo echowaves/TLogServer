@@ -8,7 +8,6 @@ var assert = require('assert'),
     User   = require('../../models/user');
 
 require('co-mocha');
-var db = require('../../consts').DB;
 
 describe('User model testing', function() {
 
@@ -25,19 +24,19 @@ describe('User model testing', function() {
   });
 
   it('should store properties passed when instantiated', function *() {
-    var userName = 'james';
-    var user = new User({userName: userName});
-    assert.equal(user.userName, userName);
+    var userEmail = 'james@example.com';
+    var user = new User({email: userEmail});
+    assert.equal(user.email, userEmail);
   });
 
   it('should assign id after being saved', function *() {
-    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    var user = new User({email: 'e@example.com', password: 'secret'});
     user.save();
     assert(user.id);
   });
 
   it('should hash a password after save', function *() {
-    var user = new User({userName: 'james', password: 'secret', email: "blank@example.com"});
+    var user = new User({email: "blank@example.com", password: 'secret',});
     user.save();
     assert.notEqual(user.password, 'secret');
   });
@@ -52,19 +51,19 @@ describe('User model testing', function() {
   });
 
   it('should validate correct password', function *() {
-    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    var user = new User({password: 'secret', email: 'e@example.com'});
     user.save();
     assert(user.comparePassword('secret'));
   });
 
   it('should not validate wrong password', function *() {
-    var user = new User({userName: 'james', password: 'secretwrong', email: 'e@example.com'});
+    var user = new User({password: 'secretwrong', email: 'e@example.com'});
     user.save();
     assert(!user.comparePassword('secret'));
   });
 
   it('should validate user by email and password', function *() {
-    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    var user = new User({password: 'secret', email: 'e@example.com'});
     user.save();
 
     assert.notEqual(new User().validateUserAndGenerateToken('e@example.com', 'secret'), null);
@@ -73,7 +72,7 @@ describe('User model testing', function() {
   });
 
   it('should generate jwt while validating user by email and password', function *() {
-    var user = new User({userName: 'james', password: 'secret', email: 'e@example.com'});
+    var user = new User({password: 'secret', email: 'e@example.com'});
     user.save();
 
     var token = new User().validateUserAndGenerateToken('e@example.com', 'secret');

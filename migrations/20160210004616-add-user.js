@@ -6,9 +6,8 @@ var type = dbm.dataType;
 exports.up = function(db, callback) {
   db.createTable('users', {
      id: { type: 'int', primaryKey: true, autoIncrement: true },
-     userName: 'string',
-     password: 'string',
-     email: {type: 'string', notNull: true, unique: true }
+     email: {type: 'string', notNull: true, unique: true },
+     password: 'string'     
    }, callback);
 
 };

@@ -11,18 +11,28 @@ const request = supertest.agent(app.listen());
 
 const headers = { Host: 'api.localhost' }; // set host header
 
+var assert = require('assert'),
+    User   = require('../../models/user');
 
 
 describe('/auth', function() {
-    it('should unable to authenticate user that does not exists', function*() {
-        const response =
-          yield request.post('/auth')
-            .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send({username: 'asdasd', password: 'qweqwe' })
-            .end();
-        expect(response.status).to.equal(401, response.text);
-        expect(response.body).to.be.an('object');
-    });
 
-    it('should be able to register a user and authenticate')
+  beforeEach(function(done) {
+    var user = new User();
+    user.delete();// delete all users before each test run
+    done();
+  });
+
+
+  it('should unable to authenticate user that does not exists', function*() {
+    const response =
+    yield request.post('/auth')
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .send({username: 'asdasd', password: 'qweqwe' })
+    .end();
+    expect(response.status).to.equal(401, response.text);
+    expect(response.body).to.be.an('object');
+  });
+
+  it('should be able to register a user and authenticate')
 });
