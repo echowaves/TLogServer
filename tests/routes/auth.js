@@ -4,6 +4,7 @@ const supertest = require('co-supertest'); // SuperAgent-driven library for test
 const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
 
+process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 
 const request = supertest.agent(app.listen());
@@ -13,13 +14,15 @@ const headers = { Host: 'api.localhost' }; // set host header
 
 
 describe('/auth', function() {
-    it('validate user', function*() {
+    it('should unable to authenticate user that does not exists', function*() {
         const response =
           yield request.post('/auth')
             .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send({username: 'john.doe', password: 'foobar' })
+            .send({username: 'asdasd', password: 'qweqwe' })
             .end();
-        expect(response.status).to.equal(200, response.text);
+        expect(response.status).to.equal(401, response.text);
         expect(response.body).to.be.an('object');
     });
+
+    it('should be able to register a user and authenticate')
 });
