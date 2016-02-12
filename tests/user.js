@@ -72,13 +72,6 @@ describe('User model testing', function() {
 
     assert(token.length > 10);
 
-    var userByToken = new User();
-    userByToken.findByToken(token);
-
-    assert.equal(userByToken.email, user.email);
-    assert.equal(userByToken.password, user.password);
-    assert.equal(userByToken.jwt, token);
-
     user.delete();
   });
 

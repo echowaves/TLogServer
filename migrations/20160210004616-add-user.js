@@ -6,14 +6,8 @@ exports.up = function(db, callback) {
      id: { type: 'int', primaryKey: true, autoIncrement: true },
      userName: 'string',
      password: 'string',
-     email: {type: 'string', notNull: true, unique: true },
-     jwt: 'string'
-   }, addJwtIndex);
-
-   function addJwtIndex(err) {
-     if (err) { callback(err); return; }
-     db.addIndex('users', 'jwtIndex', 'jwt', callback);
-   };
+     email: {type: 'string', notNull: true, unique: true }
+   }, callback);
 
 };
 
