@@ -41,10 +41,11 @@ describe('User model testing', function() {
     assert.notEqual(user.password, 'secret');
   });
 
-  it('should not hash already hasshed password', function *() {
-    var user = new User({password: 'secret'});
+  it('should not hash password for users with id', function *() {
+    var user = new User({email: 'qwe@example.com', password: 'secret'});
     user.hashPassword();
     assert(user.comparePassword('secret'));
+    user.id = 123;
     user.hashPassword();
     user.hashPassword();
     assert(user.comparePassword('secret'));

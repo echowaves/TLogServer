@@ -10,18 +10,12 @@ module.exports = require('koa-router')()
 //register a user
 .put('/user', function *(next) {
   let data = yield parse.form(this);
-
-    // console.log('Username or password not matched.');
-    var user = new User({email: data.email, password: data.email});
-
+    var user = new User({email: data.email, password: data.password});
     user.save();
 
     this.response.status = 200;
     this.body = 'sign up successfull';
-
     // yield next;
-
-
 })
 
 

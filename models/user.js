@@ -14,9 +14,8 @@ var User = function(properties) {
 
 // only hash password if it's not yet hashed
 User.prototype.hashPassword = function () {
-  if(!this.password.startsWith('$2a$10$')) {
-    var salt = bcrypt.genSaltSync(10);
-    this.password = bcrypt.hashSync(this.password, salt);
+  if(!this.id) {//hash only on insert
+    this.password = bcrypt.hashSync(this.password, 10);
   }
 }
 
@@ -27,12 +26,18 @@ User.prototype.comparePassword = function (password) {
 // return token if user is found by email and password
 User.prototype.validateUserAndGenerateToken = function (email, password) {
   var foundUser = db.users.findOneSync({email: email});
-  if(!foundUser) {
+  if(foundUser == null) {
     return null;
   }
-  this.password = foundUser.password;
-  if(this.comparePassword(password)) {
-    return jwt.sign(foundUser, SECRET, { expiresIn: '7d' });
+  var profile = {
+    id: foundUser.id,
+    email: foundUser.email
+  };
+  var user = new User(foundUser);
+  var passwordsMatch = user.comparePassword(password);
+
+  if(passwordsMatch) {
+    return jwt.sign(profile, SECRET, { expiresIn: '7d' });
   };
   return null;
 }
