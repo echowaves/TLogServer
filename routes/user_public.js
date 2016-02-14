@@ -18,9 +18,4 @@ module.exports = require('koa-router')()
     // yield next;
 })
 
-
-.get('/user', function *(next) {
-  this.body = 'Hello from server user';
-})
-
 .routes();

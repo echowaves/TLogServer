@@ -29,7 +29,7 @@ User.prototype.validateUserAndGenerateToken = function () {
   if(foundUser == null) {
     return null;
   }
-  var profile = {
+  var jwtUser = {
     id: foundUser.id,
     email: foundUser.email
   };
@@ -37,7 +37,7 @@ User.prototype.validateUserAndGenerateToken = function () {
   var passwordsMatch = user.comparePassword(this.password);
 
   if(passwordsMatch) {
-    return jwt.sign(profile, SECRET, { expiresIn: '7d' });
+    return jwt.sign(jwtUser, SECRET, { expiresIn: '7d' });
   };
   return null;
 }
