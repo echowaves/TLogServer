@@ -11,7 +11,6 @@ module.exports = require('koa-router')()
 
 .post('/auth', function *(next) {
   let data = yield parse.json(this);
-  console.log(data);
   var user = new User({email: data.email, password: data.password});
 
   var token = user.validateUserAndGenerateToken();
