@@ -8,11 +8,10 @@ module.exports = require('koa-router')()
 // })
 //will decode the user from jwt token
 .get('/user', function *(next) {
-  console.log(this.state.user);
+
   var token = this.request.header.authorization.replace("Bearer ", "");
   this.response.status = 200;
-  this.body = { "token" : token};
-
+  this.body = this.state.user;
   yield next;
 })
 

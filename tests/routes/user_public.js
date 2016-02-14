@@ -14,7 +14,7 @@ var assert = require('assert'),
     User   = require('../../models/user');
 
 
-describe('/auth route testing', function() {
+describe('/user public routes testing', function() {
 
   beforeEach(function(done) {
     var user = new User();
@@ -23,14 +23,29 @@ describe('/auth route testing', function() {
   });
 
 
-  it('should unable to authenticate user that does not exists', function*() {
+  it('should be able to register a user and authenticate', function*() {
+    var email = 'asdasd@example.com',
+        password = 'password';
     const response =
+    yield request.put('/user')
+    .set('Content-Type', 'application/json')
+    .send({email: email, password: password })
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body).to.be.an('object');
+
+
+    const response2 =
     yield request.post('/auth')
     .set('Content-Type', 'application/json')
-    .send({email: 'qwe@example.com', password: 'qweqwe' })
+    .send({email: email, password: password })
     .end();
-    expect(response.status).to.equal(401, response.text);
-    expect(response.body).to.be.an('object');
+
+    expect(response2.status).to.equal(200, response2.text);
+    expect(response2.body).to.be.an('object');
+
+    expect(response2.body).to.contain.keys('token');
+    expect(response2.body).to.be.json;
 
   });
 
