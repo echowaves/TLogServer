@@ -3,6 +3,8 @@
 const supertest = require('co-supertest'); // SuperAgent-driven library for testing HTTP servers
 const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
+var uuid = require('uuid');
+
 let parse = require('co-body');
 
 process.env.NODE_ENV = 'test'
@@ -16,12 +18,6 @@ var assert = require('assert'),
 
 describe('/user private routes testing', function() {
 
-  beforeEach(function(done) {
-    var user = new User();
-    user.delete();// delete all users before each test run
-    done();
-  });
-
   it('should not be able to view a user unless authenticated', function*() {
     const response =
     yield request.get('/user')
@@ -32,7 +28,7 @@ describe('/user private routes testing', function() {
   });
 
   it('should be able to view an authenticated user', function*() {
-    var email = 'asdasd@example.com',
+    var email = uuid.v4() + "@example.com",
         password = 'password';
     const response =
     yield request.put('/user')
