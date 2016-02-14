@@ -10,8 +10,11 @@ var SECRET = require('../consts').SECRET;
 module.exports = require('koa-router')()
 
 .post('/auth', function *(next) {
-  let data = yield parse.form(this);
-  var token = new User().validateUserAndGenerateToken(data.email, data.password);
+  let data = yield parse.json(this);
+  console.log(data);
+  var user = new User({email: data.email, password: data.password});
+
+  var token = user.validateUserAndGenerateToken();
 
   if (token == null) {
     this.response.status = 401;

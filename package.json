@@ -2,7 +2,7 @@
   "name": "tlog-server",
   "version": "0.1.0",
   "description": "Trades Log API",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha $(find tests -name \"*.js\")"
   },

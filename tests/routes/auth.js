@@ -28,7 +28,7 @@ describe('/auth route testing', function() {
   it('should unable to authenticate user that does not exists', function*() {
     const response =
     yield request.post('/auth')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .set('Content-Type', 'application/json')
     .send({email: 'qwe@example.com', password: 'qweqwe' })
     .end();
     expect(response.status).to.equal(401, response.text);
@@ -41,7 +41,7 @@ describe('/auth route testing', function() {
         password = 'password';
     const response =
     yield request.put('/user')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .set('Content-Type', 'application/json')
     .send({email: email, password: password })
     .end();
     expect(response.status).to.equal(200, response.text);
@@ -50,18 +50,15 @@ describe('/auth route testing', function() {
 
     const response2 =
     yield request.post('/auth')
-    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .set('Content-Type', 'application/json')
     .send({email: email, password: password })
     .end();
 
     expect(response2.status).to.equal(200, response2.text);
     expect(response2.body).to.be.an('object');
-    // .expect('Content-Type', /json/)
 
     expect(response2.body).to.contain.keys('token');
     expect(response2.body).to.be.json;
-
-    // expect(response.body).to.have.property('token');
 
   });
 });

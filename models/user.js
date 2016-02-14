@@ -24,8 +24,8 @@ User.prototype.comparePassword = function (password) {
 }
 
 // return token if user is found by email and password
-User.prototype.validateUserAndGenerateToken = function (email, password) {
-  var foundUser = db.users.findOneSync({email: email});
+User.prototype.validateUserAndGenerateToken = function () {
+  var foundUser = db.users.findOneSync({email: this.email});
   if(foundUser == null) {
     return null;
   }
@@ -34,7 +34,7 @@ User.prototype.validateUserAndGenerateToken = function (email, password) {
     email: foundUser.email
   };
   var user = new User(foundUser);
-  var passwordsMatch = user.comparePassword(password);
+  var passwordsMatch = user.comparePassword(this.password);
 
   if(passwordsMatch) {
     return jwt.sign(profile, SECRET, { expiresIn: '7d' });

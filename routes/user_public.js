@@ -9,7 +9,7 @@ module.exports = require('koa-router')()
 
 //register a user
 .put('/user', function *(next) {
-  let data = yield parse.form(this);
+  let data = yield parse.json(this);
     var user = new User({email: data.email, password: data.password});
     user.save();
 
