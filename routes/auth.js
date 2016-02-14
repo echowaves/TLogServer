@@ -17,8 +17,8 @@ module.exports = require('koa-router')()
 
   if (token == null) {
     this.response.status = 401;
-    this.body = 'Wrong user or password';
-    yield next;
+    this.body = { error: 'Wrong user or password'};
+    // yield next;
   } else {
     //authenticated
         this.response.status = 200;

@@ -24,6 +24,7 @@ describe('/user private routes testing', function() {
     .set('Content-Type', 'application/json')
     .end();
     expect(response.status).to.equal(401, response.text);
+    console.log(response.text);
     expect(response.body).to.be.an('object');
   });
 

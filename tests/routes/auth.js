@@ -26,8 +26,9 @@ describe('/auth route testing', function() {
     .set('Content-Type', 'application/json')
     .send({email: userEmail, password: 'qweqwe' })
     .end();
-    expect(response.status).to.equal(401, response.text);
+    expect(response.status).to.equal(401);
     expect(response.body).to.be.an('object');
+    expect(response.body.error).to.equal("Wrong user or password");
 
   });
 
