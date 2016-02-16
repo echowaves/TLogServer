@@ -14,7 +14,7 @@ module.exports = require('koa-router')()
     user.save();
 
     this.response.status = 200;
-    this.body = 'sign up successfull';
+    this.body = { "result": 'sign up successfull'};
     // yield next;
 })
 
