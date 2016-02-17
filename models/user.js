@@ -37,7 +37,7 @@ User.prototype.validateUserAndGenerateToken = function () {
   var passwordsMatch = user.comparePassword(this.password);
 
   if(passwordsMatch) {
-    return jwt.sign(jwtUser, SECRET, { expiresIn: '7d' });
+    return jwt.sign(jwtUser, SECRET, { expiresIn: '30d' });
   };
   return null;
 }
