@@ -1,4 +1,5 @@
 'use strict';
+let parse = require('co-body');
 
 module.exports = require('koa-router')()
 
@@ -6,7 +7,6 @@ module.exports = require('koa-router')()
 
 //create a new employee
 .put('/employees', function *(next) {
-
   var token = this.request.header.authorization.replace("Bearer ", "");
   this.response.status = 200;
   this.body = this.state.user;
