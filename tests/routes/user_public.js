@@ -23,7 +23,7 @@ describe('/user public routes testing', function() {
     var email = uuid.v4() + "@example.com",
         password = 'password';
     const response =
-    yield request.put('/user')
+    yield request.post('/users')
     .set('Content-Type', 'application/json')
     .send({email: email, password: password })
     .end();

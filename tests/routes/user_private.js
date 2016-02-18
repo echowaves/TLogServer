@@ -31,7 +31,7 @@ describe('/user private routes testing', function() {
     var email = uuid.v4() + "@example.com",
         password = 'password';
     const response =
-    yield request.put('/user')
+    yield request.post('/users')
     .set('Content-Type', 'application/json')
     .send({email: email, password: password })
     .end();
@@ -52,7 +52,7 @@ describe('/user private routes testing', function() {
     var token = response2.body.token;
 
     const response3 =
-    yield request.get('/user')
+    yield request.get('/users')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
