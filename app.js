@@ -6,10 +6,11 @@ var SECRET = require('./consts').SECRET;
 
 const app = module.exports = require('koa')()
   .use(require('./routes/auth'))
-  .use(require('./routes/user_public'))
+  .use(require('./routes/users_public'))
   .use(jwt({ secret: SECRET }))
   //protected routes below this line
-  .use(require('./routes/user_private'))
+  .use(require('./routes/users_private'))
+  .use(require('./routes/employees_private'))
 
   .listen(process.env.PORT || 3000);
 
