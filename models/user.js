@@ -42,7 +42,7 @@ User.prototype.validateUserAndGenerateToken = function () {
   return null;
 }
 
-// set id to the user obejct, call load to populate the rest of the properties
+// set id to the user object, call load to populate the rest of the properties
 User.prototype.load = function () {
   var foundUser = db.users.findOneSync({id: this.id});
   if(foundUser) {
@@ -63,9 +63,9 @@ User.prototype.save = function () {
     }
 }
 
-//delete a user
-User.prototype.delete = function () {
-  db.users.destroySync(this);
-}
+// //delete a user (no user should ever be deleted)
+// User.prototype.delete = function () {
+//   db.users.destroySync(this);
+// }
 
 module.exports = User;

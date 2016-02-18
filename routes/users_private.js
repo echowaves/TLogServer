@@ -1,9 +1,9 @@
 'use strict';
 var jwt = require('koa-jwt');
 let parse = require('co-body');
-var User   = require('../models/user');
-
 var SECRET = require('../consts').SECRET;
+
+var User   = require('../models/user');
 
 module.exports = require('koa-router')()
 
