@@ -8,7 +8,7 @@ exports.up = function(db, callback) {
      user_id:         { type: 'int',   notNull: true,  unique: false },
      name:            {type: 'string', notNull: true,  unique: false },
      email:           {type: 'string', notNull: true,  unique: true },
-     activation_code: {type: 'string'}
+     activation_code: {type: 'string', notNull: false }
    }, createIndexes);
 
    function createIndexes(err) {
@@ -16,7 +16,7 @@ exports.up = function(db, callback) {
    async.series([
       db.addIndex.bind(db, 'employees', 'employeeUserIdIndex', 'user_id' ),
       db.addIndex.bind(db, 'employees', 'employeeNameIndex', 'name' ),
-      db.addIndex.bind(db, 'employees', 'employeeActivationCodeIndex', 'activation_code' )
+      db.addIndex.bind(db, 'employees', 'employeeActivationCodeIndex', 'activation_code', {unique: true} )
     ], callback);
 
   }
