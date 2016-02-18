@@ -20,11 +20,10 @@ describe('/user private routes testing', function() {
 
   it('should not be able to view a user unless authenticated', function*() {
     const response =
-    yield request.get('/user')
+      yield request.get('/users')
     .set('Content-Type', 'application/json')
     .end();
     expect(response.status).to.equal(401, response.text);
-    expect(response.body).to.be.an('object');
   });
 
   it('should be able to view an authenticated user', function*() {
