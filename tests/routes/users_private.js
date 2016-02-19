@@ -12,11 +12,9 @@ const app = require('../../app.js');
 
 const request = supertest.agent(app.listen());
 
-var assert = require('assert'),
-    User   = require('../../models/user');
+var assert = require('assert');
 
-
-describe('/user private routes testing', function() {
+describe('/users private routes testing', function() {
 
   it('should not be able to view a user unless authenticated', function*() {
     const response =
@@ -58,7 +56,9 @@ describe('/user private routes testing', function() {
     expect(response3.status).to.equal(200, response3.text);
     expect(response3.body).to.be.an('object');
     expect(response3.body).to.be.json;
-    expect(response3.body).to.contain.keys(['id', 'email', 'password']);
+    expect(response3.body).to.have.property('id');
+    expect(response3.body).to.have.property('email');
+    expect(response3.body).to.not.have.property('password');
     expect(response3.body.email).to.equal(email);
   });
 
@@ -108,8 +108,9 @@ describe('/user private routes testing', function() {
     expect(response4.status).to.equal(200, response4.text);
     expect(response4.body).to.be.an('object');
     expect(response4.body).to.be.json;
-    expect(response4.body).to.contain.keys(['id', 'email', 'password']);
-    expect(response4.body.password).to.equal(null); //the password should never be returned, even encrypted
+    expect(response4.body).to.have.property('id');
+    expect(response4.body).to.have.property('email');
+    expect(response4.body).to.not.have.property('password'); //the password should never be returned, even encrypted
     expect(response4.body.email).to.equal(email3);
   });
 

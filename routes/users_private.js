@@ -26,7 +26,13 @@ module.exports = require('koa-router')()
 .put('/users', function *(next) {
   let data = yield parse.json(this);
   let jwtUser = this.state.user;
-  var user = new User({id: jwtUser.id, email: data.email, password: data.password});
+  var user = new User({id: jwtUser.id})
+  if(data.email) {
+    user.email = data.email;
+  }
+  if(data.password) {
+    user.password = data.password;
+  }
   user.save();
 
   this.response.status = 200;

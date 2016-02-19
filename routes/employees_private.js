@@ -37,15 +37,6 @@ module.exports = require('koa-router')()
 })
 
 
-
-//update an employee
-.put('/employees', function *(next) {
-  var token = this.request.header.authorization.replace("Bearer ", "");
-  this.response.status = 200;
-  this.body = this.state.user;
-  yield next;
-})
-
 // get all employess for current user
 .get('/employees', function *(next) {
   var token = this.request.header.authorization.replace("Bearer ", "");
@@ -54,9 +45,9 @@ module.exports = require('koa-router')()
   yield next;
 })
 
-//delete an employee
-.delete('/employees', function *(next) {
 
+// get  employess details for current user
+.get('/employees/:id', function *(next) {
   var token = this.request.header.authorization.replace("Bearer ", "");
   this.response.status = 200;
   this.body = this.state.user;

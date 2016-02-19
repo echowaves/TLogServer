@@ -47,7 +47,7 @@ User.prototype.load = function () {
   var foundUser = db.users.findOneSync({id: this.id});
   if(foundUser) {
     _.assign(this, foundUser);
-    this.password = null;// we do not want to return password
+    delete this.password; // we do not want to return password
     return this;
   } else {
     return null;// this is error
