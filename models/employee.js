@@ -23,6 +23,8 @@ Employee.prototype.load = function () {
 
 // upsert employee
 Employee.prototype.save = function () {
+  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  // console.log(this);
   var inserted = db.employees.saveSync(this);
     if(!this.id) {
       this.id = inserted.id; // assign newly generated id to the object

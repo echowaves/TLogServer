@@ -29,6 +29,9 @@ describe('/user public routes testing', function() {
     .end();
     expect(response.status).to.equal(200, response.text);
     expect(response.body).to.be.an('object');
+    expect(response.body).to.contain.keys('result');
+    expect(response.body).to.contain.keys('id');
+    expect(response.body.result).to.equal('sign up successfull');
 
 
     const response2 =

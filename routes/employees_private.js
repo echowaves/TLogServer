@@ -1,5 +1,6 @@
 'use strict';
 let parse = require('co-body');
+var uuid = require('uuid');
 
 var Employee   = require('../models/employee');
 
@@ -8,7 +9,6 @@ module.exports = require('koa-router')()
 //create a new employee
 .post('/employees', function *(next) {
   let data = yield parse.json(this);
-
   var employee =
     new Employee(
       { user_id: this.state.user.id,
@@ -18,15 +18,27 @@ module.exports = require('koa-router')()
   employee.save();
 
   this.response.status = 200;
-  this.body = { "result": 'employee successfully added'};
+  this.body = { "result": "employee successfully added", "id" : employee.id};
 })
 
 //activate an employee
-.put('/employees/:id/activation', function *(next) {
-  var token = this.request.header.authorization.replace("Bearer ", "");
+.put('/employees/:employee_id/activation', function *(next) {
+  console.log("::::::::::::::::::::::::::::::::::::::::::::::::::");
+  // console.log(ctx.params.employee_id);
+  // const activation_code = uuid.v4();
+// console.log(activation_code);
+  // var employee =
+  //   new Employee(
+  //     { id: ctx.params.employee_id,
+  //       user_id: this.state.user.id,
+  //       activation_code: activation_code
+  //     });
+  // employee.save();
+
+
   this.response.status = 200;
-  this.body = this.state.user;
-  yield next;
+  this.body = { "activation_code" : "activation_code"};
+  // yield next;
 })
 //deactivate an employee
 .delete('/employees/:id/activation', function *(next) {
