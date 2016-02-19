@@ -21,23 +21,31 @@ module.exports = require('koa-router')()
   this.body = { "result": "employee successfully added", "id" : employee.id};
 })
 
-//activate an employee
-.put('/employees/:employee_id/activation', function *(next) {
-  console.log("::::::::::::::::::::::::::::::::::::::::::::::::::");
-  // console.log(ctx.params.employee_id);
-  // const activation_code = uuid.v4();
-// console.log(activation_code);
-  // var employee =
-  //   new Employee(
-  //     { id: ctx.params.employee_id,
-  //       user_id: this.state.user.id,
-  //       activation_code: activation_code
-  //     });
-  // employee.save();
+//activate an employee (create activation)
+.post('/employees/:employee_id/activation', function *(next) {
+  var employeeToLoad =
+    new Employee({ id: this.params.employee_id});
+  employeeToLoad.load();
+
+  if(employeeToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  } else {
+    const activation_code = uuid.v4();
+    // TODO: check that the employee exists and belongs to the user
+    var employee =
+      new Employee(
+        { id: this.params.employee_id,
+          user_id: this.state.user.id,
+          activation_code: activation_code
+        });
+    employee.save();
+
+    this.response.status = 200;
+    this.body = { "activation_code" : employee.activation_code};
+  }
 
 
-  this.response.status = 200;
-  this.body = { "activation_code" : "activation_code"};
   // yield next;
 })
 //deactivate an employee

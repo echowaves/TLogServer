@@ -13,8 +13,8 @@ const app = require('../../app.js');
 const request = supertest.agent(app.listen());
 
 var assert = require('assert');
-var User   = require('../../models/user'),
-    Employee = require('../../models/employee');
+var User   = require('../../models/user');
+    // Employee = require('../../models/employee');
 
 describe('/employees private routes testing', function() {
   var user, token;
@@ -60,28 +60,25 @@ describe('/employees private routes testing', function() {
   it('should be able to activate an employee', function*() {
     var email = uuid.v4() + "@example.com";
 
+// add an employee
     const response =
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "Joe Doh"})
+    .send({email: email, name: "John Smith"})
     .end();
-    console.log(response.body);
 
 
-// // console.log('/employees/' + employee.id + '/activation');
-// // console.log(token);
-//
-//     const response =
-//       yield request.put("/employees/" + employee.id + "/activation")
-//     .set('Content-Type', 'application/json')
-//     .set('Authorization', 'Bearer ' + token)
-//     .end();
-//     // expect(response.status).to.equal(200, response.text);
-//     // expect(response.body).to.be.an('object');
-//     // expect(response.body).to.be.json;
-//     // expect(response.body).to.contain.keys('activation_code');
-//
+    const response1 =
+      yield request.post("/employees/" + response.body.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response1.status).to.equal(200, response.text);
+    expect(response1.body).to.be.an('object');
+    expect(response1.body).to.be.json;
+    expect(response1.body).to.contain.keys('activation_code');
+
   });
 
   it('should not be able to activate an employee which does not belong to current user', function*() {
