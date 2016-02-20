@@ -73,9 +73,10 @@ module.exports = require('koa-router')()
 
 // get all employess for current user
 .get('/employees', function *(next) {
-  var token = this.request.header.authorization.replace("Bearer ", "");
+  var employee = new Employee();
+  var employees = employee.loadAllForUser(this.state.user.id);
   this.response.status = 200;
-  this.body = this.state.user;
+  this.body = { "results" : employees };
   yield next;
 })
 

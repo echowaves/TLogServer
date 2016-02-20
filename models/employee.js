@@ -21,10 +21,20 @@ Employee.prototype.load = function () {
   }
 }
 
+//load all employees for user
+Employee.prototype.loadAllForUser = function (user_id) {
+  var foundEmployees = db.employees.findSync({user_id: user_id});
+  var employees = [];
+  foundEmployees.forEach(function(item){
+    var employee = new Employee();
+    _.assign(employee, item);
+    employees.push(employee);
+  });
+  return employees;
+}
+
 // upsert employee
 Employee.prototype.save = function () {
-  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-  // console.log(this);
   var inserted = db.employees.saveSync(this);
     if(!this.id) {
       this.id = inserted.id; // assign newly generated id to the object

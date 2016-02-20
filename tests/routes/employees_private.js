@@ -222,4 +222,38 @@ describe('/employees private routes testing', function() {
   });
 
 
+  it('should be able to load all employee belonging to current user', function*() {
+    // add an employee to a user
+    var email = uuid.v4() + "@example.com";
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    // add another employee to user
+    var anotherEmail = uuid.v4() + "@example.com";
+    const anotherResponse =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: anotherEmail, name: "John Smith"})
+    .end();
+
+    // try to load all employess
+    const response3 =
+      yield request.get("/employees")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response3.status).to.equal(200, response.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.key("results");
+    expect(response3.body.results[0].user_id).to.equal(user.id);
+    expect(response3.body.results[1].user_id).to.equal(user.id);
+  });
+
+
 });

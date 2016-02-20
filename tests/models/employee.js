@@ -51,4 +51,27 @@ describe('Employee model testing', function() {
   });
 
 
+  it('should return all employess that belong to user', function *() {
+    var employeeEmail = uuid.v4() + "@example.com";
+    var employee =
+      new Employee({
+        user_id: user.id,
+        name: "John Smith",
+        email: employeeEmail});
+    employee.save();
+
+    var employeeEmail2 = uuid.v4() + "@example.com";
+    var employee2 =
+      new Employee({
+        user_id: user.id,
+        name: "John Smith",
+        email: employeeEmail2});
+    employee2.save();
+
+    var employees = employee.loadAllForUser(user.id);
+    assert(Array.isArray(employees), "must be array");
+    assert(employees.length == 2, "array size must be 2");
+  });
+
+
 });
