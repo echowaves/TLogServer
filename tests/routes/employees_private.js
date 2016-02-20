@@ -327,5 +327,85 @@ describe('/employees private routes testing', function() {
     expect(response3.body.error).to.equal("the employee does not belong to currenty authenticated user");
   });
 
+  it('should be able to update an employee', function*() {
+    var email = uuid.v4() + "@example.com";
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "Joe Doh"})
+    .end();
+
+    var employeeId = response.body.id;
+
+    email = uuid.v4() + "@example.com";
+    var response1 =
+      yield request.put('/employees/' + employeeId)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "Joe Doh2"})
+    .end();
+    expect(response1.status).to.equal(200, response1.text);
+    expect(response1.body).to.be.an('object');
+    expect(response1.body).to.be.json;
+    expect(response1.body).to.contain.key("result");
+    expect(response1.body.result).to.equal("employee successfully updated");
+  });
+
+
+  it('should not be able to update an employee which does not belong to current user', function*() {
+    // add an employee to a first user
+    var email = uuid.v4() + "@example.com";
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    // register and authenticate another user
+    var anotherUserEmail = uuid.v4() + "@example.com";
+    var anotherUserPassword = 'secret';
+    const anotherUserResponse =
+    yield request.post('/users')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+
+    var anotherUserId = anotherUserResponse.body.id;
+
+
+    //authenticate and obtain a another token
+    const resp =
+    yield request.post('/auth')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+    var anotherToken = resp.body.token;
+
+    // add an employee to another user
+    var anotherEmail = uuid.v4() + "@example.com";
+    const anotherResponse =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + anotherToken)
+    .send({email: anotherEmail, name: "John Smith"})
+    .end();
+
+    email = uuid.v4() + "@example.com";
+    // try to update an employee for a wron user
+    const response3 =
+      yield request.put("/employees/" + anotherResponse.body.id )
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "Joe Doh2"})
+    .end();
+    expect(response3.status).to.equal(403, response.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.keys('error');
+    expect(response3.body.error).to.equal('the employee does not belong to currenty authenticated user');
+  });
+
 
 });

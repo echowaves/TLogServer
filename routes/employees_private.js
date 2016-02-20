@@ -95,4 +95,31 @@ module.exports = require('koa-router')()
   }
 })
 
+// update an employee
+.put('/employees/:employee_id', function *(next) {
+  let data = yield parse.json(this);
+  var employeeToLoad = new Employee({ id: this.params.employee_id});
+  employeeToLoad.load();
+
+  if(employeeToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  } else {
+    var employee =
+      new Employee(
+        { id: this.params.employee_id,
+          user_id: this.state.user.id,
+          name: data.name,
+          email: data.email
+        });
+    employee.save();
+
+    this.response.status = 200;
+    this.body = { "result": "employee successfully updated"};
+  }
+
+
+})
+
+
 .routes();
