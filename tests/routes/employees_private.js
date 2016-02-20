@@ -59,7 +59,6 @@ describe('/employees private routes testing', function() {
 
   it('should be able to activate an employee', function*() {
     var email = uuid.v4() + "@example.com";
-
 // add an employee
     const response =
       yield request.post('/employees')
@@ -134,6 +133,39 @@ describe('/employees private routes testing', function() {
 
   });
 
+  it('should be able to de-activate an employee', function*() {
+    var email = uuid.v4() + "@example.com";
+// add an employee
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+
+    const response1 =
+      yield request.post("/employees/" + response.body.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response1.status).to.equal(200, response.text);
+    expect(response1.body).to.be.an('object');
+    expect(response1.body).to.be.json;
+    expect(response1.body).to.contain.keys('activation_code');
+
+    const response2 =
+      yield request.delete("/employees/" + response.body.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response2.status).to.equal(200, response.text);
+    expect(response2.body).to.be.an('object');
+    expect(response2.body).to.be.json;
+    expect(response2.body).to.contain.keys('result');
+    expect(response2.body.result).to.equal("employee deactivated");
+
+  });
 
 
 });

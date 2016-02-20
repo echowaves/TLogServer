@@ -29,7 +29,6 @@ describe('/auth route testing', function() {
     expect(response.status).to.equal(401, response.text);
     expect(response.body).to.be.an('object');
     expect(response.body.error).to.equal("Wrong user or password");
-
   });
 
 });
