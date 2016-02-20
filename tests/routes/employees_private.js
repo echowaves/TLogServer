@@ -255,5 +255,77 @@ describe('/employees private routes testing', function() {
     expect(response3.body.results[1].user_id).to.equal(user.id);
   });
 
+  it('should be able to load an employee by id', function*() {
+    // add an employee to a user
+    var email = uuid.v4() + "@example.com";
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    var employee_id = response.body.id;
+    // try to load employee
+    const response3 =
+      yield request.get("/employees/" + employee_id)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response3.status).to.equal(200, response3.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.key("result");
+    expect(response3.body.result.user_id).to.equal(user.id);
+    expect(response3.body.result.id).to.equal(employee_id);
+
+  });
+
+  it('should not be able to load an employee by id which belongs to a wrong user', function*() {
+    // add an employee to a user
+    var email = uuid.v4() + "@example.com";
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    var employee_id = response.body.id;
+
+
+    // register and authenticate another user
+    var anotherUserEmail = uuid.v4() + "@example.com";
+    var anotherUserPassword = 'secret';
+    const anotherUserResponse =
+    yield request.post('/users')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+
+    var anotherUserId = anotherUserResponse.body.id;
+
+    //authenticate and obtain a another token
+    const resp =
+    yield request.post('/auth')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+    var anotherToken = resp.body.token;
+
+
+    // try to load employee
+    const response3 =
+      yield request.get("/employees/" + employee_id)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + anotherToken)
+    .end();
+    expect(response3.status).to.equal(403, response3.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.key("error");
+    expect(response3.body.error).to.equal("the employee does not belong to currenty authenticated user");
+  });
+
 
 });

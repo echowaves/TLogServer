@@ -81,12 +81,18 @@ module.exports = require('koa-router')()
 })
 
 
-// get  employess details for current user
-.get('/employees/:id', function *(next) {
-  var token = this.request.header.authorization.replace("Bearer ", "");
-  this.response.status = 200;
-  this.body = this.state.user;
-  yield next;
+// get employee details
+.get('/employees/:employee_id', function *(next) {
+  var employeeToLoad = new Employee({ id: this.params.employee_id});
+  employeeToLoad.load();
+
+  if(employeeToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  } else {
+    this.response.status = 200;
+    this.body = { "result" : employeeToLoad };
+  }
 })
 
 .routes();
