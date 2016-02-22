@@ -408,4 +408,91 @@ describe('/employees private routes testing', function() {
   });
 
 
+//////////////////////////////////////////////////////////////////////////
+
+it('should be able to delete an employee', function*() {
+  var email = uuid.v4() + "@example.com";
+// add an employee
+  const response =
+    yield request.post('/employees')
+  .set('Content-Type', 'application/json')
+  .set('Authorization', 'Bearer ' + token)
+  .send({email: email, name: "John Smith"})
+  .end();
+
+  const response2 =
+    yield request.delete("/employees/" + response.body.id)
+  .set('Content-Type', 'application/json')
+  .set('Authorization', 'Bearer ' + token)
+  .end();
+  expect(response2.status).to.equal(200, response.text);
+  expect(response2.body).to.be.an('object');
+  expect(response2.body).to.be.json;
+  expect(response2.body).to.contain.keys('result');
+  expect(response2.body.result).to.equal("employee deleted");
+
+});
+
+
+it('should not be able to delete an employee which does not belong to current user', function*() {
+  // add an employee to a first user
+  var email = uuid.v4() + "@example.com";
+  const response =
+    yield request.post('/employees')
+  .set('Content-Type', 'application/json')
+  .set('Authorization', 'Bearer ' + token)
+  .send({email: email, name: "John Smith"})
+  .end();
+
+  // register and authenticate another user
+  var anotherUserEmail = uuid.v4() + "@example.com";
+  var anotherUserPassword = 'secret';
+  const anotherUserResponse =
+  yield request.post('/users')
+  .set('Content-Type', 'application/json')
+  .send({email: anotherUserEmail, password: anotherUserPassword })
+  .end();
+
+  var anotherUserId = anotherUserResponse.body.id;
+
+
+  //authenticate and obtain a another token
+  const resp =
+  yield request.post('/auth')
+  .set('Content-Type', 'application/json')
+  .send({email: anotherUserEmail, password: anotherUserPassword })
+  .end();
+  var anotherToken = resp.body.token;
+
+  // add an employee to another user
+  var anotherEmail = uuid.v4() + "@example.com";
+  const anotherResponse =
+    yield request.post('/employees')
+  .set('Content-Type', 'application/json')
+  .set('Authorization', 'Bearer ' + anotherToken)
+  .send({email: anotherEmail, name: "John Smith"})
+  .end();
+
+  // try to delete an employee for a wrong user
+  const response3 =
+    yield request.delete("/employees/" + anotherResponse.body.id )
+  .set('Content-Type', 'application/json')
+  .set('Authorization', 'Bearer ' + token)
+  .end();
+  expect(response3.status).to.equal(403, response.text);
+  expect(response3.body).to.be.an('object');
+  expect(response3.body).to.be.json;
+  expect(response3.body).to.contain.keys('error');
+  expect(response3.body.error).to.equal('the employee does not belong to currenty authenticated user');
+
+});
+
+
+
+
+
+
+
+
+
 });
