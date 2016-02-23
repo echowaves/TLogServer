@@ -4,7 +4,10 @@ var jwt = require('koa-jwt');
 
 var SECRET = require('./consts').SECRET;
 
+var serve = require('koa-static-folder');
+
 const app = module.exports = require('koa')()
+  .use(serve('./public'))
   .use(require('./routes/auth'))
   .use(require('./routes/users_public'))
   .use(jwt({ secret: SECRET }))
