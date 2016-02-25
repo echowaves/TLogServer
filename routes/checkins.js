@@ -8,7 +8,7 @@ module.exports = require('koa-router')()
 
 // get employee details inluding all checkins, by defauls last 100 checkins, page parameters can be passed in
 .get('/employees/:activation_code/checkins', function *(next) {
-  var employeeToLoad = new Employee({ id: this.params.employee_id});
+  var employeeToLoad = new Employee({ activation_code: this.params.activation_code});
   employeeToLoad.load();
 
   if(employeeToLoad.user_id != this.state.user.id) {
