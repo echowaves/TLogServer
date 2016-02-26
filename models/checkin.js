@@ -12,7 +12,7 @@ var Checkin = function(properties) {
 
 // set id to the checkin object, call load to populate the rest of the properties
 Checkin.prototype.load = function () {
-  var found = db.action_codes.findOneSync({id: this.id});
+  var found = db.checkins.findOneSync({id: this.id});
   if(found) {
     _.assign(this, found);
     return this;
@@ -32,7 +32,7 @@ Checkin.prototype.save = function () {
 
 //delete checkin
 Checkin.prototype.delete = function () {
-  db.action_codes.destroySync(this);
+  db.checkins.destroySync(this);
 }
 
 module.exports = Checkin;
