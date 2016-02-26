@@ -22,7 +22,7 @@ describe('Employee model testing', function() {
     user.save();
   });
 
-  it('should create a an employee', function *() {
+  it('should create an employee', function *() {
     var employee = new Employee();
     assert.equal(typeof employee, 'object');
   });
