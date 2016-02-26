@@ -10,6 +10,7 @@ const app = module.exports = require('koa')()
   .use(serve('./public'))
   .use(require('./routes/auth'))
   .use(require('./routes/users_public'))
+  .use(require('./routes/action_codes'))
   .use(require('./routes/checkins'))
   .use(jwt({ secret: SECRET }))
   //protected routes below this line
