@@ -17,7 +17,8 @@
     "koa-router": "^5.4.0",
     "koa-static-folder": "^0.1.6",
     "lodash": "^4.5.0",
-    "massive": "^2.1.0"
+    "massive": "^2.1.0",
+    "moment": "^2.11.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
