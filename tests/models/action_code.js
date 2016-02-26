@@ -43,6 +43,25 @@ describe('ActionCode model testing', function() {
     assert(actionCode.id);
   });
 
+  it('should load by id after being saved', function *() {
+    var code = uuid.v4();
+    var description = uuid.v4();
+    var actionCode =
+      new ActionCode({
+        code: code,
+        description: description
+      });
+    actionCode.save();
+
+    var actionCode1 =
+      new ActionCode({
+        id: actionCode.id
+      });
+    actionCode1.load();
+    assert.deepEqual(actionCode, actionCode1);
+
+  });
+
   it('should lookup action code', function *() {
     //clean all action codes first
     var actionCode =

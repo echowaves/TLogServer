@@ -15,6 +15,18 @@ ActionCode.prototype.lookup = function (lookupString) {
   return db.runSync("select * from action_codes where code ilike $1 or description ilike $1", ['%' + lookupString + '%']);
 }
 
+
+// set id to the action_code obejct, call load to populate the rest of the properties
+ActionCode.prototype.load = function () {
+  var foundActionCode = db.action_codes.findOneSync({id: this.id});
+  if(foundActionCode) {
+    _.assign(this, foundActionCode);
+    return this;
+  } else {
+    return null;// this is error
+  }
+}
+
 // upsert actionCode
 ActionCode.prototype.save = function () {
   var inserted = db.action_codes.saveSync(this);
