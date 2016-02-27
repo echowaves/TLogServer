@@ -4,11 +4,13 @@ const supertest = require('co-supertest'); // SuperAgent-driven library for test
 const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
 var uuid = require('uuid');
+var moment = require('moment');
 
 let parse = require('co-body');
 
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
+var db = require('../../consts').DB;
 
 const request = supertest.agent(app.listen());
 
@@ -17,34 +19,117 @@ var User   = require('../../models/user'),
     Employee = require('../../models/employee');
 
 describe('/checkins routes testing', function() {
-  var user, token;
+  var activation_code, user, token;
 
-//   beforeEach(function *() {
-//     var userEmail = uuid.v4() + "@example.com";
-//     var password = 'secret';
-//     user = new User({email: userEmail, password: password});
-//     user.save();
-//
-//     //authenticate and obtain a token
-//     const resp =
-//     yield request.post('/auth')
-//     .set('Content-Type', 'application/json')
-//     .send({email: userEmail, password: password })
-//     .end();
-//     token = resp.body.token;
-//   });
-//
-  it('should be able to create checkin');
-  it('should be able to get a particuar checkin');
-  it('should not be able to get a particular checkin if it does not belong to the employee');
-  it('should be able to update checkin');
-  it('should not be able to update checkin belonging to other employee');
-  it('should be able to checkout');
-  it('should not be able to checkout as a wrong employee');
-  it('should be able to delete checkin');
-  it('should not be able to delete checkin of the wrong employee');
-  it('should be able to get all (first page by default) checkins for an employee');
-  it('should be able to get paged results checkins for an employee');
+  beforeEach(function *() {
+    //cleanup users
+    db.users.destroySync({});
+    //cleanup employees
+    db.employees.destroySync({});
+    //cleanup checkins
+    db.checkins.destroySync({});
+
+    var userEmail = uuid.v4() + "@example.com";
+    var password = 'secret';
+    user = new User({email: userEmail, password: password});
+    user.save();
+
+    //authenticate user and obtain a token
+    const resp =
+    yield request.post('/auth')
+    .set('Content-Type', 'application/json')
+    .send({email: userEmail, password: password })
+    .end();
+    token = resp.body.token;
+
+    var email = uuid.v4() + "@example.com";
+
+    // add an employee
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    // and activate the employee
+    const response1 =
+      yield request.post("/employees/" + response.body.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    activation_code = response1.body.activation_code;
+
+  });
+
+  it('should not be able to create checkin with missing parameters', function*() {
+    var response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response.status).to.equal(400, response.text);
+    expect(response.body).to.contain.keys('error');
+    expect(response.body.error).to.equal('parameters missing');
+
+    response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: moment().toDate() })
+    .end();
+    expect(response.status).to.equal(400, response.text);
+    expect(response.body).to.contain.keys('error');
+    expect(response.body.error).to.equal('parameters missing');
+
+    response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({action_code_id: 1 })
+    .end();
+    expect(response.status).to.equal(400, response.text);
+    expect(response.body).to.contain.keys('error');
+    expect(response.body.error).to.equal('parameters missing');
+
+  });
+
+
+  it('should be able to create checkin', function*() {
+    const checked_in_at = moment().format();
+    const response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body).to.contain.keys('result');
+    expect(response.body.result.checked_in_at).to.equal(checked_in_at);
+  });
+  //
+  //
+  // it('should be able to get a particuar checkin', function*() {
+  //   const response =
+  //     yield request.post('/employees/' + activation_code + '/checkins')
+  //   .set('Content-Type', 'application/json')
+  //   .end();
+  //   var createdEmployee = response.body.result;
+  //
+  //   const response1 =
+  //     yield request1.get('/employees/' + activation_code + '/checkins')
+  //   .set('Content-Type', 'application/json')
+  //   .end();
+  //
+  //   expect(response.status).to.equal(200, response.text);
+  //   expect(response.body).to.contain.keys('result');
+  //   expect(response.body.result.activation_code).to.equal(activation_code);
+  // });
+  // it('should not be able to get a particular checkin if it does not belong to the employee');
+  // it('should be able to update checkin');
+  // it('should not be able to update checkin belonging to other employee');
+  // it('should be able to checkout');
+  // it('should not be able to checkout as a wrong employee');
+  // it('should be able to delete checkin');
+  // it('should not be able to delete checkin of the wrong employee');
+  // it('should be able to get all (first page by default) checkins for an employee');
+  // it('should be able to get paged results checkins for an employee');
 
 //   it('should not be able to view an employee unless authenticated', function*() {
 //     const response =

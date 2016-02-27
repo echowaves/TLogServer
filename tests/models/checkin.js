@@ -24,7 +24,7 @@ describe('Checkin model testing', function() {
   it('should store properties passed when instantiated', function *() {
     var email = uuid.v4() + "@example.com";
     var user_id = 1;
-    var checked_in_at = moment().millisecond();
+    var checked_in_at = moment().toDate();
     var checked_out_at = moment(checked_in_at).add(3, 'h');
     var action_code_id = 1;
     var checkin =

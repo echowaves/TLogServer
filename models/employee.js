@@ -21,6 +21,18 @@ Employee.prototype.load = function () {
   }
 }
 
+// set activation_code to the employee object, call load to populate the rest of the properties
+Employee.prototype.loadByActivationCode = function () {
+  var foundEmployee = db.employees.findOneSync({activation_code: this.activation_code});
+  if(foundEmployee) {
+    _.assign(this, foundEmployee);
+    return this;
+  } else {
+    return null;// this is error
+  }
+}
+
+
 //load all employees for user
 Employee.prototype.loadAllForUser = function (user_id) {
   var foundEmployees = db.employees.findSync({user_id: user_id});

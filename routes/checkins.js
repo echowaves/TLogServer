@@ -3,6 +3,7 @@ let parse = require('co-body');
 var uuid = require('uuid');
 
 var Employee   = require('../models/employee');
+var Checkin    = require('../models/checkin');
 
 module.exports = require('koa-router')()
 
@@ -20,29 +21,37 @@ module.exports = require('koa-router')()
   }
 })
 
-//create a checkin, checkin time must be passed as a parameter
+//create a checkin, checkin time must be passed as a parameter as well as action code
 .post('/employees/:activation_code/checkins', function *(next) {
-  var employeeToLoad =
-    new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  let data = yield parse.json(this);
 
-  // check that the employee exists and belongs to the user
-  if(employeeToLoad.user_id != this.state.user.id) {
-    this.response.status = 403;
-    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  let checked_in_at = data.checked_in_at;
+  let action_code_id = data.action_code_id;
+
+  if(checked_in_at == null || action_code_id == null) {
+    this.response.status = 400;
+    this.body = { "error" : 'parameters missing'};
   } else {
-    const activation_code = uuid.v4();
-    var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          activation_code: activation_code
-        });
-    employee.save();
+    var employeeToLoad =
+      new Employee({ activation_code: this.params.activation_code});
+    employeeToLoad.loadByActivationCode();
+
+    var checkin = new Checkin(
+      {
+        email: employeeToLoad.email,
+        user_id: employeeToLoad.user_id,
+        checked_in_at: checked_in_at,
+        // checked_out_at: moment(checked_in_at).add(3, 'h'),
+        action_code_id: action_code_id
+      }
+    );
+    checkin.save();
 
     this.response.status = 200;
-    this.body = { "activation_code" : employee.activation_code};
+    this.body = { "result" : checkin };
   }
+
+
 })
 
 //get details of a particular checkin
