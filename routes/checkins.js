@@ -50,8 +50,6 @@ module.exports = require('koa-router')()
     this.response.status = 200;
     this.body = { "result" : checkin };
   }
-
-
 })
 
 //get details of a particular checkin
@@ -79,26 +77,41 @@ module.exports = require('koa-router')()
 
 //update checkin which includes checkout, checkout time must be passed as a parameter
 .put('/employees/:activation_code/checkins/:checkin_id', function *(next) {
-  var employeeToLoad =
-    new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  var employee =
+    new Employee({ activation_code: this.params.activation_code});
+  employee.loadByActivationCode();
 
-  // check that the employee exists and belongs to the user
-  if(employeeToLoad.user_id != this.state.user.id) {
-    this.response.status = 403;
-    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  var checkin = new Checkin(
+    {
+      id: this.params.checkin_id
+    }
+  );
+  checkin.load();
+  if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
+    this.response.status = 404;
+    this.body = { "error" : 'checkin not found' };
   } else {
-    const activation_code = uuid.v4();
-    var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          activation_code: activation_code
-        });
-    employee.save();
+
+    let data = yield parse.json(this);
+
+    let checked_in_at = data.checked_in_at;
+    let checked_out_at = data.checked_out_at;
+    let action_code_id = data.action_code_id;
+
+
+    var checkin = new Checkin(
+      {
+        email: employee.email,
+        user_id: employee.user_id,
+        checked_in_at: checked_in_at,
+        checked_out_at: checked_out_at,
+        action_code_id: action_code_id
+      }
+    );
+    checkin.save();
 
     this.response.status = 200;
-    this.body = { "activation_code" : employee.activation_code};
+    this.body = { "result" : checkin };
   }
 })
 

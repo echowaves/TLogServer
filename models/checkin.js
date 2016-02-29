@@ -27,6 +27,7 @@ Checkin.prototype.save = function () {
   var inserted = db.checkins.saveSync(this);
     if(!this.id) {
       this.id = inserted.id; // assign newly generated id to the object
+      _.assign(this, inserted);
     }
 }
 
