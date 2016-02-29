@@ -256,8 +256,78 @@ describe('/checkins routes testing', function() {
 
   });
 
-  // it('should be able to delete checkin');
-  // it('should not be able to delete checkin of the wrong employee');
+
+  it('should be able to delete checkin', function*() {
+    var checked_in_at = moment().format();
+    const response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    const checkin_id = response.body.result.id;
+
+
+    const response1 =
+      yield request.delete('/employees/' + activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .end();
+
+    expect(response1.status).to.equal(200, response1.text);
+    expect(response1.body).to.contain.keys('result');
+    expect(response1.body.result).to.equal('checkin deleted');
+  });
+
+
+
+  it('should not be able to delete checkin of the wrong employee', function*() {
+    var checked_in_at = moment().format();
+    const response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    const checkin_id = response.body.result.id;
+
+    checked_in_at = moment().add(15, 'm').format();
+    const checked_out_at = moment().add(3, 'h').format();
+
+
+    const email = uuid.v4() + "@example.com";
+    // add anohter employee
+    const response2 =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    // and activate the employee
+    const response3 =
+      yield request.post("/employees/" + response2.body.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    const another_activation_code = response3.body.activation_code;
+
+
+
+    const response4 =
+      yield request.delete('/employees/' + another_activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response4.status).to.equal(404, response4.text);
+    expect(response4.body).to.contain.keys('error');
+    expect(response4.body.error).to.equal('checkin not found');
+
+    const response5 =
+    yield request.delete('/employees/' + 'non_existing_code' + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response5.status).to.equal(404, response5.text);
+    expect(response5.body).to.contain.keys('error');
+    expect(response5.body.error).to.equal('checkin not found');
+
+  });
   // it('should be able to get all (first page by default) checkins for an employee');
   // it('should be able to get paged results checkins for an employee');
 

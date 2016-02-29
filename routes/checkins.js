@@ -117,26 +117,26 @@ module.exports = require('koa-router')()
 
 // delete checkin
 .delete('/employees/:activation_code/checkins/:checkin_id', function *(next) {
-  var employeeToLoad =
-    new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  var employee =
+    new Employee({ activation_code: this.params.activation_code});
+  employee.loadByActivationCode();
 
-  // check that the employee exists and belongs to the user
-  if(employeeToLoad.user_id != this.state.user.id) {
-    this.response.status = 403;
-    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  var checkin = new Checkin(
+    {
+      id: this.params.checkin_id
+    }
+  );
+  checkin.load();
+
+  if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
+    this.response.status = 404;
+    this.body = { "error" : 'checkin not found' };
   } else {
-    const activation_code = uuid.v4();
-    var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          activation_code: activation_code
-        });
-    employee.save();
+
+    checkin.delete();
 
     this.response.status = 200;
-    this.body = { "activation_code" : employee.activation_code};
+    this.body = { "result" : 'checkin deleted' };
   }
 })
 
