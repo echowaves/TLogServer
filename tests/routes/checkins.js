@@ -103,24 +103,30 @@ describe('/checkins routes testing', function() {
     expect(response.body).to.contain.keys('result');
     expect(response.body.result.checked_in_at).to.equal(checked_in_at);
   });
-  //
-  //
-  // it('should be able to get a particuar checkin', function*() {
-  //   const response =
-  //     yield request.post('/employees/' + activation_code + '/checkins')
-  //   .set('Content-Type', 'application/json')
-  //   .end();
-  //   var createdEmployee = response.body.result;
-  //
-  //   const response1 =
-  //     yield request1.get('/employees/' + activation_code + '/checkins')
-  //   .set('Content-Type', 'application/json')
-  //   .end();
-  //
-  //   expect(response.status).to.equal(200, response.text);
-  //   expect(response.body).to.contain.keys('result');
-  //   expect(response.body.result.activation_code).to.equal(activation_code);
-  // });
+
+
+
+  it('should be able to get a particuar checkin', function*() {
+    const checked_in_at = moment().format();
+    const response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    const checkin_id = response.body.result.id;
+
+    const response1 =
+      yield request.get('/employees/' + activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body).to.contain.keys('result');
+    expect(response.body.result.id).to.equal(response1.body.result.id);
+    expect(response.body.result.email).to.equal(response1.body.result.email);
+    expect(response.body.result.user_id).to.equal(response1.body.result.user_id);
+    expect(response.body.result.action_code_id).to.equal(response1.body.result.action_code_id);
+  });
   // it('should not be able to get a particular checkin if it does not belong to the employee');
   // it('should be able to update checkin');
   // it('should not be able to update checkin belonging to other employee');

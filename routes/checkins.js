@@ -56,6 +56,19 @@ module.exports = require('koa-router')()
 
 //get details of a particular checkin
 .get('/employees/:activation_code/checkins/:checkin_id', function *(next) {
+    var employeeToLoad =
+      new Employee({ activation_code: this.params.activation_code});
+    employeeToLoad.loadByActivationCode();
+
+    var checkin = new Checkin(
+      {
+        id: this.params.checkin_id
+      }
+    );
+    checkin.load();
+
+    this.response.status = 200;
+    this.body = { "result" : checkin };
 })
 
 //update checkin which includes checkout, checkout time must be passed as a parameter
