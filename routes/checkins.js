@@ -32,14 +32,14 @@ module.exports = require('koa-router')()
     this.response.status = 400;
     this.body = { "error" : 'parameters missing'};
   } else {
-    var employeeToLoad =
+    var employee =
       new Employee({ activation_code: this.params.activation_code});
-    employeeToLoad.loadByActivationCode();
+    employee.loadByActivationCode();
 
     var checkin = new Checkin(
       {
-        email: employeeToLoad.email,
-        user_id: employeeToLoad.user_id,
+        email: employee.email,
+        user_id: employee.user_id,
         checked_in_at: checked_in_at,
         // checked_out_at: moment(checked_in_at).add(3, 'h'),
         action_code_id: action_code_id
@@ -56,9 +56,9 @@ module.exports = require('koa-router')()
 
 //get details of a particular checkin
 .get('/employees/:activation_code/checkins/:checkin_id', function *(next) {
-    var employeeToLoad =
+    var employee =
       new Employee({ activation_code: this.params.activation_code});
-    employeeToLoad.loadByActivationCode();
+    employee.loadByActivationCode();
 
     var checkin = new Checkin(
       {
@@ -67,8 +67,14 @@ module.exports = require('koa-router')()
     );
     checkin.load();
 
-    this.response.status = 200;
-    this.body = { "result" : checkin };
+    if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
+      this.response.status = 404;
+      this.body = { "error" : 'checkin not found' };
+    } else {
+      this.response.status = 200;
+      this.body = { "result" : checkin };
+    }
+
 })
 
 //update checkin which includes checkout, checkout time must be passed as a parameter

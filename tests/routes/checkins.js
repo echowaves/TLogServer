@@ -127,7 +127,56 @@ describe('/checkins routes testing', function() {
     expect(response.body.result.user_id).to.equal(response1.body.result.user_id);
     expect(response.body.result.action_code_id).to.equal(response1.body.result.action_code_id);
   });
-  // it('should not be able to get a particular checkin if it does not belong to the employee');
+
+  it('should not be able to get a particular checkin if it does not belong to the employee', function*() {
+    const checked_in_at = moment().format();
+    const response =
+      yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    const checkin_id = response.body.result.id;
+
+    const email = uuid.v4() + "@example.com";
+    // add anohter employee
+    const response2 =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+
+    // and activate the employee
+    const response3 =
+      yield request.post("/employees/" + response2.body.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    const another_activation_code = response3.body.activation_code;
+
+
+    const response4 =
+      yield request.get('/employees/' + another_activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    expect(response4.status).to.equal(404, response4.text);
+    expect(response4.body).to.contain.keys('error');
+    expect(response4.body.error).to.equal('checkin not found');
+
+    const response5 =
+      yield request.get('/employees/' + 'non_existing_code' + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    expect(response5.status).to.equal(404, response5.text);
+    expect(response5.body).to.contain.keys('error');
+    expect(response5.body.error).to.equal('checkin not found');
+  });
+
+
+
+
   // it('should be able to update checkin');
   // it('should not be able to update checkin belonging to other employee');
   // it('should be able to checkout');
