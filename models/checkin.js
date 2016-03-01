@@ -21,6 +21,20 @@ Checkin.prototype.load = function () {
   }
 }
 
+// set email address  to the checkin object (test covered only by route test)
+Checkin.prototype.loadAll = function (page_number, page_size) {
+  if(this.email == null)         { return null;};
+  if(page_number == null)   { page_number = 0;};
+  if(page_size == null)     { page_size = 100;};
+  var options = {
+    limit : page_size,
+    order : "checked_in_at desc",
+    offset: page_number * page_size
+  }
+
+  return db.checkins.findSync({email: this.email}, options);
+}
+
 
 // upsert checkin
 Checkin.prototype.save = function () {

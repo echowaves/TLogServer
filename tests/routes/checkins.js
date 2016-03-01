@@ -271,7 +271,6 @@ describe('/checkins routes testing', function() {
       yield request.delete('/employees/' + activation_code + '/checkins/' + checkin_id)
     .set('Content-Type', 'application/json')
     .end();
-
     expect(response1.status).to.equal(200, response1.text);
     expect(response1.body).to.contain.keys('result');
     expect(response1.body.result).to.equal('checkin deleted');
@@ -328,7 +327,37 @@ describe('/checkins routes testing', function() {
     expect(response5.body.error).to.equal('checkin not found');
 
   });
-  // it('should be able to get all (first page by default) checkins for an employee');
+
+
+  it('should be able to get all (first page by default) checkins for an employee', function*() {
+    // let's create 100 checkins
+    for(var i = 0; i < 100; i++) {
+      const checked_in_at = moment().format();
+
+      const response =
+        yield request.post('/employees/' + activation_code + '/checkins')
+      .set('Content-Type', 'application/json')
+      .send({checked_in_at: checked_in_at, action_code_id: i })
+      .end();
+      const checkin_id = response.body.result.id;
+    }
+
+
+    const response1 =
+      yield request.get('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({page_number: 0, page_size: 10})
+    .end();
+
+    expect(response1.status).to.equal(200, response1.text);
+    expect(response1.body).to.contain.keys('employee');
+    expect(response1.body).to.contain.keys('checkins');
+    expect(response1.body).to.contain.keys('page_number');
+    expect(response1.body).to.contain.keys('page_size');
+    // expect(response1.body.result).to.equal('checkin deleted');
+
+
+  })
   // it('should be able to get paged results checkins for an employee');
 
 
