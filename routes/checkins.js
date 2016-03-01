@@ -18,8 +18,7 @@ module.exports = require('koa-router')()
 
   var employee =
     new Employee({ activation_code: this.params.activation_code});
-  employee.loadByActivationCode();
-
+  employee = employee.loadByActivationCode();
 
   if(employee == null) {
     this.response.status = 404;
