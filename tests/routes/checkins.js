@@ -331,8 +331,8 @@ describe('/checkins routes testing', function() {
 
   it('should be able to get all (first page by default) checkins for an employee', function*() {
     // let's create 100 checkins
-    for(var i = 0; i < 100; i++) {
-      const checked_in_at = moment().format();
+    for(var i = 0; i < 110; i++) {
+      const checked_in_at = moment().add( i, 's').format();
 
       const response =
         yield request.post('/employees/' + activation_code + '/checkins')
@@ -342,14 +342,34 @@ describe('/checkins routes testing', function() {
       const checkin_id = response.body.result.id;
     }
 
-
+    // default page
     const response1 =
+      yield request.get('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .end();
+
+    expect(response1.status).to.equal(200, response1.text);
+    expect(response1.body.employee.activation_code).to.equal(activation_code);
+    expect(response1.body.page_number).to.equal(0);
+    expect(response1.body.page_size).to.equal(100);
+    expect(response1.body.checkins.length).to.equal(100);
+    expect(response1.body.checkins[0].action_code_id).to.equal(109);
+    expect(response1.body.checkins[99].action_code_id).to.equal(10);
+
+
+    const response2 =
       yield request.get('/employees/' + activation_code + '/checkins')
     .set('Content-Type', 'application/json')
     .send({page_number: 0, page_size: 10})
     .end();
 
-    expect(response1.status).to.equal(200, response1.text);
+    expect(response2.status).to.equal(200, response2.text);
+
+  console.log(response1.body.employee);
+  console.log(response1.body.checkins);
+  console.log(response1.body.page_number);
+  console.log(response1.body.page_size);
+
     expect(response1.body).to.contain.keys('employee');
     expect(response1.body).to.contain.keys('checkins');
     expect(response1.body).to.contain.keys('page_number');

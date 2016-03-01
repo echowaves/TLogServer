@@ -10,8 +10,11 @@ module.exports = require('koa-router')()
 // get employee details inluding all checkins, by defauls last 100 checkins, page parameters can be passed in
 .get('/employees/:activation_code/checkins', function *(next) {
   let data = yield parse.json(this);
-  let page_number = data.page_number;
-  let page_size = data.page_size;
+  var page_number = data.page_number;
+  var page_size = data.page_size;
+
+  if(page_number == null) {page_number = 0};
+  if(page_size == null) {page_size = 100};
 
   var employee =
     new Employee({ activation_code: this.params.activation_code});
@@ -23,14 +26,14 @@ module.exports = require('koa-router')()
     this.body = { "error" : 'employee not found' };
   } else {
 
-    var checkins = new Checkin({email: employee.email}).loadAll();
+    var checkins = new Checkin({email: employee.email}).loadAll(page_number, page_size);
 
     this.response.status = 200;
     this.body = {
-       "employee" :employee,
+        employee :employee,
         page_number: page_number,
         page_size: page_size,
-        "checkins": checkins };
+        checkins: checkins };
   }
 })
 
