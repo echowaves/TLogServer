@@ -12,7 +12,7 @@ var ActionCode = function(properties) {
 
 // lookup action codes by code and/or description
 ActionCode.prototype.lookup = function (lookupString) {
-  return db.runSync("select * from action_codes where code ilike $1 or description ilike $1", ['%' + lookupString + '%']);
+  return db.runSync("select * from action_codes where code ilike $1 or description ilike $1 limit 100", ['%' + lookupString + '%']);
 }
 
 // loadAll
