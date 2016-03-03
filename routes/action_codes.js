@@ -6,13 +6,14 @@ var ActionCode   = require('../models/action_code');
 
 module.exports = require('koa-router')()
 
+// this should not be exposed
 // get all action codes
-.get('/actioncodes', function *(next) {
-  var results = new ActionCode().loadAll();
-
-  this.response.status = 200;
-  this.body = { "result" : results };
-})
+// .get('/actioncodes', function *(next) {
+//   var results = new ActionCode().loadAll();
+//
+//   this.response.status = 200;
+//   this.body = { "result" : results };
+// })
 
 
 // get action code by id

@@ -44,32 +44,33 @@ describe('/actioncodes route testing', function() {
     actionCode3.save();
   });
 
-  it('should be able to get all actioncodes available', function*() {
-    const response =
-    yield request.get('/actioncodes')
-    .set('Content-Type', 'application/json')
-    .end();
-    expect(response.status).to.equal(200, response.text);
-    expect(response.body).to.be.an('object');
-    expect(response.body.result.length).to.equal(3);
-  });
+// this should not be exposed
+  // it('should be able to get all actioncodes available', function*() {
+  //   const response =
+  //   yield request.get('/actioncodes')
+  //   .set('Content-Type', 'application/json')
+  //   .end();
+  //   expect(response.status).to.equal(200, response.text);
+  //   expect(response.body).to.be.an('object');
+  //   expect(response.body.result.length).to.equal(3);
+  // });
 
   it('should be able to load actioncode by id', function*() {
-    const response =
-    yield request.get('/actioncodes')
-    .set('Content-Type', 'application/json')
-    .end();
-
-    var actionCode = response.body.result[0];
+    // const response =
+    // yield request.get('/actioncodes')
+    // .set('Content-Type', 'application/json')
+    // .end();
+    //
+    var actionCode = '1'; //response.body.result[0];
 
     const response1 =
-    yield request.get('/actioncodes/' + actionCode.id)
+    yield request.get('/actioncodes/' + actionCode)
     .set('Content-Type', 'application/json')
     .end();
 
-    expect(response1.status).to.equal(200, response.text);
+    expect(response1.status).to.equal(200, response1.text);
     expect(response1.body).to.be.an('object');
-    expect(response1.body.result).to.deep.equal(actionCode);
+    expect(response1.body.result.id).to.equal(actionCode);
   });
 
 
