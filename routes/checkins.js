@@ -14,8 +14,8 @@ module.exports = require('koa-router')()
   var page_number = data.page_number;
   var page_size = data.page_size;
 
-  if(page_number == null) {page_number = 0};
-  if(page_size == null) {page_size = 100};
+  if(page_number == null) {page_number = '0'};
+  if(page_size == null) {page_size = '100'};
 
   var employee =
     new Employee({ activation_code: this.params.activation_code});
@@ -26,7 +26,8 @@ module.exports = require('koa-router')()
     this.body = { "error" : 'employee not found' };
   } else {
 
-    var checkins = new Checkin({email: employee.email}).loadAll(page_number, page_size);
+    var checkinTemplate = new Checkin({email: employee.email});
+    var checkins = checkinTemplate.loadAll(page_number, page_size);
 
     this.response.status = 200;
     this.body = {

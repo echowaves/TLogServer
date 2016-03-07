@@ -16,10 +16,11 @@ const request = supertest.agent(app.listen());
 
 var assert = require('assert');
 var User   = require('../../models/user'),
-Employee = require('../../models/employee');
+Employee   = require('../../models/employee'),
+ActionCode = require('../../models/action_code');
 
 describe('/checkins routes testing', function() {
-  var activation_code, user, token;
+  var activation_code, user, token, actionCode;
 
   beforeEach(function *() {
     //cleanup users
@@ -28,6 +29,11 @@ describe('/checkins routes testing', function() {
     db.employees.destroySync({});
     //cleanup checkins
     db.checkins.destroySync({});
+    //cleanup actioncodes
+    db.action_codes.destroySync({});
+
+    actionCode = db.action_codes.saveSync({code: '0001', description: "this is a dummy action code just for testing"});
+
 
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
@@ -332,14 +338,15 @@ describe('/checkins routes testing', function() {
   it('should be able to get checkins for an employee', function*() {
     // let's create 100 checkins
     for(var i = 0; i < 110; i++) {
-      const checked_in_at = moment().add( i, 's').format();
 
+
+      const checked_in_at = moment().add( i, 's').format();
       const response =
       yield request.post('/employees/' + activation_code + '/checkins')
       .set('Content-Type', 'application/json')
-      .send({checked_in_at: checked_in_at, action_code_id: i })
+      .send({checked_in_at: checked_in_at, action_code_id: actionCode.id })
       .end();
-      const checkin_id = response.body.result.id;
+      // const checkin_id = response.body.result.id;
     }
 
     // default page
@@ -350,11 +357,11 @@ describe('/checkins routes testing', function() {
 
     expect(response1.status).to.equal(200, response1.text);
     expect(response1.body.employee.activation_code).to.equal(activation_code);
-    expect(response1.body.page_number).to.equal(0);
-    expect(response1.body.page_size).to.equal(100);
+    expect(response1.body.page_number).to.equal('0');
+    expect(response1.body.page_size).to.equal('100');
     expect(response1.body.checkins.length).to.equal(100);
-    expect(response1.body.checkins[0].action_code_id).to.equal(109);
-    expect(response1.body.checkins[99].action_code_id).to.equal(10);
+    expect(response1.body.checkins[0].action_code_id).to.equal(actionCode.id);
+    expect(response1.body.checkins[99].action_code_id).to.equal(actionCode.id);
 
 
     const response2 =
@@ -367,8 +374,8 @@ describe('/checkins routes testing', function() {
     expect(response2.body.page_number).to.equal('2');
     expect(response2.body.page_size).to.equal('10');
     expect(response2.body.checkins.length).to.equal(10);
-    expect(response2.body.checkins[0].action_code_id).to.equal(89);
-    expect(response2.body.checkins[9].action_code_id).to.equal(80);
+    expect(response2.body.checkins[0].action_code_id).to.equal(actionCode.id);
+    expect(response2.body.checkins[9].action_code_id).to.equal(actionCode.id);
 
   });
 
