@@ -358,15 +358,14 @@ describe('/checkins routes testing', function() {
 
 
     const response2 =
-    yield request.get('/employees/' + activation_code + '/checkins')
+    yield request.get('/employees/' + activation_code + "/checkins/?page_size=10&page_number=2")
     .set('Content-Type', 'application/json')
-    .send({page_number: 2, page_size: 10})
     .end();
 
     expect(response2.status).to.equal(200, response2.text);
     expect(response2.body.employee.activation_code).to.equal(activation_code);
-    expect(response2.body.page_number).to.equal(2);
-    expect(response2.body.page_size).to.equal(10);
+    expect(response2.body.page_number).to.equal('2');
+    expect(response2.body.page_size).to.equal('10');
     expect(response2.body.checkins.length).to.equal(10);
     expect(response2.body.checkins[0].action_code_id).to.equal(89);
     expect(response2.body.checkins[9].action_code_id).to.equal(80);

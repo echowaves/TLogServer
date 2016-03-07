@@ -4,12 +4,13 @@ var uuid = require('uuid');
 
 var Employee   = require('../models/employee');
 var Checkin    = require('../models/checkin');
+var Utils      = require('../utils/utils');
 
 module.exports = require('koa-router')()
 
 // get employee details inluding all checkins, by defauls last 100 checkins, page parameters can be passed in
 .get('/employees/:activation_code/checkins', function *(next) {
-  let data = yield parse.json(this);
+  let data = new Utils().parseQueryString(this.request.querystring);
   var page_number = data.page_number;
   var page_size = data.page_size;
 
