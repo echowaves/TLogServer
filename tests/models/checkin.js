@@ -25,20 +25,20 @@ describe('Checkin model testing', function() {
     var email = uuid.v4() + "@example.com";
     var user_id = 1;
     var checked_in_at = moment().toDate();
-    var checked_out_at = moment(checked_in_at).add(3, 'h');
+    var duration = moment.duration(3, 'hours').asSeconds();
     var action_code_id = 1;
     var checkin =
       new Checkin({
         email: email,
         user_id: user_id,
         checked_in_at: checked_in_at,
-        checked_out_at: checked_out_at,
+        duration: duration,
         action_code_id: action_code_id
       });
     assert.equal(checkin.email, email);
     assert.equal(checkin.user_id, user_id);
     assert.equal(checkin.checked_in_at, checked_in_at);
-    assert.equal(checkin.checked_out_at, checked_out_at);
+    assert.equal(checkin.duration, duration);
     assert.equal(checkin.action_code_id, action_code_id);
   });
 
@@ -46,14 +46,14 @@ describe('Checkin model testing', function() {
     var email = uuid.v4() + "@example.com";
     var user_id = 1;
     var checked_in_at = moment().toDate();
-    var checked_out_at = moment(checked_in_at).add(3, 'h').toDate();
+    var duration = moment.duration(3, 'hours').asSeconds();
     var action_code_id = 1;
     var checkin =
       new Checkin({
         email: email,
         user_id: user_id,
         checked_in_at: checked_in_at,
-        checked_out_at: checked_out_at,
+        duration: duration,
         action_code_id: action_code_id
       });
     checkin.save();
@@ -64,14 +64,14 @@ describe('Checkin model testing', function() {
     var email = uuid.v4() + "@example.com";
     var user_id = 1;
     var checked_in_at = moment().toDate();
-    var checked_out_at = moment(checked_in_at).add(3, 'h').toDate();
+    var duration = moment.duration(3, 'hours').asSeconds();
     var action_code_id = 1;
     var checkin =
       new Checkin({
         email: email,
         user_id: user_id,
         checked_in_at: checked_in_at,
-        checked_out_at: checked_out_at,
+        duration: duration,
         action_code_id: action_code_id
       });
     checkin.save();

@@ -58,7 +58,7 @@ module.exports = require('koa-router')()
         email: employee.email,
         user_id: employee.user_id,
         checked_in_at: checked_in_at,
-        // checked_out_at: moment(checked_in_at).add(3, 'h'),
+        duration: 0,//always create with duration 0, can modify later by updating checkin
         action_code_id: action_code_id
       }
     );
@@ -112,7 +112,7 @@ module.exports = require('koa-router')()
     let data = yield parse.json(this);
 
     let checked_in_at = data.checked_in_at;
-    let checked_out_at = data.checked_out_at;
+    let duration = data.duration;
     let action_code_id = data.action_code_id;
 
 
@@ -121,7 +121,7 @@ module.exports = require('koa-router')()
         email: employee.email,
         user_id: employee.user_id,
         checked_in_at: checked_in_at,
-        checked_out_at: checked_out_at,
+        duration: duration,
         action_code_id: action_code_id
       }
     );
@@ -149,9 +149,7 @@ module.exports = require('koa-router')()
     this.response.status = 404;
     this.body = { "error" : 'checkin not found' };
   } else {
-
     checkin.delete();
-
     this.response.status = 200;
     this.body = { "result" : 'checkin deleted' };
   }

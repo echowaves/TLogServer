@@ -192,19 +192,17 @@ describe('/checkins routes testing', function() {
     const checkin_id = response.body.result.id;
 
     checked_in_at = moment().add(15, 'm').format();
-    const checked_out_at = moment().add(3, 'h').format();
+    const duration = moment.duration(3, 'hours').asSeconds();
 
     const response1 =
     yield request.put('/employees/' + activation_code + '/checkins/' + checkin_id)
     .set('Content-Type', 'application/json')
-    .send({checked_in_at: checked_in_at, checked_out_at: checked_out_at, action_code_id: 2 })
+    .send({checked_in_at: checked_in_at, duration: duration, action_code_id: 2 })
     .end();
-
-
     expect(response1.status).to.equal(200, response1.text);
     expect(response1.body).to.contain.keys('result');
     expect(moment(response1.body.result.checked_in_at).format()).to.equal(checked_in_at);
-    expect(moment(response1.body.result.checked_out_at).format()).to.equal(checked_out_at);
+    expect(moment.duration(response1.body.result.duration).asSeconds()).to.equal(duration);
     expect(response1.body.result.action_code_id).to.equal(2);
 
   });
@@ -220,7 +218,7 @@ describe('/checkins routes testing', function() {
     const checkin_id = response.body.result.id;
 
     checked_in_at = moment().add(15, 'm').format();
-    const checked_out_at = moment().add(3, 'h').format();
+    const duration = moment.duration(3, 'hours').asSeconds();
 
 
     const email = uuid.v4() + "@example.com";
@@ -245,7 +243,7 @@ describe('/checkins routes testing', function() {
     const response4 =
     yield request.put('/employees/' + another_activation_code + '/checkins/' + checkin_id)
     .set('Content-Type', 'application/json')
-    .send({checked_in_at: checked_in_at, checked_out_at: checked_out_at, action_code_id: 2 })
+    .send({checked_in_at: checked_in_at, duration: duration, action_code_id: 2 })
     .end();
     expect(response4.status).to.equal(404, response4.text);
     expect(response4.body).to.contain.keys('error');
@@ -265,13 +263,13 @@ describe('/checkins routes testing', function() {
 
   it('should be able to delete checkin', function*() {
     var checked_in_at = moment().format();
+
     const response =
     yield request.post('/employees/' + activation_code + '/checkins')
     .set('Content-Type', 'application/json')
     .send({checked_in_at: checked_in_at, action_code_id: 1 })
     .end();
     const checkin_id = response.body.result.id;
-
 
     const response1 =
     yield request.delete('/employees/' + activation_code + '/checkins/' + checkin_id)
@@ -294,7 +292,7 @@ describe('/checkins routes testing', function() {
     const checkin_id = response.body.result.id;
 
     checked_in_at = moment().add(15, 'm').format();
-    const checked_out_at = moment().add(3, 'h').format();
+    const checked_out_at = moment.duration(3, 'hours').asSeconds();
 
 
     const email = uuid.v4() + "@example.com";

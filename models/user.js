@@ -65,7 +65,7 @@ User.prototype.save = function () {
 
 // //delete a user (no user should ever be deleted)
 // User.prototype.delete = function () {
-//   db.users.destroySync(this);
+//   db.users.destroySync({id: this.id});
 // }
 
 module.exports = User;

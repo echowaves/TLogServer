@@ -27,8 +27,7 @@ Checkin.prototype.loadAll = function (page_number, page_size) {
   if(page_number == null)   { page_number = '0';};
   if(page_size == null)     { page_size = '100';};
 
-// var result = db.checkins.findSync({email: this.email}, options);
-    return db.runSync("SELECT c.id, c.email, c.checked_in_at, c.checked_out_at, c.action_code_id, a.code, a.description FROM checkins c INNER JOIN action_codes a ON c.action_code_id = a.id WHERE c.email=$1 ORDER BY c.checked_in_at desc LIMIT $2 OFFSET $3", [this.email, parseInt(page_size), parseInt(page_number) * parseInt(page_size)]);
+  return db.runSync("SELECT c.id, c.email, c.user_id, c.checked_in_at, c.duration, c.action_code_id, a.code, a.description FROM checkins c INNER JOIN action_codes a ON c.action_code_id = a.id WHERE c.email=$1 ORDER BY c.checked_in_at desc LIMIT $2 OFFSET $3", [this.email, parseInt(page_size), parseInt(page_number) * parseInt(page_size)]);
 }
 
 
@@ -43,7 +42,7 @@ Checkin.prototype.save = function () {
 
 //delete checkin
 Checkin.prototype.delete = function () {
-  db.checkins.destroySync(this);
+  db.checkins.destroySync({id: this.id});
 }
 
 module.exports = Checkin;

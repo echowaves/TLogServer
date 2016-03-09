@@ -42,7 +42,7 @@ ActionCode.prototype.save = function () {
 
 //delete a actionCode
 ActionCode.prototype.delete = function () {
-  db.action_codes.destroySync(this);
+  db.action_codes.destroySync({id: this.id});
 }
 
 

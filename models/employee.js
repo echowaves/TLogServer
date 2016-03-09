@@ -55,7 +55,7 @@ Employee.prototype.save = function () {
 
 //delete a employee
 Employee.prototype.delete = function () {
-  db.employees.destroySync(this);
+  db.employees.destroySync({id: this.id});
 }
 
 module.exports = Employee;

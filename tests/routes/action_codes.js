@@ -9,6 +9,7 @@ let parse = require('co-body');
 
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
+var db = require('../../consts').DB;
 
 const request = supertest.agent(app.listen());
 
@@ -20,9 +21,7 @@ describe('/actioncodes route testing', function() {
 
   beforeEach(function *() {
     //clean all action codes first
-    var actionCode =
-      new ActionCode({});
-    actionCode.delete();
+    db.action_codes.destroySync({});
 
     var actionCode1 =
       new ActionCode({
