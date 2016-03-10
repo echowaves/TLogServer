@@ -33,11 +33,18 @@ Checkin.prototype.loadAll = function (page_number, page_size) {
 
 // upsert checkin
 Checkin.prototype.save = function () {
+  console.log(1);
   var inserted = db.checkins.saveSync(this);
+  console.log(2);
     if(!this.id) {
+      console.log(3);
+
       this.id = inserted.id; // assign newly generated id to the object
       _.assign(this, inserted);
-    }
+      console.log(4);
+    };
+    console.log(5);
+    console.log("--------------");
 }
 
 //delete checkin

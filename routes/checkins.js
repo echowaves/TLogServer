@@ -1,10 +1,10 @@
 'use strict';
 let parse = require('co-body');
 var uuid = require('uuid');
-
-var Employee   = require('../models/employee');
-var Checkin    = require('../models/checkin');
 var Utils      = require('../utils/utils');
+
+var Checkin    = require('../models/checkin');
+var Employee   = require('../models/employee');
 
 module.exports = require('koa-router')()
 

@@ -23,7 +23,7 @@ Employee.prototype.load = function () {
 
 // set activation_code to the employee object, call load to populate the rest of the properties
 Employee.prototype.loadByActivationCode = function () {
-  var foundEmployee = db.employees.findOneSync({activation_code: this.activation_code});
+  var foundEmployee = db.employees.findOneSync( { "activation_code" : this.activation_code } );
   if(foundEmployee) {
     _.assign(this, foundEmployee);
     return this;
@@ -48,6 +48,7 @@ Employee.prototype.loadAllForUser = function (user_id) {
 // upsert employee
 Employee.prototype.save = function () {
   var inserted = db.employees.saveSync(this);
+
     if(!this.id) {
       this.id = inserted.id; // assign newly generated id to the object
     }
