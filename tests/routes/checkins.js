@@ -192,7 +192,7 @@ describe('/checkins routes testing', function() {
     const checkin_id = response.body.result.id;
 
     checked_in_at = moment().add(15, 'm').format();
-    const duration = moment.duration(3, 'hours').asSeconds();
+    const duration = moment.duration(3, 'hours').asMilliseconds();
 
     const response1 =
     yield request.put('/employees/' + activation_code + '/checkins/' + checkin_id)
@@ -202,7 +202,7 @@ describe('/checkins routes testing', function() {
     expect(response1.status).to.equal(200, response1.text);
     expect(response1.body).to.contain.keys('result');
     expect(moment(response1.body.result.checked_in_at).format()).to.equal(checked_in_at);
-    expect(moment.duration(response1.body.result.duration).asSeconds()).to.equal(duration);
+    expect(moment.duration(response1.body.result.duration).asMilliseconds()).to.equal(duration);
     expect(response1.body.result.action_code_id).to.equal(2);
 
   });

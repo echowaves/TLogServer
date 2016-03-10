@@ -63,7 +63,6 @@ module.exports = require('koa-router')()
       }
     );
     checkin.save();
-
     this.response.status = 200;
     this.body = { "result" : checkin };
   }
@@ -92,7 +91,7 @@ module.exports = require('koa-router')()
 
 })
 
-//update checkin which includes checkout, checkout time must be passed as a parameter
+//update checkin which includes checkout, duration must be passed as a parameter
 .put('/employees/:activation_code/checkins/:checkin_id', function *(next) {
   var employee =
     new Employee({ activation_code: this.params.activation_code});
@@ -104,6 +103,7 @@ module.exports = require('koa-router')()
     }
   );
   checkin.load();
+
   if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
     this.response.status = 404;
     this.body = { "error" : 'checkin not found' };
@@ -115,16 +115,10 @@ module.exports = require('koa-router')()
     let duration = data.duration;
     let action_code_id = data.action_code_id;
 
+    checkin.checked_in_at = checked_in_at;
+    checkin.duration = duration;
+    checkin.action_code_id = action_code_id;
 
-    var checkin = new Checkin(
-      {
-        email: employee.email,
-        user_id: employee.user_id,
-        checked_in_at: checked_in_at,
-        duration: duration,
-        action_code_id: action_code_id
-      }
-    );
     checkin.save();
 
     this.response.status = 200;
