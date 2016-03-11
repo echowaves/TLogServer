@@ -10,7 +10,7 @@
   "license": "echowaves",
   "dependencies": {
     "bcrypt": "^0.8.5",
-    "co-body": "^4.0.0",
+    "koa-bodyparser": "^2.0.1",
     "db-migrate": "^0.9.23",
     "koa": "^1.2.0",
     "koa-jwt": "^1.1.2",

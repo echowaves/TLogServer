@@ -1,5 +1,5 @@
 'use strict';
-let parse = require('co-body');
+
 var uuid = require('uuid');
 
 var Employee   = require('../models/employee');
@@ -8,7 +8,7 @@ module.exports = require('koa-router')()
 
 //create a new employee
 .post('/employees', function *(next) {
-  let data = yield parse.json(this);
+  let data = this.request.body;
   var employee =
     new Employee(
       { user_id: this.state.user.id,
@@ -122,7 +122,7 @@ module.exports = require('koa-router')()
 
 // update an employee
 .put('/employees/:employee_id', function *(next) {
-  let data = yield parse.json(this);
+  let data = this.request.body; 
   var employeeToLoad = new Employee({ id: this.params.employee_id});
   employeeToLoad.load();
 

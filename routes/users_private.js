@@ -1,6 +1,5 @@
 'use strict';
 var jwt = require('koa-jwt');
-let parse = require('co-body');
 var SECRET = require('../consts').SECRET;
 
 var User   = require('../models/user');
@@ -9,7 +8,7 @@ module.exports = require('koa-router')()
 
 //will decode the user from jwt token, will return the only user that is authenticated
 .get('/users', function *(next) {
-    let data = yield parse.json(this);
+    let data = this.request.body;
     let jwtUser = this.state.user;
     var user = new User({id: jwtUser.id});
     var success = user.load();
@@ -24,7 +23,7 @@ module.exports = require('koa-router')()
 
 //update a user
 .put('/users', function *(next) {
-  let data = yield parse.json(this);
+  let data = this.request.body; 
   let jwtUser = this.state.user;
   var user = new User({id: jwtUser.id})
   if(data.email) {

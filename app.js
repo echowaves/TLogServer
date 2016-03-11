@@ -5,9 +5,11 @@ var jwt = require('koa-jwt');
 var SECRET = require('./consts').SECRET;
 
 var serve = require('koa-static-folder');
+var bodyParser = require('koa-bodyparser');
 
 const app = module.exports = require('koa')()
   .use(serve('./public'))
+  .use(bodyParser())
   .use(require('./routes/auth'))
   .use(require('./routes/users_public'))
   .use(require('./routes/action_codes'))

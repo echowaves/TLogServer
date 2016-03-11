@@ -3,7 +3,6 @@
 var User   = require('../models/user');
 
 var jwt = require('koa-jwt');
-let parse = require('co-body');
 
 var SECRET = require('../consts').SECRET;
 
@@ -11,7 +10,7 @@ module.exports = require('koa-router')()
 
 // create new auth token
 .post('/auth', function *(next) {
-  let data = yield parse.json(this);
+  let data = this.request.body; 
   var user = new User({email: data.email, password: data.password});
 
   var token = user.validateUserAndGenerateToken();

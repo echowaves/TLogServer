@@ -1,5 +1,5 @@
 'use strict';
-let parse = require('co-body');
+
 var uuid = require('uuid');
 var Utils      = require('../utils/utils');
 
@@ -40,7 +40,7 @@ module.exports = require('koa-router')()
 
 //create a checkin, checkin time must be passed as a parameter as well as action code
 .post('/employees/:activation_code/checkins', function *(next) {
-  let data = yield parse.json(this);
+  let data = this.request.body;
 
   let checked_in_at = data.checked_in_at;
   let action_code_id = data.action_code_id;
@@ -108,8 +108,7 @@ module.exports = require('koa-router')()
     this.response.status = 404;
     this.body = { "error" : 'checkin not found' };
   } else {
-
-    let data = yield parse.json(this);
+    let data = this.request.body;
 
     let checked_in_at = data.checked_in_at;
     let duration = data.duration;
