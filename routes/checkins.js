@@ -38,7 +38,7 @@ module.exports = require('koa-router')()
   }
 })
 
-//create a checkin, checkin time must be passed as a parameter as well as action code
+//create a checkin, checkin time must be passed as a parameter as well as action code, duration can only be updated
 .post('/employees/:activation_code/checkins', function *(next) {
   let data = this.request.body;
 
@@ -64,7 +64,7 @@ module.exports = require('koa-router')()
     );
     checkin.save();
     this.response.status = 200;
-    this.body = { "result" : checkin };
+    this.body = { "checkin" : checkin };
   }
 })
 
@@ -86,7 +86,7 @@ module.exports = require('koa-router')()
       this.body = { "error" : 'checkin not found' };
     } else {
       this.response.status = 200;
-      this.body = { "result" : checkin };
+      this.body = { "checkin" : checkin };
     }
 
 })
@@ -121,7 +121,7 @@ module.exports = require('koa-router')()
     checkin.save();
 
     this.response.status = 200;
-    this.body = { "result" : checkin };
+    this.body = { "checkin" : checkin };
   }
 })
 
