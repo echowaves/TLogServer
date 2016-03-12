@@ -5,8 +5,6 @@ const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
 var uuid = require('uuid');
 
-let parse = require('co-body');
-
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 

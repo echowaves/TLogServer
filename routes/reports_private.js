@@ -2,7 +2,7 @@
 
 var uuid = require('uuid');
 
-var Employee   = require('../models/employee');
+var Report   = require('../models/report');
 
 module.exports = require('koa-router')()
 
@@ -102,6 +102,7 @@ module.exports = require('koa-router')()
   var employees = employee.loadAllForUser(this.state.user.id);
   this.response.status = 200;
   this.body = { "results" : employees };
+  yield next;
 })
 
 

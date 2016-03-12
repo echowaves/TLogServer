@@ -6,6 +6,8 @@ require('co-mocha');                     // enable support for generators in moc
 var uuid = require('uuid');
 var moment = require('moment');
 
+let parse = require('co-body');
+
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 var db = require('../../consts').DB;
