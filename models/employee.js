@@ -35,7 +35,7 @@ Employee.prototype.loadByActivationCode = function () {
 
 //load all employees for user
 Employee.prototype.loadAllForUser = function (user_id) {
-  var foundEmployees = db.employees.findSync({user_id: user_id});
+  var foundEmployees = db.employees.findSync({user_id: user_id}, {order: "name asc"});
   var employees = [];
   foundEmployees.forEach(function(item){
     var employee = new Employee();

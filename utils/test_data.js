@@ -23,6 +23,8 @@ for (var i = 0; i < 10; i++) {
   var user = new User({email: userEmail, password: 'password'});
   user.save();
 
+  http://localhost:3000/public/mobile_employee.html?activation_code=f880edc5-de0c-4d6e-940c-0a71b644ad36
+
   console.log("User: " + user.id);
 
   //for each user generate employees
@@ -49,7 +51,7 @@ for (var i = 0; i < 10; i++) {
         var actionCode = actionCodes[Math.floor(Math.random() * (actionCodes.length))];
         // console.log("ActionCode: " + actionCode.id);
 
-        var date = moment().day(getRandomArbitrary(-200, 200));
+        var date = moment().subtract(getRandomArbitrary(400 * 1440, 0), 'minutes');
         var checkin = new Checkin(
           {
             email: employee.email,
