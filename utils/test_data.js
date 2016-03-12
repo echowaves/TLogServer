@@ -42,26 +42,27 @@ for (var i = 0; i < 10; i++) {
     console.log("Employee: " + employee.id);
 
 
-    //create checkins
-    for (var k = 0; k < 500; k++) {
-      var actionCode = actionCodes[Math.floor(Math.random() * (actionCodes.length))];
-      // console.log("ActionCode: " + actionCode.id);
+    //skip 20% of the users
+    if( j % 5 != 0) {
+      //create checkins
+      for (var k = 0; k < 500; k++) {
+        var actionCode = actionCodes[Math.floor(Math.random() * (actionCodes.length))];
+        // console.log("ActionCode: " + actionCode.id);
 
-      var date = moment().day(getRandomArbitrary(-200, 200));
-      var checkin = new Checkin(
-        {
-          email: employee.email,
-          user_id: employee.user_id,
-          checked_in_at: date,
-          duration: Math.floor(Math.random() * (8 * 60 * 60)),
-          action_code_id: actionCode.id
-        }
-      );
-      checkin.save();
-
+        var date = moment().day(getRandomArbitrary(-200, 200));
+        var checkin = new Checkin(
+          {
+            email: employee.email,
+            user_id: employee.user_id,
+            checked_in_at: date,
+            duration: Math.floor(Math.random() * (8 * 60 * 60)),
+            action_code_id: actionCode.id
+          }
+        );
+        checkin.save();
+      }
     }
   }
-
 }
 
 
