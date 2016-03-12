@@ -58,7 +58,7 @@ describe('/checkins routes testing', function() {
 
     // and activate the employee
     const response1 =
-    yield request.post("/employees/" + response.body.id + "/activation")
+    yield request.post("/employees/" + response.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -334,8 +334,6 @@ describe('/checkins routes testing', function() {
   it('should be able to get checkins for an employee', function*() {
     // let's create 100 checkins
     for(var i = 0; i < 110; i++) {
-
-
       const checked_in_at = moment().add( i, 's').format();
       const response =
       yield request.post('/employees/' + activation_code + '/checkins')

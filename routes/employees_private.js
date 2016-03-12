@@ -18,7 +18,7 @@ module.exports = require('koa-router')()
   employee.save();
 
   this.response.status = 200;
-  this.body = { "result": "employee successfully added", "id" : employee.id};
+  this.body = { "result": "employee successfully added", "employee" : employee};
 })
 
 //activate an employee (create activation)

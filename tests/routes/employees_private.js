@@ -50,7 +50,7 @@ describe('/employees private routes testing', function() {
     .end();
     expect(response.status).to.equal(200, response.text);
     expect(response.body).to.contain.keys('result');
-    expect(response.body).to.contain.keys('id');
+    expect(response.body).to.contain.keys('employee');
     expect(response.body.result).to.equal('employee successfully added');
 
   });
@@ -67,7 +67,7 @@ describe('/employees private routes testing', function() {
 
 
     const response1 =
-      yield request.post("/employees/" + response.body.id + "/activation")
+      yield request.post("/employees/" + response.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -119,7 +119,7 @@ describe('/employees private routes testing', function() {
 
     // try to activate an employee for a wron user
     const response3 =
-      yield request.post("/employees/" + anotherResponse.body.id + "/activation")
+      yield request.post("/employees/" + anotherResponse.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -143,7 +143,7 @@ describe('/employees private routes testing', function() {
 
 
     const response1 =
-      yield request.post("/employees/" + response.body.id + "/activation")
+      yield request.post("/employees/" + response.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -153,7 +153,7 @@ describe('/employees private routes testing', function() {
     expect(response1.body).to.contain.keys('activation_code');
 
     const response2 =
-      yield request.delete("/employees/" + response.body.id + "/activation")
+      yield request.delete("/employees/" + response.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -207,7 +207,7 @@ describe('/employees private routes testing', function() {
 
     // try to activate an employee for a wron user
     const response3 =
-      yield request.delete("/employees/" + anotherResponse.body.id + "/activation")
+      yield request.delete("/employees/" + anotherResponse.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -263,7 +263,7 @@ describe('/employees private routes testing', function() {
     .send({email: email, name: "John Smith"})
     .end();
 
-    var employee_id = response.body.id;
+    var employee_id = response.body.employee.id;
     // try to load employee
     const response3 =
       yield request.get("/employees/" + employee_id)
@@ -289,7 +289,7 @@ describe('/employees private routes testing', function() {
     .send({email: email, name: "John Smith"})
     .end();
 
-    var employee_id = response.body.id;
+    var employee_id = response.body.employee.id;
 
 
     // register and authenticate another user
@@ -334,7 +334,7 @@ describe('/employees private routes testing', function() {
     .send({email: email, name: "Joe Doh"})
     .end();
 
-    var employeeId = response.body.id;
+    var employeeId = response.body.employee.id;
 
     email = uuid.v4() + "@example.com";
     var response1 =
@@ -393,7 +393,7 @@ describe('/employees private routes testing', function() {
     email = uuid.v4() + "@example.com";
     // try to update an employee for a wron user
     const response3 =
-      yield request.put("/employees/" + anotherResponse.body.id )
+      yield request.put("/employees/" + anotherResponse.body.employee.id )
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .send({email: email, name: "Joe Doh2"})
@@ -419,7 +419,7 @@ it('should be able to delete an employee', function*() {
   .end();
 
   const response2 =
-    yield request.delete("/employees/" + response.body.id)
+    yield request.delete("/employees/" + response.body.employee.id)
   .set('Content-Type', 'application/json')
   .set('Authorization', 'Bearer ' + token)
   .end();
@@ -473,7 +473,7 @@ it('should not be able to delete an employee which does not belong to current us
 
   // try to delete an employee for a wrong user
   const response3 =
-    yield request.delete("/employees/" + anotherResponse.body.id )
+    yield request.delete("/employees/" + anotherResponse.body.employee.id )
   .set('Content-Type', 'application/json')
   .set('Authorization', 'Bearer ' + token)
   .end();

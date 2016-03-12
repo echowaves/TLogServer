@@ -5,9 +5,7 @@ var massive = require("massive");
 
 var db = require('../consts').DB;
 
-var Report = function(properties) {
-}
-
+var Report = function(properties) {}
 
 // all years available on report for for particular user
 Report.prototype.yearsForUser = function (user_id) {

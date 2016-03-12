@@ -1,0 +1,127 @@
+// 'use strict';
+//
+// const supertest = require('co-supertest'); // SuperAgent-driven library for testing HTTP servers
+// const expect    = require('chai').expect;  // BDD/TDD assertion library
+// require('co-mocha');                     // enable support for generators in mocha tests using co
+//
+// var moment = require('moment');
+//
+//
+// process.env.NODE_ENV = 'test'
+// const app = require('../../app.js');
+// var db = require('../../consts').DB;
+//
+// const request = supertest.agent(app.listen());
+//
+// var assert = require('assert');
+// var User   = require('../../models/user'),
+// Employee   = require('../../models/employee'),
+// ActionCode = require('../../models/action_code');
+//
+// describe('/reports routes testing', function() {
+//   var activation_code, user, token;
+//   var actionCodes = new Array(5);
+//   var employees = new Array(5);
+//
+//   before(function *() {
+//     //cleanup users
+//     db.users.destroySync({});
+//     //cleanup employees
+//     db.employees.destroySync({});
+//     //cleanup checkins
+//     db.checkins.destroySync({});
+//     //cleanup actioncodes
+//     db.action_codes.destroySync({});
+//
+//     for(var i = 0; i < actionCodes.length; i++) {
+//       actionCodes[i] = db.action_codes.saveSync({code: '000'+i, description: "this is a dummy action code"+i+" just for testing"});
+//     }
+//
+//
+//     var userEmail = "user@example.com";
+//     var password = 'secret';
+//     user = new User({email: userEmail, password: password});
+//     user.save();
+//
+//     //authenticate user and obtain a token
+//     const resp =
+//     yield request.post('/auth')
+//     .set('Content-Type', 'application/json')
+//     .send({email: userEmail, password: password })
+//     .end();
+//     token = resp.body.token;
+//
+//     // add few employees    var employeeEmail = uuid.v4() + "@example.com";
+//     for(var i=0; i<employees.length; i++) {
+//       // add an employee
+//       const response =
+//       yield request.post('/employees')
+//       .set('Content-Type', 'application/json')
+//       .set('Authorization', 'Bearer ' + token)
+//       .send({
+//         email: "employee" + i + "@example.com",
+//         name: "employee" + i + " name"})
+//       .end();
+//
+//
+//       // employees[i] =
+//       //   new Employee({
+//       //     user_id: user.id,
+//       //     name: "employee" + i + " name",
+//       //     email: "employee" + i + "@example.com"});
+//       // employees[i].save();
+//     }
+//
+//     // add few checkins
+//     for(var i=0; i<employees.length; i++) {
+//       for(var j=0; j<actionCodes; j++) {
+//         var date = moment([2010 + i, j, 15]);
+//         var checkin = new Checkin(
+//           {
+//             email: employees[i].email,
+//             user_id: employee[i].user_id,
+//             checked_in_at: date,
+//             duration: i + j * 60,
+//             action_code_id: actionCodes[i].id
+//           }
+//         );
+//         console(checkin);
+//         checkin.save();
+//       }
+//     }
+//     console.log("done");
+//   });
+//
+//   it('should not be able to create checkin with missing parameters', function*() {
+//     // var response =
+//     // yield request.post('/employees/' + activation_code + '/checkins')
+//     // .set('Content-Type', 'application/json')
+//     // .end();
+//     // expect(response.status).to.equal(400, response.text);
+//     // expect(response.body).to.contain.keys('error');
+//     // expect(response.body.error).to.equal('parameters missing');
+//     //
+//     // response =
+//     // yield request.post('/employees/' + activation_code + '/checkins')
+//     // .set('Content-Type', 'application/json')
+//     // .send({checked_in_at: moment().toDate() })
+//     // .end();
+//     // expect(response.status).to.equal(400, response.text);
+//     // expect(response.body).to.contain.keys('error');
+//     // expect(response.body.error).to.equal('parameters missing');
+//     //
+//     // response =
+//     // yield request.post('/employees/' + activation_code + '/checkins')
+//     // .set('Content-Type', 'application/json')
+//     // .send({action_code_id: 1 })
+//     // .end();
+//     // expect(response.status).to.equal(400, response.text);
+//     // expect(response.body).to.contain.keys('error');
+//     // expect(response.body.error).to.equal('parameters missing');
+//
+//   });
+//
+//
+//
+//
+// });
