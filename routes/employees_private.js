@@ -101,7 +101,7 @@ module.exports = require('koa-router')()
   var employee = new Employee();
   var employees = employee.loadAllForUser(this.state.user.id);
   this.response.status = 200;
-  this.body = { "results" : employees };
+  this.body = { "employees" : employees };
 })
 
 

@@ -248,9 +248,9 @@ describe('/employees private routes testing', function() {
     expect(response3.status).to.equal(200, response.text);
     expect(response3.body).to.be.an('object');
     expect(response3.body).to.be.json;
-    expect(response3.body).to.contain.key("results");
-    expect(response3.body.results[0].user_id).to.equal(user.id);
-    expect(response3.body.results[1].user_id).to.equal(user.id);
+    expect(response3.body).to.contain.key("employees");
+    expect(response3.body.employees[0].user_id).to.equal(user.id);
+    expect(response3.body.employees[1].user_id).to.equal(user.id);
   });
 
   it('should be able to load an employee by id', function*() {
