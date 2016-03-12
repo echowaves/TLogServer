@@ -8,10 +8,9 @@ module.exports = require('koa-router')()
 
 // get all employess for current user
 .get('/reports/years', function *(next) {
-  var report = new Report();
-  var years = report.yearsForUser(this.state.user.id);
+  const years = new Report().yearsForUser(this.state.user.id);
   this.response.status = 200;
-  this.body = { "results" : years };
+  this.body = { "years" : years };
 })
 
 

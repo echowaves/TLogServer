@@ -97,36 +97,22 @@ describe('/reports routes testing', function() {
     // console.log("done");
   });
 
-  it('should not be able to create checkin with missing parameters', function*() {
-    // var response =
-    // yield request.post('/employees/' + activation_code + '/checkins')
-    // .set('Content-Type', 'application/json')
-    // .end();
-    // expect(response.status).to.equal(400, response.text);
-    // expect(response.body).to.contain.keys('error');
-    // expect(response.body.error).to.equal('parameters missing');
-    //
-    // response =
-    // yield request.post('/employees/' + activation_code + '/checkins')
-    // .set('Content-Type', 'application/json')
-    // .send({checked_in_at: moment().toDate() })
-    // .end();
-    // expect(response.status).to.equal(400, response.text);
-    // expect(response.body).to.contain.keys('error');
-    // expect(response.body.error).to.equal('parameters missing');
-    //
-    // response =
-    // yield request.post('/employees/' + activation_code + '/checkins')
-    // .set('Content-Type', 'application/json')
-    // .send({action_code_id: 1 })
-    // .end();
-    // expect(response.status).to.equal(400, response.text);
-    // expect(response.body).to.contain.keys('error');
-    // expect(response.body.error).to.equal('parameters missing');
-
+  it('should not be able to get years for unathenticated user', function*() {
+    var response =
+    yield request.get('/reports/years')
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response.status).to.equal(401, response.text);
   });
 
-
-
+  it('should be able to get years for user', function*() {
+    var response =
+    yield request.get('/reports/years')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body.years.length).to.equal(5);
+  });
 
 });
