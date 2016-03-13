@@ -11,7 +11,7 @@ var Report = function(properties) {}
 Report.prototype.yearsForUser = function (user_id) {
   // console.log(user_id);
   let results = db.runSync("select distinct(extract(year from checked_in_at)) from checkins where user_id = $1 ORDER BY date_part desc", [user_id]);
-  console.log(results);
+  // console.log(results);
   return results;
 }
 

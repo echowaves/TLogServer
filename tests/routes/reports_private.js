@@ -113,6 +113,7 @@ describe('/reports routes testing', function() {
     .end();
     expect(response.status).to.equal(200, response.text);
     expect(response.body.years.length).to.equal(5);
+    expect(response.body.years[0]).to.contain.keys('date_part');
   });
 
 });
