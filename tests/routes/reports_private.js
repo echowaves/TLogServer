@@ -116,4 +116,26 @@ describe('/reports routes testing', function() {
     expect(response.body.years[0]).to.contain.keys('date_part');
   });
 
+
+  it('should not be able to get months for unathenticated user', function*() {
+    var response =
+    yield request.get('/reports/months')
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response.status).to.equal(401, response.text);
+  });
+
+
+
+  it('should be able to get months for user and year', function*() {
+    var response =
+    yield request.get('/reports/months/2014')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body.months.length).to.equal(5);
+    expect(response.body.months[0]).to.contain.keys('date_part');
+  });
+
 });

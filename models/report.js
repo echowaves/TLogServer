@@ -15,4 +15,12 @@ Report.prototype.yearsForUser = function (user_id) {
   return results;
 }
 
+// all years available on report for for particular user
+Report.prototype.monthsForUserAndYear = function (user_id, year) {
+  // console.log(user_id);
+  let results = db.runSync("select distinct(extract(month from checked_in_at)) from checkins WHERE user_id = $1 and EXTRACT(YEAR FROM checked_in_at) = $2 ORDER BY date_part", [user_id, year]);
+  // console.log(results);
+  return results;
+}
+
 module.exports = Report;
