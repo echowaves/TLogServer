@@ -26,8 +26,8 @@ Report.prototype.monthsForUserAndYear = function (user_id, year) {
 // action codes durations for year, month, user
 Report.prototype.actionCodesDurationsByYearMonthForUser = function (user_id, year, month) {
   // console.log(user_id);
-  let results = db.runSync("SELECT e.name, sum(duration) FROM checkins c, employees e WHERE c.email = e.email and c.user_id = $1  and EXTRACT(YEAR FROM checked_in_at) = $2  and EXTRACT(MONTH FROM checked_in_at) = $3    GROUP BY (e.name) ORDER BY e.name", [user_id, year, month]);
-  // console.log(results);
+  let results = db.runSync("SELECT a.id, a.code, a.description, round(sum(EXTRACT(epoch FROM c.duration))/3600) AS sum FROM checkins c, action_codes a WHERE a.id = c.action_code_id and c.user_id = $1  and EXTRACT(YEAR FROM checked_in_at) = $2  and EXTRACT(MONTH FROM checked_in_at) = $3 GROUP BY (a.id) ORDER BY a.code, a.description",  [user_id, year, month]);
+// console.log(results);
   return results;
 }
 
@@ -35,7 +35,7 @@ Report.prototype.actionCodesDurationsByYearMonthForUser = function (user_id, yea
 // employees durations for year, month, user
 Report.prototype.employeeDurationsByYearMonthForUser = function (user_id, year, month) {
   // console.log(user_id);
-  let results = db.runSync("SELECT e.email, e.name, round(sum(EXTRACT(epoch FROM duration))/3600) AS sum FROM checkins c, employees e WHERE c.email = e.email and c.user_id = $1  and EXTRACT(YEAR FROM checked_in_at) = $2  and EXTRACT(MONTH FROM checked_in_at) = $3    GROUP BY (e.email, e.name) ORDER BY e.name", [user_id, year, month]);
+  let results = db.runSync("SELECT e.email, e.name, round(sum(EXTRACT(epoch FROM c.duration))/3600) AS sum FROM checkins c, employees e WHERE c.email = e.email and c.user_id = $1  and EXTRACT(YEAR FROM checked_in_at) = $2  and EXTRACT(MONTH FROM checked_in_at) = $3    GROUP BY (e.email, e.name) ORDER BY e.name", [user_id, year, month]);
   // console.log(results);
   return results;
 }

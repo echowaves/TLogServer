@@ -139,9 +139,32 @@ describe('/reports routes testing', function() {
   });
 
 
+  it('should not be able to get action_codes duration for unathenticated user', function*() {
+    var response =
+    yield request.get('/reports/action_codes/2012/2')
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response.status).to.equal(401, response.text);
+  });
+
+  it('should be able to get employees duration for user and year and month', function*() {
+    var response =
+    yield request.get('/reports/action_codes/2012/2')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response.status).to.equal(200, response.text);
+    expect(response.body.action_codes.length).to.equal(1);
+    expect(response.body.action_codes[0].code).to.equal('0001');
+    expect(response.body.action_codes[0].sum).to.equal(2);
+  });
+
+
+
+
   it('should not be able to get employees duration for unathenticated user', function*() {
     var response =
-    yield request.get('/reports/months')
+    yield request.get('/reports/employees/2012/2')
     .set('Content-Type', 'application/json')
     .end();
     expect(response.status).to.equal(401, response.text);

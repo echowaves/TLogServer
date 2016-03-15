@@ -21,6 +21,15 @@ module.exports = require('koa-router')()
   this.body = { "months" : months };
 })
 
+// get action_codes durations for year, month, user
+.get('/reports/action_codes/:year/:month', function *(next) {
+  let year = this.params.year;
+  let month = this.params.month;
+  const action_codes = new Report().actionCodesDurationsByYearMonthForUser(this.state.user.id, year, month);
+  this.response.status = 200;
+  this.body = { "action_codes" : action_codes };
+})
+
 
 // get employees durations for year, month, user
 .get('/reports/employees/:year/:month', function *(next) {
