@@ -23,4 +23,16 @@ Report.prototype.monthsForUserAndYear = function (user_id, year) {
   return results;
 }
 
+// employees durations for year, month, user
+Report.prototype.employeeDurationsByYearMonthForUser = function (user_id, year, month) {
+  // console.log(user_id);
+  let results = db.runSync("SELECT e.name, sum(duration) FROM checkins c, employees e WHERE c.email = e.email and c.user_id = $1  and EXTRACT(YEAR FROM checked_in_at) = $2  and EXTRACT(MONTH FROM checked_in_at) = $3    GROUP BY (e.name) ORDER BY e.name", [user_id, year, month]);
+  // console.log(results);
+  return results;
+}
+
+
+
+// SELECT   e.name, sum(duration) FROM checkins c, employees e WHERE c.email = e.email and c.user_id = 8216 GROUP BY (e.name) ORDER BY e.name;
+
 module.exports = Report;

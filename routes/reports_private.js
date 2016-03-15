@@ -22,6 +22,16 @@ module.exports = require('koa-router')()
 })
 
 
+// get employees durations for year, month, user
+.get('/reports/employees/:year/:month', function *(next) {
+  let year = this.params.year;
+  let month = this.params.month;
+  const employees = new Report().employeeDurationsByYearMonthForUser(this.state.user.id, year, month);
+  this.response.status = 200;
+  this.body = { "employees" : employees };
+})
+
+
 
 
 .routes();
