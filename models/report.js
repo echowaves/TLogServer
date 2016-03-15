@@ -33,7 +33,7 @@ Report.prototype.actionCodesDurationsByYearMonthForUser = function (user_id, yea
 
 
 // employees durations for year, month, user
-Report.prototype.employeeDurationsByYearMonthForUser = function (user_id, year, month) {
+Report.prototype.employeesDurationsByYearMonthForUser = function (user_id, year, month) {
   // console.log(user_id);
   let results = db.runSync("SELECT e.email, e.name, round(sum(EXTRACT(epoch FROM c.duration))/3600) AS sum FROM checkins c, employees e WHERE c.email = e.email and c.user_id = $1  and EXTRACT(YEAR FROM checked_in_at) = $2  and EXTRACT(MONTH FROM checked_in_at) = $3    GROUP BY (e.email, e.name) ORDER BY e.name", [user_id, year, month]);
   // console.log(results);

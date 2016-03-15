@@ -147,7 +147,7 @@ describe('/reports routes testing', function() {
     expect(response.status).to.equal(401, response.text);
   });
 
-  it('should be able to get employees duration for user and year and month', function*() {
+  it('should be able to get action_codes duration for user and year and month', function*() {
     var response =
     yield request.get('/reports/action_codes/2012/2')
     .set('Content-Type', 'application/json')
