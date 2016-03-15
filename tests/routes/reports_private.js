@@ -156,7 +156,7 @@ describe('/reports routes testing', function() {
     expect(response.status).to.equal(200, response.text);
     expect(response.body.employees.length).to.equal(1);
     expect(response.body.employees[0].name).to.equal('employee2 name');
-    expect(response.body.employees[0].sum.hours).to.equal(2);
+    expect(response.body.employees[0].sum).to.equal(2);
   });
 
 
