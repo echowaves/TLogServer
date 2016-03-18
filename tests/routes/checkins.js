@@ -53,7 +53,7 @@ describe('/checkins routes testing', function() {
     yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith"})
+    .send({email: email, name: "John Smith", is_subcontractor: false})
     .end();
 
     // and activate the employee
