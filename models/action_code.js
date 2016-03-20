@@ -45,5 +45,10 @@ ActionCode.prototype.delete = function () {
   db.action_codes.destroySync({id: this.id});
 }
 
+// load all ActionCodes for employee
+ActionCode.prototype.loadAllForEmployee = function (employee_id) {
+  return db.runSync("select * from action_codes where id in (select action_code_id from employees_action_codes where employee_id  = $1)", [employee_id]);
+}
+
 
 module.exports = ActionCode;

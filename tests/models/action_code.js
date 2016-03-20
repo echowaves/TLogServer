@@ -2,6 +2,7 @@
 
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
+var db = require('../../consts').DB;
 
 
 var assert   = require('assert'),
@@ -13,6 +14,10 @@ var uuid = require('uuid');
 
 
 describe('ActionCode model testing', function() {
+  before(function *() {
+    //clean all action codes first  
+    db.action_codes.destroySync({});
+  })
 
   it('should create an action_code', function *() {
     var actionCode = new ActionCode();

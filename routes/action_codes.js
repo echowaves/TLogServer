@@ -30,7 +30,16 @@ module.exports = require('koa-router')()
   var results = new ActionCode().lookup(this.params.lookup_string);
 
   this.response.status = 200;
-  this.body = { "result" : results };
+  this.body = { "results" : results };
 })
+
+// list all action codes specific to employee
+.get('/employees/:employee_id/actioncodes', function *(next) {
+  var results = new ActionCode().loadAllForEmployee(this.params.employee_id);
+
+  this.response.status = 200;
+  this.body = { "results" : results };
+})
+
 
 .routes();

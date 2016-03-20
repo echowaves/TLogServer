@@ -3,6 +3,7 @@
 var uuid = require('uuid');
 
 var Employee   = require('../models/employee');
+var EmployeesActionCode   = require('../models/employees_action_code');
 
 module.exports = require('koa-router')()
 
@@ -146,6 +147,38 @@ module.exports = require('koa-router')()
 
 
 })
+
+
+
+//employee specific action codes
+// add action code to employee
+.post('/employees/:employee_id/actioncodes/:action_code_id', function *(next) {
+    var employeesActionCode =
+      new EmployeesActionCode(
+        {
+          employee_id: this.params.employee_id,
+          action_code_id: this.params.action_code_id
+        });
+    employeesActionCode.save();
+
+    this.response.status = 200;
+    this.body = { "result": "employeesActionCode successfully created"};
+})
+
+// delete action code from employee
+.delete('/employees/:employee_id/actioncodes/:action_code_id', function *(next) {
+  var employeesActionCode =
+    new EmployeesActionCode(
+      {
+        employee_id: this.params.employee_id,
+        action_code_id: this.params.action_code_id
+      });
+  employeesActionCode.delete();
+
+  this.response.status = 200;
+  this.body = { "result": "employeesActionCode successfully deleted"};
+})
+
 
 
 .routes();
