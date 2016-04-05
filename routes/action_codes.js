@@ -38,7 +38,7 @@ module.exports = require('koa-router')()
   var results = new ActionCode().loadAllForEmployee(this.params.employee_id);
 
   this.response.status = 200;
-  this.body = { "results" : results };
+  this.body = { "actionCodes" : results };
 })
 
 

@@ -125,7 +125,7 @@ describe('/actioncodes route testing', function() {
     .end();
     expect(response2.status).to.equal(200, response2.text);
     expect(response2.body).to.be.an('object');
-    expect(response2.body.results.length).to.equal(1);
+    expect(response2.body.actionCodes.length).to.equal(1);
 
     const response3 =
     yield request.delete('/employees/' + employee_id + '/actioncodes/' + action_code_id)
@@ -142,7 +142,7 @@ describe('/actioncodes route testing', function() {
     .end();
     expect(response4.status).to.equal(200, response4.text);
     expect(response4.body).to.be.an('object');
-    expect(response4.body.results.length).to.equal(0);
+    expect(response4.body.actionCodes.length).to.equal(0);
 
   });
 
