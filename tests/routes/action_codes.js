@@ -60,7 +60,7 @@ describe('/actioncodes route testing', function() {
     .set('Content-Type', 'application/json')
     .end();
 
-    var actionCode = response.body.results[0];
+    var actionCode = response.body.actionCodes[0];
 
     const response1 =
     yield request.get('/actioncodes/' + actionCode.id)
@@ -81,7 +81,7 @@ describe('/actioncodes route testing', function() {
 
     expect(response.status).to.equal(200, response.text);
     expect(response.body).to.be.an('object');
-    expect(response.body.results.length).to.equal(2);
+    expect(response.body.actionCodes.length).to.equal(2);
 
   });
 
@@ -108,7 +108,7 @@ describe('/actioncodes route testing', function() {
     .set('Content-Type', 'application/json')
     .end();
 
-    var actionCode = response.body.results[0];
+    var actionCode = response.body.actionCodes[0];
 
     var action_code_id = actionCode.id;
     var employee_id = 100;
