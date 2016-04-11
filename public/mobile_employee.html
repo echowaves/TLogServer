@@ -8,7 +8,7 @@
     </script>
 
     <meta id="apple-itunes-app" name="apple-itunes-app" content="app-id=782010386">
-    <link rel="alternate" href="android-app://com.android.echowaves/http/echowaves.com" />
+    <link rel="alternate" href="android-app://com.android.echowaves/http/tlog.us" />
 
   </head>
   <body>
@@ -32,15 +32,9 @@
       </div>
     </div>
 
-    <script type="text/javascript">
-      var CLOSURE_NO_DEPS = true;
-    </script>
     <script src="/js/colors.js" type="text/javascript"></script>
     <script src="/js/jquery-2.0.3.min.js" type="text/javascript"></script>
     <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-    <script src="/js/echowaves-cljs.js" type="text/javascript"></script>
-    <!--script src="/js/blends.js" type="text/javascript"></script-->
-    <script src="/js/waves.js" type="text/javascript"></script>
     <script>
       site.init();
     </script>
@@ -113,7 +107,7 @@ window.onload = function(){
 
     response = "You are tlogging on Android.";
 
-    // window.location = "http://echowaves.com/android_is_not_installed.html?token=" + getQueryVariable('token');
+    window.location = "tlog://employee?activation_code=" + getQueryVariable('activation_code');
 
   } else if (deviceDetection.device == 'iPhone' || deviceDetection.device == 'iPad' || deviceDetection.device == 'Android') {
 
@@ -121,7 +115,7 @@ window.onload = function(){
 
     setTimeout(function() {
       if (+new Date - clickedAt < 2000) {
-        window.location = "itms-apps://itunes.apple.com/us/app/echowaves/id782010386?token=" + getQueryVariable('token');
+        window.location = "itms-apps://itunes.apple.com/us/app/echowaves/id782010386?activation_code=" + getQueryVariable('activation_code');
       }
     }, 500);
     window.location = "tlog://employee?activation_code=" + getQueryVariable('activation_code');

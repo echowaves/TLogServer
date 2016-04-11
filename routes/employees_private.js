@@ -5,6 +5,14 @@ var uuid = require('uuid');
 var Employee   = require('../models/employee');
 var EmployeesActionCode   = require('../models/employees_action_code');
 
+var SEND_GRID_API_USER     = require('../consts').SEND_GRID_API_USER;
+var SEND_GRID_API_PASSWORD = require('../consts').SEND_GRID_API_PASSWORD;
+
+var sendgrid  = require('sendgrid')(SEND_GRID_API_USER, SEND_GRID_API_PASSWORD);
+
+var TL_HOST = require('../consts').TL_HOST;
+
+
 module.exports = require('koa-router')()
 
 //create a new employee
@@ -42,6 +50,24 @@ module.exports = require('koa-router')()
           activation_code: activation_code
         });
     employee.save();
+
+
+    var email = new sendgrid.Email();
+    email.addTo(employeeToLoad.email);
+    email.subject = "TLog Activation";
+    email.from = 'tlog@echowaves.com';
+    email.text = "Install TLog application and Sign in by clickin on the following link: " + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code ;
+    email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your mobile device.</body></html>";
+
+    sendgrid.send(email, function(err, json) {
+      if(err) {
+        console.log("error sending activation email through sendgrid to " + employeeToLoad.email);
+        console.log(err);
+        console.log(err);
+        console.log(json);
+      }
+    });
+
 
     this.response.status = 200;
     this.body = { "activation_code" : employee.activation_code};
