@@ -15,5 +15,5 @@ module.exports = Object.freeze({
         "postgres://root:root@localhost/tlog_test"}),
     SEND_GRID_API_USER: process.env.TLOG_SEND_GRID_API_USER || "tlog",
     SEND_GRID_API_PASSWORD: process.env.TLOG_SEND_GRID_API_PASSWORD || "echoKuku90",
-    TL_HOST: process.env.TLOG_TL_HOST || "http://localhost:3000"
+    TL_HOST: process.env.TLOG_TL_HOST || "http://tlog.us:3000"
 });

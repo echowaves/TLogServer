@@ -59,15 +59,20 @@ module.exports = require('koa-router')()
     email.text = "Install TLog application and Sign in by clickin on the following link: " + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code ;
     email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your mobile device.</body></html>";
 
-    sendgrid.send(email, function(err, json) {
-      if(err) {
-        console.log("error sending activation email through sendgrid to " + employeeToLoad.email);
-        console.log(err);
-        console.log(err);
-        console.log(json);
-      }
-    });
 
+    var isInTest = typeof global.it === 'function';
+    if( isInTest != true) {// only send email in non test mode
+      sendgrid.send(email, function(err, json) {
+        if(err) {
+          console.log("error sending activation email through sendgrid to: " + employeeToLoad.email);
+          console.log(err);
+          console.log(err);
+          console.log(json);
+        } else {
+          console.log("successfully sent activation email to: " + employeeToLoad.email);
+        }
+      });
+    };
 
     this.response.status = 200;
     this.body = { "activation_code" : employee.activation_code};
