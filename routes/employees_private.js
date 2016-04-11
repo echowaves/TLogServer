@@ -56,8 +56,8 @@ module.exports = require('koa-router')()
     email.addTo(employeeToLoad.email);
     email.subject = "TLog Activation";
     email.from = 'tlog@echowaves.com';
-    email.text = "Install TLog application and Sign in by clickin on the following link: " + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code ;
-    email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your mobile device.</body></html>";
+    email.text = "Install TLog application and Sign in on your smart phone by clickin on the following link: " + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code ;
+    email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your smart phone.</body></html>";
 
 
     var isInTest = typeof global.it === 'function';
