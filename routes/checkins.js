@@ -62,6 +62,8 @@ module.exports = require('koa-router')()
         action_code_id: action_code_id
       }
     );
+
+    // console.log(checkin);
     checkin.save();
     this.response.status = 200;
     this.body = { "checkin" : checkin };

@@ -4,11 +4,10 @@ var massive = require("massive");
 
 var db = require('./database.json');
 
-
-
-
 module.exports = Object.freeze({
     SECRET: 'tradeogsha-secret',
+    API_VERSION_ANDROID: '1.0.0',
+    API_VERSION_IOS:     '1.0.0',
     DB: massive.connectSync(
       {connectionString: process.env.TLOG_DB_CONNECTION
         ||

@@ -10,6 +10,7 @@ var bodyParser = require('koa-bodyparser');
 const app = module.exports = require('koa')()
   .use(serve('./public'))
   .use(bodyParser())
+  .use(require('./routes/common'))
   .use(require('./routes/auth'))
   .use(require('./routes/users_public'))
   .use(require('./routes/action_codes'))
