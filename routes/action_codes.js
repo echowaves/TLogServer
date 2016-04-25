@@ -1,5 +1,4 @@
 'use strict';
-let parse = require('co-body');
 var uuid = require('uuid');
 
 var ActionCode   = require('../models/action_code');
