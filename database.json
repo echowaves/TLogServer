@@ -20,7 +20,7 @@
     "user": {"ENV": "DB_USER"},
     "password": {"ENV": "DB_PASS"},
     "host": {"ENV": "DB_HOST"},
-    "database": "tlog",
-    "schema": "tlog"
+    "database": "tlog_prod",
+    "schema": "tlog_prod"
   }
 }
