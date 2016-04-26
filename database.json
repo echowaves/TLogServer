@@ -17,10 +17,10 @@
   },
   "prod": {
     "driver": "pg",
-    "user": {"ENV": "DB_USER"},
-    "password": {"ENV": "DB_PASS"},
-    "host": {"ENV": "DB_HOST"},
-    "database": {"ENV": "DB_NAME"},
-    "schema": {"ENV": "DB_NAME"}
+    "user": {"ENV": "TLOG_DB_USER"},
+    "password": {"ENV": "TLOG_DB_PASS"},
+    "host": {"ENV": "TLOG_DB_HOST"},
+    "database": {"ENV": "TLOG_DB_NAME"},
+    "schema": {"ENV": "TLOG_DB_NAME"}
   }
 }
