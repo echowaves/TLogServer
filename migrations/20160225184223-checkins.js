@@ -7,7 +7,7 @@ exports.up = function(db, callback) {
      id:              { type: 'int', primaryKey: true, autoIncrement: true },
      email:           { type: 'string', notNull: true, unique: false },
      user_id:         { type: 'int',    notNull: true, unique: false },
-     checked_in_at:   { type: 'datetime',   notNull: true, unique: false },
+     checked_in_at:   { type: 'timestamp',   notNull: true, unique: false },
      duration:        { type: 'interval',   notNull: true, unique: false },
      action_code_id:  { type: 'int',    notNull: true, unique: false }
    }, createIndexes);
