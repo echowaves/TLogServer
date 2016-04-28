@@ -101,7 +101,14 @@ window.onload = function(){
 
     response = "You are tlogging on Android.";
 
-    window.location = "https://play.google.com/store/apps/details?id=com.echowaves.tlog&activation_code=" + getQueryVariable('activation_code');
+    setTimeout(function() {
+      if (+new Date - clickedAt < 2000) {
+
+        window.location = "https://play.google.com/store/apps/details?id=com.echowaves.tlog&activation_code=" + getQueryVariable('activation_code');
+      }
+    }, 500);
+    window.location = "tlog://employee?activation_code=" + getQueryVariable('activation_code');
+
 
   } else if (deviceDetection.device == 'iPhone' || deviceDetection.device == 'iPad' || deviceDetection.device == 'Android') {
 
