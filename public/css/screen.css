@@ -1,0 +1,292 @@
+h1 {
+    text-align: center;
+    font-size:250%;
+    font-family: Comic Sans MS
+}
+h2 {
+    padding: 5px;
+    margin: 8px;
+    font-size:150%
+}
+h3 {
+    padding: 5px;
+    margin: 8px;
+}
+p {
+    padding: 5px;
+    margin: 8px;
+    font-size: 20px;
+}
+p b {
+    font-size: 22px;
+    font-weight: bold; 
+}
+
+label {
+    width:150px;
+    float:left;
+}
+
+.error {
+	color: red;
+}
+
+.step-container {
+    margin: 20px 20px 0 0;  
+    overflow: hidden;
+    width: 100%;
+}
+
+.step-image img {
+    padding: 2px;
+    margin: 3px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000000;
+    box-shadow: 4px 4px 6px -1px #222;
+    -moz-box-shadow: 4px 4px 6px -1px #222;
+    -webkit-box-shadow: 4px 4px 6px -1px #222;
+    background: #e0e0f0;
+    display: -moz-inline-stack;
+    display: inline-block;
+
+    float: left;
+    clear:left;
+}
+.step-text {    
+    width: 65%;
+    float:right;
+    /* font-weight: bold; */
+    font-size: 25;
+    clear:right;
+    font-family: Comic Sans MS, cursive, sans-serif;
+}
+
+
+
+.thumbnail {
+    /* float:left; */
+    padding: 2px;
+    margin: 3px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#000000;
+    box-shadow:         4px 4px 6px -1px #222;        
+    -moz-box-shadow:    4px 4px 6px -1px #222;
+    -webkit-box-shadow: 4px 4px 6px -1px #222;    
+    background: #e0e0f0;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: top;
+    /* min-height: 170px; */
+}
+
+/* .content { */
+/*     clear: both;  */
+/*     padding: 20px; */
+/* } */
+#sign_up_content {
+    float:right;
+    padding: 5px;
+    margin: 8px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#ccc;
+    box-shadow:         4px 4px 6px -1px #222;        
+    -moz-box-shadow:    4px 4px 6px -1px #222;
+    -webkit-box-shadow: 4px 4px 6px -1px #222;    
+    clear: both; 
+    padding: 20px;
+}
+
+.menuitem {    
+    color: #D1F0DA;
+    font-size: 15px;
+    font-weight:bold;
+	
+    float: left;
+    list-style: none;        
+    padding: 5px;
+    margin: 5px;    
+}
+
+#wavemenu {
+	background-color: #FF6600;	
+	width: 100%;
+	border-bottom-color: #dedede;
+	line-height: 30px;
+	border:1px solid;
+	border-color:#ccc;
+	
+	-webkit-box-shadow: 0 8px 6px -6px #555;
+	-moz-box-shadow: 0 8px 6px -6px #555;
+	box-shadow: 0 8px 6px -6px #555;
+	
+	margin-bottom: 5px;
+	display: inline-block;;
+}
+
+#wavemenu a:link {text-decoration: none; color: white;}
+#wavemenu a:hover {text-decoration: underline; color: white;}
+#wavemenu a:visited {text-decoration: none; color: white;}
+
+input[type=submit] {
+    background: #99A699;
+    padding: 5px 8px 5px;
+    
+    color: #fff;
+    font-weight: bold;
+
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-box-shadow: 0 1px 3px #999;
+    -webkit-box-shadow: 0 1px 3px #999;
+
+    text-shadow: 0 -1px 1px #222;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+}
+
+
+/*------------------------------------------------------------*/
+/* improved layout                                            */
+/*------------------------------------------------------------*/
+    html, body, span, applet, object, iframe,
+    h3, h4, h5, h6, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+    display: block;
+    }
+
+    ol, ul {
+        list-style: none;
+    }
+    blockquote, q {
+        quotes: none;
+    }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+body {
+    line-height: 1;
+    background: #FFBB66;
+    Font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color:#333
+}
+
+/* p { */
+/*     padding: 10px; */
+/* } */
+
+#wrapper {
+    margin: 0 auto;
+    width: 1000px;
+}
+
+#contentwrap {
+    width: 750px;
+    float: left;
+    margin: 0 auto;
+}
+
+#content {
+    padding: 10px;
+    background: #eeeeee;
+    border-radius: 5px;
+    border: 1px solid #b5c5b5;
+    margin: 5px;
+    padding: 10px;
+    box-shadow:         2px 2px 3px -1px #222;        
+    -moz-box-shadow:    2px 2px 3px -1px #222;
+    -webkit-box-shadow: 2px 2px 3px -1px #222;    
+}
+
+#rightcolumnwrap {
+    width: 250px;
+    float: left;
+    margin: 0 auto;
+}
+
+#rightcolumn {
+    background: #eeeeee;
+    border-radius: 5px;
+    border: 1px solid #c5b5c5;
+    margin: 5px;
+    padding: 10px;
+    box-shadow:         2px 2px 3px -1px #222;        
+    -moz-box-shadow:    2px 2px 3px -1px #222;
+    -webkit-box-shadow: 2px 2px 3px -1px #222;    
+}
+
+#footerwrap {
+    width: 750px;
+    float: left;
+    margin: 0 auto;
+    clear: both;
+}
+
+#footer {
+    height: 15px;
+    font-size:10px;
+    background: #FF6600;
+    border-radius: 5px;
+    border: 1px solid #b5b5b5;
+    margin: 5px;
+    padding: 10px;
+    box-shadow:         2px 2px 3px -1px #222;        
+    -moz-box-shadow:    2px 2px 3px -1px #222;
+    -webkit-box-shadow: 2px 2px 3px -1px #222;    
+}
+
+
+#unconfirmed-blends {
+    background: #c9c9c9;
+}
+.my-blends {
+    font-size:15px;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.ui-autocomplete-loading {
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+/* hover over menues */
+.trigger ul.menu
+{
+    display: none;
+}
+.trigger:hover ul.menu
+{
+    display: block;
+}
+/* --------------------------- */
+
