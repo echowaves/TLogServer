@@ -7,13 +7,13 @@
       var context = "";
     </script>
 
-    <meta id="apple-itunes-app" name="apple-itunes-app" content="app-id=782010386">
+    <meta id="apple-itunes-app" name="apple-itunes-app" content="app-id=1108698790">
     <link rel="alternate" href="android-app://com.android.echowaves/http/tlog.us" />
 
   </head>
   <body>
 
-      <h1>Trade Log</h1>
+      <h1>MyTradeLog</h1>
 
     <div id="wrapper">
 
@@ -115,7 +115,8 @@ window.onload = function(){
 
     setTimeout(function() {
       if (+new Date - clickedAt < 2000) {
-        window.location = "itms-apps://itunes.apple.com/us/app/echowaves/id782010386?activation_code=" + getQueryVariable('activation_code');
+
+        window.location = "itms-apps://itunes.apple.com/us/app/mytradelog/id1108698790?activation_code=" + getQueryVariable('activation_code');
       }
     }, 500);
     window.location = "tlog://employee?activation_code=" + getQueryVariable('activation_code');
