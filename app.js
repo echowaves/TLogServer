@@ -8,7 +8,6 @@ var serve = require('koa-static-folder');
 var bodyParser = require('koa-bodyparser');
 
 const app = module.exports = require('koa')()
-  .use(serve('./favicon.ico'))
   .use(serve('./public'))
   .use(bodyParser())
   .use(require('./routes/common'))
