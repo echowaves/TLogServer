@@ -12,7 +12,6 @@ module.exports = require('koa-router')()
 .post('/auth', function *(next) {
   let data = this.request.body;
   var user = new User({email: data.email, password: data.password});
-console.log("trying to authenticate: " + data.email);
 
   var token = user.validateUserAndGenerateToken();
 

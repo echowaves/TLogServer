@@ -109,6 +109,29 @@ describe('/checkins routes testing', function() {
   });
 
 
+  it('should not be able to create checkin with date in the future', function*() {
+    const checked_in_at = moment().add(1, 's').format();
+    const response =
+    yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    expect(response.status).to.equal(403, response.text);
+    expect(response.body).to.contain.keys('error');
+  });
+
+
+  it('should not be able to create checkin with date more than 7 days in the past', function*() {
+    const checked_in_at = moment().subtract(7, 'd').subtract(1, 's').format();
+    const response =
+    yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    expect(response.status).to.equal(403, response.text);
+    expect(response.body).to.contain.keys('error');
+  });
+
 
   it('should be able to get a particuar checkin', function*() {
     const checked_in_at = moment().format();
@@ -189,7 +212,7 @@ describe('/checkins routes testing', function() {
     .end();
     const checkin_id = response.body.checkin.id;
 
-    checked_in_at = moment().add(15, 'm').format();
+    checked_in_at = moment().subtract(15, 'm').format();
     const duration = moment.duration(3, 'hours').asMilliseconds();
 
     const response1 =
@@ -202,7 +225,77 @@ describe('/checkins routes testing', function() {
     expect(moment(response1.body.checkin.checked_in_at).format()).to.equal(checked_in_at);
     expect(moment.duration(response1.body.checkin.duration).asMilliseconds()).to.equal(duration);
     expect(response1.body.checkin.action_code_id).to.equal(2);
+  });
 
+
+  it('should not be able to update more then 7 days old checkin', function*() {
+    var checked_in_at = moment().format();
+    const response =
+    yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+
+    const checkin_id = response.body.checkin.id;
+
+    db.run("update checkins set checked_in_at=$1 WHERE id=$2", [moment().subtract(8, 'd').format(), checkin_id]);
+
+    checked_in_at = moment().subtract(15, 'm').format();
+    const duration = moment.duration(3, 'hours').asMilliseconds();
+
+    const response1 =
+    yield request.put('/employees/' + activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, duration: duration, action_code_id: 2 })
+    .end();
+    expect(response1.status).to.equal(403, response1.text);
+    expect(response1.body).to.contain.keys('error');
+  });
+
+
+  it('should not be able to update checkin with a future date', function*() {
+    var checked_in_at = moment().format();
+    const response =
+    yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+
+    const checkin_id = response.body.checkin.id;
+
+    checked_in_at = moment().add(15, 'm').format();
+    const duration = moment.duration(3, 'hours').asMilliseconds();
+
+    const response1 =
+    yield request.put('/employees/' + activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, duration: duration, action_code_id: 2 })
+    .end();
+    expect(response1.status).to.equal(403, response1.text);
+    expect(response1.body).to.contain.keys('error');
+  });
+
+
+  it('should not be able to update checkin with a more that 7 days ago date ', function*() {
+    var checked_in_at = moment().format();
+    const response =
+    yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+
+    const checkin_id = response.body.checkin.id;
+
+    checked_in_at = moment().subtract(8, 'd').format();
+    const duration = moment.duration(3, 'hours').asMilliseconds();
+
+    const response1 =
+    yield request.put('/employees/' + activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, duration: duration, action_code_id: 2 })
+    .end();
+    expect(response1.status).to.equal(403, response1.text);
+    expect(response1.body).to.contain.keys('error');
   });
 
 
@@ -235,8 +328,6 @@ describe('/checkins routes testing', function() {
     .set('Authorization', 'Bearer ' + token)
     .end();
     const another_activation_code = response3.body.activation_code;
-
-
 
     const response4 =
     yield request.put('/employees/' + another_activation_code + '/checkins/' + checkin_id)
@@ -278,6 +369,26 @@ describe('/checkins routes testing', function() {
     expect(response1.body.result).to.equal('checkin deleted');
   });
 
+
+  it('should not be able to delete checkin more than 7 days old', function*() {
+    var checked_in_at = moment().format();
+
+    const response =
+    yield request.post('/employees/' + activation_code + '/checkins')
+    .set('Content-Type', 'application/json')
+    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    .end();
+    const checkin_id = response.body.checkin.id;
+
+    db.run("update checkins set checked_in_at=$1 WHERE id=$2", [moment().subtract(8, 'd').format(), checkin_id]);
+
+    const response1 =
+    yield request.delete('/employees/' + activation_code + '/checkins/' + checkin_id)
+    .set('Content-Type', 'application/json')
+    .end();
+    expect(response1.status).to.equal(403, response1.text);
+    expect(response1.body).to.contain.keys('error');
+  });
 
 
   it('should not be able to delete checkin of the wrong employee', function*() {
@@ -334,7 +445,7 @@ describe('/checkins routes testing', function() {
   it('should be able to get checkins for an employee', function*() {
     // let's create 100 checkins
     for(var i = 0; i < 110; i++) {
-      const checked_in_at = moment().add( i, 's').format();
+      const checked_in_at = moment().subtract( i, 's').format();
       const response =
       yield request.post('/employees/' + activation_code + '/checkins')
       .set('Content-Type', 'application/json')

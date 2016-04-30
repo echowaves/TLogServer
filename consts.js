@@ -18,5 +18,6 @@ module.exports = Object.freeze({
       }),
     SEND_GRID_API_USER: process.env.TLOG_SEND_GRID_API_USER ,
     SEND_GRID_API_PASSWORD: process.env.TLOG_SEND_GRID_API_PASSWORD ,
-    TL_HOST: process.env.TLOG_HOST
+    TL_HOST: process.env.TLOG_HOST,
+    TL_TEST_MODE: process.env.TL_TEST_MODE || false
 });

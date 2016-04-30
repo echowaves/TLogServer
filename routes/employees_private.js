@@ -11,6 +11,7 @@ var SEND_GRID_API_PASSWORD = require('../consts').SEND_GRID_API_PASSWORD;
 var sendgrid  = require('sendgrid')(SEND_GRID_API_USER, SEND_GRID_API_PASSWORD);
 
 var TL_HOST = require('../consts').TL_HOST;
+var TL_TEST_MODE = require('../consts').TL_TEST_MODE;
 
 
 module.exports = require('koa-router')()
@@ -60,8 +61,7 @@ module.exports = require('koa-router')()
     email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your smart phone.</body></html>";
 
 
-    var isInTest = typeof global.it === 'function';
-    if( isInTest != true) {// only send email in non test mode
+    if(TL_TEST_MODE == false) {// only send email in non test mode
       sendgrid.send(email, function(err, json) {
         if(err) {
           console.log("error sending activation email through sendgrid to: " + employeeToLoad.email);

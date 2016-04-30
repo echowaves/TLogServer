@@ -6,7 +6,6 @@ require('co-mocha');                     // enable support for generators in moc
 
 var moment = require('moment');
 
-
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 var db = require('../../consts').DB;
@@ -75,7 +74,6 @@ describe('/reports routes testing', function() {
       .end();
 
       employees[i].activation_code = response1.body.activation_code;
-      // console.log(employees[i]);
     }
 
     // add few checkins
@@ -86,17 +84,20 @@ describe('/reports routes testing', function() {
         const response =
         yield request.post('/employees/' + employees[i].activation_code + '/checkins')
         .set('Content-Type', 'application/json')
-        .send({checked_in_at: date, action_code_id: actionCodes[j].id })
+        .send({checked_in_at: moment(new Date()), action_code_id: actionCodes[j].id })
         .end();
 
-        const response1 =
-        yield request.put('/employees/' + employees[i].activation_code + '/checkins/' + response.body.checkin.id)
-        .set('Content-Type', 'application/json')
-        .send({checked_in_at: date, action_code_id: actionCodes[j].id, duration: i * j * 60 * 60 + 125})
-        .end();
+
+        db.run("update checkins set checked_in_at=$1, duration=$2 WHERE id=$3", [date.format(), i * j * 60 * 60 + 125, response.body.checkin.id]);
+
+        // const response1 =
+        // yield request.put('/employees/' + employees[i].activation_code + '/checkins/' + response.body.checkin.id)
+        // .set('Content-Type', 'application/json')
+        // .send({checked_in_at: date, action_code_id: actionCodes[j].id, duration: i * j * 60 * 60 + 125})
+        // .end();
       }
     }
-    // console.log("done");
+
   });
 
   it('should not be able to get years for unathenticated user', function*() {

@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var massive = require("massive");
 
 var db = require('../consts').DB;
 

@@ -17,15 +17,13 @@ var actionCodes = new ActionCode().loadAll();
 //create few users
 for (var i = 0; i < 10; i++) {
   var randomName = names();
-  // console.log(randomName);
   var userEmail = randomName.replace(/\s+/g, '-').toLowerCase() + "@example.com";
-  // console.log(userEmail);
   var user = new User({email: userEmail, password: 'password'});
   user.save();
 
-  http://localhost:3000/public/mobile_employee.html?activation_code=f880edc5-de0c-4d6e-940c-0a71b644ad36
+  // http://localhost:3000/public/mobile_employee.html?activation_code=f880edc5-de0c-4d6e-940c-0a71b644ad36
 
-  console.log("User: " + user.id);
+  // console.log("User: " + user.id);
 
   //for each user generate employees
   for (var j = 0; j < 200; j++) {
