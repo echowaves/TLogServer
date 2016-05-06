@@ -6,10 +6,12 @@ var SECRET = require('./consts').SECRET;
 
 var serve = require('koa-static-folder');
 var bodyParser = require('koa-bodyparser');
+var koaBody = require('koa-body');
 
 const app = module.exports = require('koa')()
   .use(serve('./public'))
-  .use(bodyParser())
+  // .use(bodyParser()) // this is to pase all non multipart forms
+  .use(koaBody({multipart:true})) // this is to pase only multipart forms
   .use(require('./routes/common'))
   .use(require('./routes/auth'))
   .use(require('./routes/users_public'))
@@ -22,8 +24,6 @@ const app = module.exports = require('koa')()
   .use(require('./routes/reports_private'))
 
   .listen(process.env.PORT || 3000);
-
-
 
 // setting up posgresql on mac http://www.tunnelsup.com/setting-up-postgres-on-mac-osx
 // psql -U root -W tlog_dev

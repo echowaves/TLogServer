@@ -7,4 +7,6 @@ export TLOG_HOST=http://localhost:3000
 # following line is required to silence email sending, a bit smelly
 export TL_TEST_MODE=true
 
+#it.only('should be able to upload COI for employee', function*() {
+
 npm test

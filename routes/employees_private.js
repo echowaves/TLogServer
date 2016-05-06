@@ -13,7 +13,6 @@ var sendgrid  = require('sendgrid')(SEND_GRID_API_USER, SEND_GRID_API_PASSWORD);
 var TL_HOST = require('../consts').TL_HOST;
 var TL_TEST_MODE = require('../consts').TL_TEST_MODE;
 
-
 module.exports = require('koa-router')()
 
 //create a new employee
@@ -210,6 +209,19 @@ module.exports = require('koa-router')()
   this.body = { "result": "employeesActionCode successfully deleted"};
 })
 
+//upload COI
+.post('/employees/:employee_id/coi', function *(next) {
+  var body = JSON.stringify(this.request.body, null, 2)
+
+  let employee_id = this.params.employee_id;
+  console.log("employee_id: " + employee_id);
+
+console.log("body: " + body);
+
+
+  this.response.status = 200;
+  this.body = { "result": "employees CIO successfully uploaded"};
+})
 
 
 .routes();

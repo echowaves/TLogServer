@@ -5,6 +5,9 @@ const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
 var uuid = require('uuid');
 
+var db = require('../../consts').DB;
+var moment = require('moment');
+
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 
@@ -19,6 +22,16 @@ describe('/employees private routes testing', function() {
   var user, token;
 
   beforeEach(function *() {
+    //cleanup users
+    db.users.destroySync({});
+    //cleanup employees
+    db.employees.destroySync({});
+    //cleanup checkins
+    db.checkins.destroySync({});
+    //cleanup actioncodes
+    db.action_codes.destroySync({});
+
+
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
     user = new User({email: userEmail, password: password});
@@ -407,90 +420,115 @@ describe('/employees private routes testing', function() {
   });
 
 
-//////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////
 
-it('should be able to delete an employee', function*() {
-  var email = uuid.v4() + "@example.com";
-// add an employee
-  const response =
+  it('should be able to delete an employee', function*() {
+    var email = uuid.v4() + "@example.com";
+    // add an employee
+    const response =
     yield request.post('/employees')
-  .set('Content-Type', 'application/json')
-  .set('Authorization', 'Bearer ' + token)
-  .send({email: email, name: "John Smith", is_subcontractor: false})
-  .end();
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith", is_subcontractor: false})
+    .end();
 
-  const response2 =
+    const response2 =
     yield request.delete("/employees/" + response.body.employee.id)
-  .set('Content-Type', 'application/json')
-  .set('Authorization', 'Bearer ' + token)
-  .end();
-  expect(response2.status).to.equal(200, response.text);
-  expect(response2.body).to.be.an('object');
-  expect(response2.body).to.be.json;
-  expect(response2.body).to.contain.keys('result');
-  expect(response2.body.result).to.equal("employee deleted");
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response2.status).to.equal(200, response.text);
+    expect(response2.body).to.be.an('object');
+    expect(response2.body).to.be.json;
+    expect(response2.body).to.contain.keys('result');
+    expect(response2.body.result).to.equal("employee deleted");
 
-});
+  });
 
 
-it('should not be able to delete an employee which does not belong to current user', function*() {
-  // add an employee to a first user
-  var email = uuid.v4() + "@example.com";
-  const response =
+  it('should not be able to delete an employee which does not belong to current user', function*() {
+    // add an employee to a first user
+    var email = uuid.v4() + "@example.com";
+    const response =
     yield request.post('/employees')
-  .set('Content-Type', 'application/json')
-  .set('Authorization', 'Bearer ' + token)
-  .send({email: email, name: "John Smith"})
-  .end();
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
 
-  // register and authenticate another user
-  var anotherUserEmail = uuid.v4() + "@example.com";
-  var anotherUserPassword = 'secret';
-  const anotherUserResponse =
-  yield request.post('/users')
-  .set('Content-Type', 'application/json')
-  .send({email: anotherUserEmail, password: anotherUserPassword })
-  .end();
+    // register and authenticate another user
+    var anotherUserEmail = uuid.v4() + "@example.com";
+    var anotherUserPassword = 'secret';
+    const anotherUserResponse =
+    yield request.post('/users')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
 
-  var anotherUserId = anotherUserResponse.body.id;
+    var anotherUserId = anotherUserResponse.body.id;
 
 
-  //authenticate and obtain a another token
-  const resp =
-  yield request.post('/auth')
-  .set('Content-Type', 'application/json')
-  .send({email: anotherUserEmail, password: anotherUserPassword })
-  .end();
-  var anotherToken = resp.body.token;
+    //authenticate and obtain a another token
+    const resp =
+    yield request.post('/auth')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+    var anotherToken = resp.body.token;
 
-  // add an employee to another user
-  var anotherEmail = uuid.v4() + "@example.com";
-  const anotherResponse =
+    // add an employee to another user
+    var anotherEmail = uuid.v4() + "@example.com";
+    const anotherResponse =
     yield request.post('/employees')
-  .set('Content-Type', 'application/json')
-  .set('Authorization', 'Bearer ' + anotherToken)
-  .send({email: anotherEmail, name: "John Smith", is_subcontractor: false})
-  .end();
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + anotherToken)
+    .send({email: anotherEmail, name: "John Smith", is_subcontractor: false})
+    .end();
 
-  // try to delete an employee for a wrong user
-  const response3 =
+    // try to delete an employee for a wrong user
+    const response3 =
     yield request.delete("/employees/" + anotherResponse.body.employee.id )
-  .set('Content-Type', 'application/json')
-  .set('Authorization', 'Bearer ' + token)
-  .end();
-  expect(response3.status).to.equal(403, response.text);
-  expect(response3.body).to.be.an('object');
-  expect(response3.body).to.be.json;
-  expect(response3.body).to.contain.keys('error');
-  expect(response3.body.error).to.equal('the employee does not belong to currenty authenticated user');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response3.status).to.equal(403, response.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.keys('error');
+    expect(response3.body.error).to.equal('the employee does not belong to currenty authenticated user');
 
-});
-
-
+  });
 
 
+  it.only('should be able to upload COI for employee', function*() {
+    // add an employee to a first user
+    var email = "upload_coi@example.com";
+    const response =
+    yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith", is_subcontractor: true})
+    .end();
+
+    let date = moment().add(1, 'M').format();
+    //now try to upload the coi file
+    const response1 =
+    yield request.post('/employees/' + response.body.employee.id + "/coi")
+    .set('Authorization', 'Bearer ' + token)
+    .field('Content-Type', 'multipart/form-data')
+    .field('expiration_date', date)
+    .attach('coi', './assets/logo-big.png')
+    .end();
+
+    expect(response1.status).to.equal(200, response1.text);
+    expect(response1.body).to.be.an('object');
+    expect(response1.body).to.be.json;
+    expect(response1.body).to.contain.keys('result');
+    expect(response1.body.result).to.equal('employees CIO successfully uploaded');
 
 
+
+  });
 
 
 
