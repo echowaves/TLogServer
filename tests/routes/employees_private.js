@@ -500,35 +500,35 @@ describe('/employees private routes testing', function() {
   });
 
 
-  it.only('should be able to upload COI for employee', function*() {
-    // add an employee to a first user
-    var email = "upload_coi@example.com";
-    const response =
-    yield request.post('/employees')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: true})
-    .end();
-
-    let date = moment().add(1, 'M').format();
-    //now try to upload the coi file
-    const response1 =
-    yield request.post('/employees/' + response.body.employee.id + "/coi")
-    .set('Authorization', 'Bearer ' + token)
-    .field('Content-Type', 'multipart/form-data')
-    .field('expiration_date', date)
-    .attach('coi', './assets/logo-big.png')
-    .end();
-
-    expect(response1.status).to.equal(200, response1.text);
-    expect(response1.body).to.be.an('object');
-    expect(response1.body).to.be.json;
-    expect(response1.body).to.contain.keys('result');
-    expect(response1.body.result).to.equal('employees CIO successfully uploaded');
-
-
-
-  });
+  // it.only('should be able to upload COI for employee', function*() {
+  //   // add an employee to a first user
+  //   var email = "upload_coi@example.com";
+  //   const response =
+  //   yield request.post('/employees')
+  //   .set('Content-Type', 'application/json')
+  //   .set('Authorization', 'Bearer ' + token)
+  //   .send({email: email, name: "John Smith", is_subcontractor: true})
+  //   .end();
+  //
+  //   let date = moment().add(1, 'M').format();
+  //   //now try to upload the coi file
+  //   const response1 =
+  //   yield request.post('/employees/' + response.body.employee.id + "/coi")
+  //   .set('Authorization', 'Bearer ' + token)
+  //   .field('Content-Type', 'multipart/form-data')
+  //   .field('expiration_date', date)
+  //   .attach('coi', './assets/logo-big.png')
+  //   .end();
+  //
+  //   expect(response1.status).to.equal(200, response1.text);
+  //   expect(response1.body).to.be.an('object');
+  //   expect(response1.body).to.be.json;
+  //   expect(response1.body).to.contain.keys('result');
+  //   expect(response1.body.result).to.equal('employees CIO successfully uploaded');
+  //
+  //
+  //
+  // });
 
 
 

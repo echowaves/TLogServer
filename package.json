@@ -9,7 +9,7 @@
   "author": "Dmitry Amelchenko",
   "license": "echowaves",
   "dependencies": {
-    "async": "2.0.0-rc.3",
+    "async": "2.0.0-rc.4",
     "bcrypt": "^0.8.5",
     "koa-bodyparser": "^2.0.1",
     "koa-body": "^1.4.0",
