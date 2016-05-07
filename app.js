@@ -21,6 +21,7 @@ const app = module.exports = require('koa')()
   //protected routes below this line
   .use(require('./routes/users_private'))
   .use(require('./routes/employees_private'))
+  .use(require('./routes/subcontractors_private'))
   .use(require('./routes/reports_private'))
 
   .listen(process.env.PORT || 3000);

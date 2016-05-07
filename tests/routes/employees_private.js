@@ -46,7 +46,7 @@ describe('/employees private routes testing', function() {
     token = resp.body.token;
   });
 
-  it('should not be able to view an employee unless authenticated', function*() {
+  it('should not be able to view employees for a user unless authenticated', function*() {
     const response =
       yield request.get('/employees')
     .set('Content-Type', 'application/json')
@@ -498,38 +498,5 @@ describe('/employees private routes testing', function() {
     expect(response3.body.error).to.equal('the employee does not belong to currenty authenticated user');
 
   });
-
-
-  // it.only('should be able to upload COI for employee', function*() {
-  //   // add an employee to a first user
-  //   var email = "upload_coi@example.com";
-  //   const response =
-  //   yield request.post('/employees')
-  //   .set('Content-Type', 'application/json')
-  //   .set('Authorization', 'Bearer ' + token)
-  //   .send({email: email, name: "John Smith", is_subcontractor: true})
-  //   .end();
-  //
-  //   let date = moment().add(1, 'M').format();
-  //   //now try to upload the coi file
-  //   const response1 =
-  //   yield request.post('/employees/' + response.body.employee.id + "/coi")
-  //   .set('Authorization', 'Bearer ' + token)
-  //   .field('Content-Type', 'multipart/form-data')
-  //   .field('expiration_date', date)
-  //   .attach('coi', './assets/logo-big.png')
-  //   .end();
-  //
-  //   expect(response1.status).to.equal(200, response1.text);
-  //   expect(response1.body).to.be.an('object');
-  //   expect(response1.body).to.be.json;
-  //   expect(response1.body).to.contain.keys('result');
-  //   expect(response1.body.result).to.equal('employees CIO successfully uploaded');
-  //
-  //
-  //
-  // });
-
-
 
 });
