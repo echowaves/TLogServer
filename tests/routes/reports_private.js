@@ -60,8 +60,7 @@ describe('/reports routes testing', function() {
       .set('Authorization', 'Bearer ' + token)
       .send({
         email: "employee" + i + "@example.com",
-        name: "employee" + i + " name",
-        is_subcontractor: false
+        name: "employee" + i + " name"        
       })
       .end();
       employees[i] = response.body.employee;

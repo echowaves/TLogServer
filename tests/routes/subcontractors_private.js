@@ -308,7 +308,7 @@ describe('/subcontractors private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "Joe Doh", is_subcontractor: true, subcontractor_id: response.body.subcontractor.id})
+    .send({email: email, name: "Joe Doh", subcontractor_id: response.body.subcontractor.id})
     .end();
 
     const response2 =
@@ -385,7 +385,7 @@ describe('/subcontractors private routes testing', function() {
   //   yield request.post('/employees')
   //   .set('Content-Type', 'application/json')
   //   .set('Authorization', 'Bearer ' + token)
-  //   .send({email: email, name: "John Smith", is_subcontractor: true})
+  //   .send({email: email, name: "John Smith"})
   //   .end();
   //
   //   let date = moment().add(1, 'M').format();

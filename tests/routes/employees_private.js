@@ -60,7 +60,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "Joe Doh", is_subcontractor: false})
+    .send({email: email, name: "Joe Doh"})
     .end();
     expect(response.status).to.equal(200, response.text);
     expect(response.body).to.contain.keys('result');
@@ -76,7 +76,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: false})
+    .send({email: email, name: "John Smith"})
     .end();
 
 
@@ -128,7 +128,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + anotherToken)
-    .send({email: anotherEmail, name: "John Smith", is_subcontractor: false})
+    .send({email: anotherEmail, name: "John Smith"})
     .end();
 
     // try to activate an employee for a wron user
@@ -152,7 +152,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: false})
+    .send({email: email, name: "John Smith"})
     .end();
 
 
@@ -216,7 +216,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + anotherToken)
-    .send({email: anotherEmail, name: "John Smith", is_subcontractor: true})
+    .send({email: anotherEmail, name: "John Smith"})
     .end();
 
     // try to activate an employee for a wron user
@@ -241,7 +241,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: false})
+    .send({email: email, name: "John Smith"})
     .end();
 
     // add another employee to user
@@ -250,7 +250,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: anotherEmail, name: "John Smith", is_subcontractor: true})
+    .send({email: anotherEmail, name: "John Smith"})
     .end();
 
     // try to load all employess
@@ -274,7 +274,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: true})
+    .send({email: email, name: "John Smith"})
     .end();
 
     var employee_id = response.body.employee.id;
@@ -300,7 +300,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: true})
+    .send({email: email, name: "John Smith"})
     .end();
 
     var employee_id = response.body.employee.id;
@@ -345,7 +345,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "Joe Doh", is_subcontractor: true})
+    .send({email: email, name: "Joe Doh"})
     .end();
 
     var employeeId = response.body.employee.id;
@@ -355,7 +355,7 @@ describe('/employees private routes testing', function() {
       yield request.put('/employees/' + employeeId)
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "Joe Doh2", is_subcontractor: true})
+    .send({email: email, name: "Joe Doh2"})
     .end();
     expect(response1.status).to.equal(200, response1.text);
     expect(response1.body).to.be.an('object');
@@ -401,7 +401,7 @@ describe('/employees private routes testing', function() {
       yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + anotherToken)
-    .send({email: anotherEmail, name: "John Smith", is_subcontractor: false})
+    .send({email: anotherEmail, name: "John Smith"})
     .end();
 
     email = uuid.v4() + "@example.com";
@@ -410,7 +410,7 @@ describe('/employees private routes testing', function() {
       yield request.put("/employees/" + anotherResponse.body.employee.id )
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "Joe Doh2", is_subcontractor: false})
+    .send({email: email, name: "Joe Doh2"})
     .end();
     expect(response3.status).to.equal(403, response.text);
     expect(response3.body).to.be.an('object');
@@ -429,7 +429,7 @@ describe('/employees private routes testing', function() {
     yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith", is_subcontractor: false})
+    .send({email: email, name: "John Smith"})
     .end();
 
     const response2 =
@@ -482,7 +482,7 @@ describe('/employees private routes testing', function() {
     yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + anotherToken)
-    .send({email: anotherEmail, name: "John Smith", is_subcontractor: false})
+    .send({email: anotherEmail, name: "John Smith"})
     .end();
 
     // try to delete an employee for a wrong user
