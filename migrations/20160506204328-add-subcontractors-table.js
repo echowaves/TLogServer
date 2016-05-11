@@ -7,7 +7,7 @@ exports.up = function(db, callback) {
      id:              { type: 'int', primaryKey: true, autoIncrement: true },
      name:            {type: 'string', notNull: true,  unique: false },
      user_id:         { type: 'int',    notNull: true, unique: false },
-     coi_expires_at:  { type: 'timestamp with time zone',   notNull: true },
+     coi_expires_at:  { type: 'timestamp with time zone' },
    }, createIndexes);
 
    function createIndexes(err) {

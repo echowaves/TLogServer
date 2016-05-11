@@ -9,21 +9,16 @@ module.exports = require('koa-router')()
 //create a new subcontractor
 .post('/subcontractors', function *(next) {
   let data = this.request.body;
-  var coi_expires_at = data.coi_expires_at;
   var name = data.name;
 
-  if(!name || !coi_expires_at) {
+  if(!name) {
     this.response.status = 400;
     this.body = { "error": "missing parameter"};
   } else {
-
-
-
     var subcontractor =
     new Subcontractor(
       { user_id: this.state.user.id,
-        name: name,
-        coi_expires_at: coi_expires_at
+        name: name
       });
       subcontractor.save();
 
@@ -33,7 +28,7 @@ module.exports = require('koa-router')()
   })
 
 
-//delete an subcontractor
+//delete a subcontractor
 .delete('/subcontractors/:subcontractor_id', function *(next) {
   var subcontractorToLoad =
     new Subcontractor({ id: this.params.subcontractor_id});

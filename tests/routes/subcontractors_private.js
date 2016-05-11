@@ -52,14 +52,14 @@ describe('/subcontractors private routes testing', function() {
     expect(response.status).to.equal(401, response.text);
   });
 
+
   it('should be able to add an subcontractor', function*() {
     const coi_expires_at = moment().add(1, 'd').format();
-
     const response =
       yield request.post('/subcontractors')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({name: "Joe Doh", coi_expires_at: coi_expires_at})
+    .send({name: "Joe Doh"})
     .end();
     expect(response.status).to.equal(200, response.text);
     expect(response.body).to.contain.keys('result');
@@ -75,19 +75,6 @@ describe('/subcontractors private routes testing', function() {
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .send({coi_expires_at: coi_expires_at})
-    .end();
-    expect(response.status).to.equal(400, response.text);
-    expect(response.body).to.contain.keys('error');
-    expect(response.body.error).to.equal('missing parameter');
-  });
-
-
-  it('should not be able to add a subcontractor without a coi_expires_at', function*() {
-    const response =
-      yield request.post('/subcontractors')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', 'Bearer ' + token)
-    .send({name: "Joe Doeh"})
     .end();
     expect(response.status).to.equal(400, response.text);
     expect(response.body).to.contain.keys('error');
