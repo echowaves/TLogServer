@@ -3,6 +3,7 @@
 var moment = require('moment');
 
 var Subcontractor   = require('../models/subcontractor');
+var Employee   = require('../models/employee');
 
 module.exports = require('koa-router')()
 
@@ -38,15 +39,20 @@ module.exports = require('koa-router')()
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-    var subcontractor =
-      new Subcontractor(
-        { id: this.params.subcontractor_id,
-          user_id: this.state.user.id
-        });
-    subcontractor.delete();
+    //check if there are any employees assigned to this subcontractor
+    var employee = new Employee();
+    employee.subcontractor_id = subcontractorToLoad.id;
+    var employees = employee.loadAllForSubcontractor();
 
-    this.response.status = 200;
-    this.body = { "result" : "subcontractor deleted"};
+    if(employees.length > 0) {
+      this.response.status = 422;
+      this.body = { "error" : "subcontractor can not be deleted, because it has active employees"};
+    } else {
+      subcontractorToLoad.delete();
+
+      this.response.status = 200;
+      this.body = { "result" : "subcontractor deleted"};
+    }
   }
 })
 

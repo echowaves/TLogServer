@@ -32,6 +32,18 @@ Employee.prototype.loadByActivationCode = function () {
   }
 }
 
+// load all by subcontractor
+Employee.prototype.loadAllForSubcontractor = function () {
+  var foundEmployees = db.employees.findSync( { "subcontractor_id" : this.subcontractor_id } );
+  var employees = [];
+  foundEmployees.forEach(function(item){
+    var employee = new Employee();
+    _.assign(employee, item);
+    employees.push(employee);
+  });
+  return employees;
+}
+
 
 //load all employees for user
 Employee.prototype.loadAllForUser = function (user_id) {

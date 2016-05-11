@@ -23,7 +23,8 @@ module.exports = require('koa-router')()
       { user_id: this.state.user.id,
         name: data.name,
         email: data.email,
-        is_subcontractor: data.is_subcontractor
+        is_subcontractor: data.is_subcontractor,
+        subcontractor_id: data.subcontractor_id
       });
   employee.save();
 

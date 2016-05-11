@@ -293,6 +293,37 @@ describe('/subcontractors private routes testing', function() {
 
   });
 
+  it('should not be able to delete a subcontractor which has employees', function*() {
+    const coi_expires_at = moment().add(2, 'd').format();
+    // add a subcontractor
+    const response =
+    yield request.post('/subcontractors')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({name: "John Smith", coi_expires_at: coi_expires_at})
+    .end();
+
+    var email = uuid.v4() + "@example.com";
+    const response1 =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "Joe Doh", is_subcontractor: true, subcontractor_id: response.body.subcontractor.id})
+    .end();
+
+    const response2 =
+    yield request.delete("/subcontractors/" + response.body.subcontractor.id)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response2.status).to.equal(422, response2.text);
+    expect(response2.body).to.be.an('object');
+    expect(response2.body).to.be.json;
+    expect(response2.body).to.contain.keys('error');
+    expect(response2.body.error).to.equal("subcontractor can not be deleted, because it has active employees");
+
+  });
+
 
   it('should not be able to delete a subcontractor which does not belong to current user', function*() {
     // add a subcontractor to a first user
