@@ -1,5 +1,15 @@
 'use strict';
 
+var AWS = require('aws-sdk');
+var fs = require('fs');
+var zlib = require('zlib');
+
+
+var S3_BUCKET = require('../consts').S3_BUCKET;
+var S3_OPTIONS = require('../consts').S3_OPTIONS;
+// var S3_CLIENT_OPTIONS = require('../consts').S3_CLIENT_OPTIONS;
+
+
 var moment = require('moment');
 
 var Subcontractor   = require('../models/subcontractor');
@@ -107,19 +117,58 @@ module.exports = require('koa-router')()
 
 })
 
-// //upload COI
-// .post('/employees/:employee_id/coi', function *(next) {
-//   var body = JSON.stringify(this.request.body, null, 2)
-//
-//   let employee_id = this.params.employee_id;
-//   console.log("employee_id: " + employee_id);
-//
-// console.log("body: " + body);
-//
-//
-//   this.response.status = 200;
-//   this.body = { "result": "employees CIO successfully uploaded"};
-// })
+//upload COI
+.post('/subcontractors/:subcontractor_id/coi', function *(next) {
+  var body = JSON.stringify(this.request.body, null, 2)
 
+  let subcontractor_id = this.params.subcontractor_id;
+  // console.log("subcontractor_id: " + subcontractor_id);
+  // console.log("body: " + body);
+
+  // console.log(2);
+  var file = this.request.body.files.coi.path;
+  var body = fs.createReadStream(file); //.pipe(zlib.createGzip());
+  // console.log(3);
+
+  var s3obj = new AWS.S3(
+    {params:
+      {
+        Bucket: S3_BUCKET,
+        Key: 'i/' + subcontractor_id //+ '.zgip'
+      }
+    });
+
+    s3obj.upload({Body: body})
+    .on('httpUploadProgress', function(evt) {
+      console.log(evt);
+    })
+    .send(function(err, data) {
+      console.log(err, data);
+    });
+
+    this.response.status = 200;
+    this.body = { "result": "subcontractor CIO successfully uploaded"};
+
+  })
+
+
+//get COI
+.get('/subcontractors/:subcontractor_id/coi', function *(next) {
+  let subcontractor_id = this.params.subcontractor_id;
+  // console.log("subcontractor_id: " + subcontractor_id);
+  // console.log("body: " + body);
+
+  var params =
+  {
+    Bucket: S3_BUCKET,
+    Key: 'i/' + subcontractor_id //+ '.png.zgip'
+  };
+
+  var file = require('fs').createWriteStream(subcontractor_id);
+  s3.getObject(params).createReadStream().pipe(file);
+
+  this.response.status = 200;
+  this.body = fs.createReadStream(subcontractor_id);
+})
 
 .routes();

@@ -378,23 +378,22 @@ describe('/subcontractors private routes testing', function() {
   });
 
 
-  // it.only('should be able to upload COI for employee', function*() {
-  //   // add an employee to a first user
-  //   var email = "upload_coi@example.com";
+  // it.only('should be able to upload COI for subcontractor', function*() {
+  //
+  //   const coi_expires_at = moment().add(1, 'd').format();
   //   const response =
-  //   yield request.post('/employees')
+  //     yield request.post('/subcontractors')
   //   .set('Content-Type', 'application/json')
   //   .set('Authorization', 'Bearer ' + token)
-  //   .send({email: email, name: "John Smith"})
+  //   .send({name: "Joe Doh"})
   //   .end();
   //
-  //   let date = moment().add(1, 'M').format();
   //   //now try to upload the coi file
   //   const response1 =
-  //   yield request.post('/employees/' + response.body.employee.id + "/coi")
+  //   yield request.post('/subcontractors/' + response.body.subcontractor.id + "/coi")
   //   .set('Authorization', 'Bearer ' + token)
   //   .field('Content-Type', 'multipart/form-data')
-  //   .field('expiration_date', date)
+  //   .field('coi_expires_at', coi_expires_at)
   //   .attach('coi', './assets/logo-big.png')
   //   .end();
   //
@@ -402,7 +401,7 @@ describe('/subcontractors private routes testing', function() {
   //   expect(response1.body).to.be.an('object');
   //   expect(response1.body).to.be.json;
   //   expect(response1.body).to.contain.keys('result');
-  //   expect(response1.body.result).to.equal('employees CIO successfully uploaded');
+  //   expect(response1.body.result).to.equal('subcontractor CIO successfully uploaded');
   //
   //
   //
