@@ -378,9 +378,10 @@ describe('/subcontractors private routes testing', function() {
   });
 
 
-  // it.only('should be able to upload COI for subcontractor', function*() {
+  // it.only('should be able to upload COI for subcontractor', function*(done) {
   //
   //   const coi_expires_at = moment().add(1, 'd').format();
+  //
   //   const response =
   //     yield request.post('/subcontractors')
   //   .set('Content-Type', 'application/json')
@@ -403,7 +404,7 @@ describe('/subcontractors private routes testing', function() {
   //   expect(response1.body).to.contain.keys('result');
   //   expect(response1.body.result).to.equal('subcontractor CIO successfully uploaded');
   //
-  //
+  //   yield delay(1, done);
   //
   // });
 
