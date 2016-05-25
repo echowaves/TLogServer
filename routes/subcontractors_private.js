@@ -135,14 +135,14 @@ module.exports = require('koa-router')()
 
     // console.log(2);
     var file = this.request.body.files.coi.path;
-    var body = fs.createReadStream(file).pipe(zlib.createGzip());
+    var body = fs.createReadStream(file);//.pipe(zlib.createGzip());
     // console.log(3);
 
     var s3obj = new AWS.S3({
       params:
       {
         Bucket: S3_BUCKET,
-        Key: 'i/' + subcontractor_id + '.zgip'
+        Key: 'i/' + subcontractor_id + '.png'
       }
     });
 
@@ -173,7 +173,7 @@ module.exports = require('koa-router')()
     var params =
     {
       Bucket: S3_BUCKET,
-      Key: 'i/' + subcontractor_id + '.zgip'
+      Key: 'i/' + subcontractor_id + '.png'
     };
 
     var file = require('fs').createWriteStream(subcontractor_id);
