@@ -122,51 +122,66 @@ module.exports = require('koa-router')()
 .post('/subcontractors/:subcontractor_id/coi', function *(next) {
   var body = JSON.stringify(this.request.body, null, 2)
 
-  let subcontractor_id = this.params.subcontractor_id;
-  // console.log("subcontractor_id: " + subcontractor_id);
-  // console.log("body: " + body);
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  subcontractorToLoad.load();
 
-  // console.log(2);
-  var file = this.request.body.files.coi.path;
-  var body = fs.createReadStream(file).pipe(zlib.createGzip());
-  // console.log(3);
+  if(subcontractorToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+  } else {
+    let subcontractor_id = this.params.subcontractor_id;
+    // console.log("subcontractor_id: " + subcontractor_id);
+    // console.log("body: " + body);
 
-  var s3obj = new AWS.S3(
-    {params:
+    // console.log(2);
+    var file = this.request.body.files.coi.path;
+    var body = fs.createReadStream(file).pipe(zlib.createGzip());
+    // console.log(3);
+
+    var s3obj = new AWS.S3({
+      params:
       {
         Bucket: S3_BUCKET,
         Key: 'i/' + subcontractor_id + '.zgip'
       }
     });
 
-   s3obj.upload({Body: body})
-      .on('httpUploadProgress', function(evt) {
-        console.log(evt);
-      }).send(function(err, data) {
-        console.log(err, data);
-      });
-      this.response.status = 200;
-      this.body = { "result": "subcontractor CIO successfully uploaded"};
-  })
+    s3obj.upload({Body: body})
+    .on('httpUploadProgress', function(evt) {
+      console.log(evt);
+    }).send(function(err, data) {
+      console.log(err, data);
+    });
+    this.response.status = 200;
+    this.body = { "result": "subcontractor CIO successfully uploaded"};
+  }
+})
 
 
 //get COI
 .get('/subcontractors/:subcontractor_id/coi', function *(next) {
-  let subcontractor_id = this.params.subcontractor_id;
-  // console.log("subcontractor_id: " + subcontractor_id);
-  // console.log("body: " + body);
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  subcontractorToLoad.load();
 
-  var params =
-  {
-    Bucket: S3_BUCKET,
-    Key: 'i/' + subcontractor_id + '.zgip'
-  };
+  if(subcontractorToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+  } else {
+    // console.log("subcontractor_id: " + subcontractor_id);
+    // console.log("body: " + body);
 
-  var file = require('fs').createWriteStream(subcontractor_id);
-  s3.getObject(params).createReadStream().pipe(file);
+    var params =
+    {
+      Bucket: S3_BUCKET,
+      Key: 'i/' + subcontractor_id + '.zgip'
+    };
 
-  this.response.status = 200;
-  this.body = fs.createReadStream(subcontractor_id);
+    var file = require('fs').createWriteStream(subcontractor_id);
+    s3.getObject(params).createReadStream().pipe(file);
+
+    this.response.status = 200;
+    this.body = fs.createReadStream(subcontractor_id);
+  }
 })
 
 .routes();
