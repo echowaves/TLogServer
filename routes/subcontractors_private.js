@@ -162,6 +162,7 @@ module.exports = require('koa-router')()
 .get('/subcontractors/:subcontractor_id/coi', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
   subcontractorToLoad.load();
+  var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -170,17 +171,19 @@ module.exports = require('koa-router')()
     // console.log("subcontractor_id: " + subcontractor_id);
     // console.log("body: " + body);
 
+    var s3 = new AWS.S3();
+
     var params =
     {
       Bucket: S3_BUCKET,
       Key: 'i/' + subcontractor_id + '.png'
     };
 
-    var file = require('fs').createWriteStream(subcontractor_id);
-    s3.getObject(params).createReadStream().pipe(file);
+    // var file = require('fs').createWriteStream(subcontractor_id.toString());
+    // s3.getObject(params).createReadStream().pipe(file);
 
     this.response.status = 200;
-    this.body = fs.createReadStream(subcontractor_id);
+    this.body = s3.getObject(params).createReadStream();//fs.createReadStream(subcontractor_id.toString());
   }
 })
 
