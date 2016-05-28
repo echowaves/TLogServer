@@ -1,6 +1,7 @@
 'use strict';
 
-var AWS = require('aws-sdk');
+var AWS = require('aws-sdk'),
+    s3Stream = require('s3-upload-stream')(new AWS.S3());
 
 var fs = require('fs');
 var zlib = require('zlib');
@@ -132,28 +133,37 @@ module.exports = require('koa-router')()
     let subcontractor_id = this.params.subcontractor_id;
     // console.log("subcontractor_id: " + subcontractor_id);
     // console.log("body: " + body);
-
-    // console.log(2);
     var file = this.request.body.files.coi.path;
-    var body = fs.createReadStream(file);//.pipe(zlib.createGzip());
-    // console.log(3);
 
-    var s3obj = new AWS.S3({
-      params:
-      {
-        Bucket: S3_BUCKET,
-        Key: 'i/' + subcontractor_id + '.png'
-      }
+    var read = fs.createReadStream(file);
+    var upload = s3Stream.upload({
+      Bucket: S3_BUCKET,
+      Key: 'i/' + subcontractor_id + '.png'
     });
+    upload.concurrentParts(10);
+    read.pipe(upload);
 
-    s3obj.upload({Body: body})
-    .on('httpUploadProgress', function(evt) {
-      console.log(evt);
-    }).send(function(err, data) {
-      console.log(err, data);
-    });
+    // var body = fs.createReadStream(file);//.pipe(zlib.createGzip());
+    // // console.log(3);
+    //
+    // var s3obj = new AWS.S3({
+    //   params:
+    //   {
+    //     Bucket: S3_BUCKET,
+    //     Key: 'i/' + subcontractor_id + '.png'
+    //   }
+    // });
+    //
+    // s3obj.upload({Body: body})
+    // .on('httpUploadProgress', function(evt) {
+    //   console.log(evt);
+    // }).send(function(err, data) {
+    //   console.log(err, data);
+    // });
+
     this.response.status = 200;
     this.body = { "result": "subcontractor CIO successfully uploaded"};
+
   }
 })
 
