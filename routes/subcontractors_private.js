@@ -192,8 +192,18 @@ module.exports = require('koa-router')()
     // var file = require('fs').createWriteStream(subcontractor_id.toString());
     // s3.getObject(params).createReadStream().pipe(file);
 
-    this.response.status = 200;
-    this.body = s3.getObject(params).createReadStream();//fs.createReadStream(subcontractor_id.toString());
+    var that = this;
+    this.body = s3.getObject(params).createReadStream().
+    on('data', function(d) {
+    }).
+    on('error', function() {
+      console.log("not found.");
+      that.response.status = 404;
+    }).
+    on('end', function() {
+      console.log("done.");
+      that.response.status = 200;
+    });//fs.createReadStream(subcontractor_id.toString());
   }
 })
 
@@ -253,18 +263,18 @@ module.exports = require('koa-router')()
       Key: 'i/' + subcontractor_id + '.png'
     };
 
-    s3.headObject(params, function (err, metadata) {
-      if (err) {
-        // Handle no object on cloud here
-        this.response.status = 200;
-        this.body = { "result" : "subcontractor does not have COI uploaded", "value": false};
-      } else {
-        this.response.status = 200;
-        this.body = { "result" : "subcontractor has COI uploaded", "value": true};
-      }
+    var that = this;
+    this.body = s3.headObject(params).createReadStream().
+    on('error', function() {
+      console.log("................not found.");
+      that.response.status = 404;
+    }).
+    on('end', function() {
+      console.log("...........done.");
+      that.response.status = 200;
     });
+
   }
 })
-
 
 .routes();
