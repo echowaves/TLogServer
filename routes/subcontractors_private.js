@@ -197,4 +197,74 @@ module.exports = require('koa-router')()
   }
 })
 
+//delete COI
+.delete('/subcontractors/:subcontractor_id/coi', function *(next) {
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  subcontractorToLoad.load();
+  var subcontractor_id = subcontractorToLoad.id;
+
+  if(subcontractorToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+  } else {
+    // console.log("subcontractor_id: " + subcontractor_id);
+    // console.log("body: " + body);
+
+    var s3 = new AWS.S3();
+
+    var params =
+    {
+      Bucket: S3_BUCKET,
+      Key: 'i/' + subcontractor_id + '.png'
+    };
+
+    s3.deleteObject(params, function (err, metadata) {
+      if (err) {
+        // Handle no object on cloud here
+        conosole.log("unable to delete COI");
+      } else {
+        console.log("deleted COI");
+      }
+    });
+    this.response.status = 200;
+    this.body = { "result" : "received request to delete COI"};
+  }
+})
+
+
+//check if COI existin in s3
+.get('/subcontractors/:subcontractor_id/coi_exists', function *(next) {
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  subcontractorToLoad.load();
+  var subcontractor_id = subcontractorToLoad.id;
+
+  if(subcontractorToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+  } else {
+    // console.log("subcontractor_id: " + subcontractor_id);
+    // console.log("body: " + body);
+
+    var s3 = new AWS.S3();
+
+    var params =
+    {
+      Bucket: S3_BUCKET,
+      Key: 'i/' + subcontractor_id + '.png'
+    };
+
+    s3.headObject(params, function (err, metadata) {
+      if (err) {
+        // Handle no object on cloud here
+        this.response.status = 200;
+        this.body = { "result" : "subcontractor does not have COI uploaded", "value": false};
+      } else {
+        this.response.status = 200;
+        this.body = { "result" : "subcontractor has COI uploaded", "value": true};
+      }
+    });
+  }
+})
+
+
 .routes();
