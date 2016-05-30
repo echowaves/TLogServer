@@ -240,7 +240,6 @@ module.exports = require('koa-router')()
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-
     // var s3 = new AWS.S3();
     var s3 = new CoAWS.S3();
 
@@ -252,16 +251,21 @@ module.exports = require('koa-router')()
 
     try {
       var result = yield s3.headObject(params);
-      console.log("result");
-      console.log(result);
+      // console.log("result");
+      // console.log(result);
       this.response.status = 200;
       this.body = { "result" : "COI uploaded"};
-      yield next;
+      // yield next;
     } catch (err) {
-      console.error("err");
-      console.error(err);
-      this.response.status = 500;
-      this.body = { "error" : err};
+      // console.error("err");
+      // console.error(err);
+      if(err.code == "NotFound") {
+        this.response.status = 404;
+        this.body = { "error" : err};
+      } else {
+        this.response.status = 500;
+        this.body = { "error" : err};
+      }
     }
   }
 
