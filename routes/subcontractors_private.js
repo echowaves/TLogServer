@@ -1,7 +1,10 @@
 'use strict';
 
-var AWS = require('aws-sdk'),
-    s3Stream = require('s3-upload-stream')(new AWS.S3());
+var AWS = require('aws-sdk');
+var s3Stream = require('s3-upload-stream')(new AWS.S3());
+
+var CoAWS = require('co-aws-sdk');
+// var co = require('co');
 
 var fs = require('fs');
 var zlib = require('zlib');
@@ -110,6 +113,9 @@ module.exports = require('koa-router')()
           name: data.name,
           coi_expires_at: data.coi_expires_at
         });
+
+// console.log(subcontractor);
+
     subcontractor.save();
 
     this.response.status = 200;
@@ -142,24 +148,6 @@ module.exports = require('koa-router')()
     });
     upload.concurrentParts(10);
     read.pipe(upload);
-
-    // var body = fs.createReadStream(file);//.pipe(zlib.createGzip());
-    // // console.log(3);
-    //
-    // var s3obj = new AWS.S3({
-    //   params:
-    //   {
-    //     Bucket: S3_BUCKET,
-    //     Key: 'i/' + subcontractor_id + '.png'
-    //   }
-    // });
-    //
-    // s3obj.upload({Body: body})
-    // .on('httpUploadProgress', function(evt) {
-    //   console.log(evt);
-    // }).send(function(err, data) {
-    //   console.log(err, data);
-    // });
 
     this.response.status = 200;
     this.body = { "result": "subcontractor CIO successfully uploaded"};
@@ -252,10 +240,9 @@ module.exports = require('koa-router')()
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-    // console.log("subcontractor_id: " + subcontractor_id);
-    // console.log("body: " + body);
 
-    var s3 = new AWS.S3();
+    // var s3 = new AWS.S3();
+    var s3 = new CoAWS.S3();
 
     var params =
     {
@@ -263,18 +250,21 @@ module.exports = require('koa-router')()
       Key: 'i/' + subcontractor_id + '.png'
     };
 
-    var that = this;
-    this.body = s3.headObject(params).createReadStream().
-    on('error', function() {
-      console.log("................not found.");
-      that.response.status = 404;
-    }).
-    on('end', function() {
-      console.log("...........done.");
-      that.response.status = 200;
-    });
-
+    try {
+      var result = yield s3.headObject(params);
+      console.log("result");
+      console.log(result);
+      this.response.status = 200;
+      this.body = { "result" : "COI uploaded"};
+      yield next;
+    } catch (err) {
+      console.error("err");
+      console.error(err);
+      this.response.status = 500;
+      this.body = { "error" : err};
+    }
   }
+
 })
 
 .routes();

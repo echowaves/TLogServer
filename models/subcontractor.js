@@ -15,6 +15,7 @@ Subcontractor.prototype.load = function () {
   var foundSubcontractor = db.subcontractors.findOneSync({id: this.id});
   if(foundSubcontractor) {
     _.assign(this, foundSubcontractor);
+    // console.log(this);
     return this;
   } else {
     return null;// this is error
@@ -35,6 +36,7 @@ Subcontractor.prototype.loadAllForUser = function (user_id) {
 
 // upsert employee
 Subcontractor.prototype.save = function () {
+  // console.log(this);
   var inserted = db.subcontractors.saveSync(this);
 
     if(!this.id) {
