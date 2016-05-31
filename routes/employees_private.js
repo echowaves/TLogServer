@@ -4,6 +4,7 @@ var uuid = require('uuid');
 
 var Employee   = require('../models/employee');
 var EmployeesActionCode   = require('../models/employees_action_code');
+var Subcontractor   = require('../models/subcontractor');
 
 var SEND_GRID_API_USER     = require('../consts').SEND_GRID_API_USER;
 var SEND_GRID_API_PASSWORD = require('../consts').SEND_GRID_API_PASSWORD;
@@ -166,15 +167,58 @@ module.exports = require('koa-router')()
         { id: this.params.employee_id,
           user_id: this.state.user.id,
           name: data.name,
-          email: data.email          
+          email: data.email
         });
     employee.save();
 
     this.response.status = 200;
     this.body = { "result": "employee successfully updated"};
   }
+})
 
 
+// add employee to subcontractor
+.post('/employees/:employee_id/subcontractor/:subcontractor_id', function *(next) {
+  var employeeToLoad = new Employee({ id: this.params.employee_id});
+  employeeToLoad.load();
+
+  if(employeeToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  } else {
+    var employee =
+      new Employee(
+        { id: this.params.employee_id,
+          user_id: this.state.user.id,
+          subcontractor_id: this.params.subcontractor_id
+        });
+    employee.save();
+
+    this.response.status = 200;
+    this.body = { "result": "employee successfully added to subcontractor"};
+  }
+})
+
+// delete employee from a subcontractor
+.delete('/employees/:employee_id/subcontractor', function *(next) {
+  var employeeToLoad = new Employee({ id: this.params.employee_id});
+  employeeToLoad.load();
+
+  if(employeeToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the employee does not belong to currenty authenticated user"};
+  } else {
+    var employee =
+      new Employee(
+        { id: this.params.employee_id,
+          user_id: this.state.user.id,
+          subcontractor_id: null
+        });
+    employee.save();
+
+    this.response.status = 200;
+    this.body = { "result": "employee successfully deleted from subcontractor"};
+  }
 })
 
 

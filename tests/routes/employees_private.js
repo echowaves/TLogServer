@@ -30,6 +30,8 @@ describe('/employees private routes testing', function() {
     db.checkins.destroySync({});
     //cleanup actioncodes
     db.action_codes.destroySync({});
+    //cleanup subcontractors
+    db.subcontractors.destroySync({});
 
 
     var userEmail = uuid.v4() + "@example.com";
@@ -293,6 +295,7 @@ describe('/employees private routes testing', function() {
 
   });
 
+
   it('should not be able to load an employee by id which belongs to a wrong user', function*() {
     // add an employee to a user
     var email = uuid.v4() + "@example.com";
@@ -338,6 +341,7 @@ describe('/employees private routes testing', function() {
     expect(response3.body).to.contain.key("error");
     expect(response3.body.error).to.equal("the employee does not belong to currenty authenticated user");
   });
+
 
   it('should be able to update an employee', function*() {
     var email = uuid.v4() + "@example.com";
@@ -385,7 +389,6 @@ describe('/employees private routes testing', function() {
     .end();
 
     var anotherUserId = anotherUserResponse.body.id;
-
 
     //authenticate and obtain a another token
     const resp =
@@ -467,7 +470,6 @@ describe('/employees private routes testing', function() {
 
     var anotherUserId = anotherUserResponse.body.id;
 
-
     //authenticate and obtain a another token
     const resp =
     yield request.post('/auth')
@@ -496,6 +498,58 @@ describe('/employees private routes testing', function() {
     expect(response3.body).to.be.json;
     expect(response3.body).to.contain.keys('error');
     expect(response3.body.error).to.equal('the employee does not belong to currenty authenticated user');
+
+  });
+
+
+  it('should be able to add/remove employee to/from subcontractor', function*() {
+    var email = uuid.v4() + "@example.com";
+// add an employee
+    const response =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "John Smith"})
+    .end();
+    var employee = response.body.employee;
+
+    const response1 =
+      yield request.post("/employees/" + employee.id + "/activation")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+
+    const coi_expires_at = moment().add(1, 'd').format();
+    const response2 =
+      yield request.post('/subcontractors')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({name: "Joe Doh"})
+    .end();
+
+    var subcontractor = response2.body.subcontractor;
+
+    const response3 =
+      yield request.post("/employees/" + employee.id + "/subcontractor/" + subcontractor.id)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response3.status).to.equal(200, response.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.keys('result');
+    expect(response3.body.result).to.equal('employee successfully added to subcontractor');
+
+    const response4 =
+      yield request.delete("/employees/" + employee.id + "/subcontractor")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response4.status).to.equal(200, response.text);
+    expect(response4.body).to.be.an('object');
+    expect(response4.body).to.be.json;
+    expect(response4.body).to.contain.keys('result');
+    expect(response4.body.result).to.equal('employee successfully deleted from subcontractor');
 
   });
 

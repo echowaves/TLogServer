@@ -185,11 +185,11 @@ module.exports = require('koa-router')()
     on('data', function(d) {
     }).
     on('error', function() {
-      console.log("not found.");
+      // console.log("not found.");
       that.response.status = 404;
     }).
     on('end', function() {
-      console.log("done.");
+      // console.log("done.");
       that.response.status = 200;
     });//fs.createReadStream(subcontractor_id.toString());
   }

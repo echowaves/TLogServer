@@ -86,7 +86,7 @@ describe('/actioncodes route testing', function() {
   });
 
 
-  it('should load action codes for employee', function*() {
+  it('should add/load/delete action codes for employee', function*() {
     var user, token;
 
     var userEmail = uuid.v4() + "@example.com";
