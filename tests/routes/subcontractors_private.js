@@ -137,8 +137,8 @@ describe('/subcontractors private routes testing', function() {
     expect(response3.body).to.be.an('object');
     expect(response3.body).to.be.json;
     expect(response3.body).to.contain.key("result");
-    expect(response3.body.result.user_id).to.equal(user.id);
-    expect(response3.body.result.id).to.equal(subcontractor_id);
+    expect(response3.body.subcontractor.user_id).to.equal(user.id);
+    expect(response3.body.subcontractor.id).to.equal(subcontractor_id);
   });
 
 

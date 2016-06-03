@@ -148,7 +148,7 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     this.response.status = 200;
-    this.body = { "result" : employeeToLoad };
+    this.body = { "result" : "employee loaded", "employee" : employeeToLoad };
   }
 })
 

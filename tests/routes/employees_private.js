@@ -290,8 +290,8 @@ describe('/employees private routes testing', function() {
     expect(response3.body).to.be.an('object');
     expect(response3.body).to.be.json;
     expect(response3.body).to.contain.key("result");
-    expect(response3.body.result.user_id).to.equal(user.id);
-    expect(response3.body.result.id).to.equal(employee_id);
+    expect(response3.body.employee.user_id).to.equal(user.id);
+    expect(response3.body.employee.id).to.equal(employee_id);
 
   });
 
@@ -554,7 +554,7 @@ describe('/employees private routes testing', function() {
   });
 
 
-  it.only('should be able to add employee to subcontractor and then retrieve the subcontractor_id as part of if', function*() {
+  it('should be able to add employee to subcontractor and then retrieve the subcontractor_id as part of if', function*() {
     var email = uuid.v4() + "@example.com";
   // add an employee
     const response =
@@ -600,9 +600,9 @@ describe('/employees private routes testing', function() {
     .end();
     expect(response4.status).to.equal(200, response4.text);
     expect(response4.body).to.contain.key("result");
-    expect(response4.body.result.user_id).to.equal(user.id);
-    expect(response4.body.result.id).to.equal(employee.id);
-    expect(response4.body.result.subcontractor_id).to.equal(subcontractor.id);
+    expect(response4.body.employee.user_id).to.equal(user.id);
+    expect(response4.body.employee.id).to.equal(employee.id);
+    expect(response4.body.employee.subcontractor_id).to.equal(subcontractor.id);
 
   });
 

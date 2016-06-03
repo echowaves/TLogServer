@@ -92,7 +92,7 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
     this.response.status = 200;
-    this.body = { "result" : subcontractorToLoad };
+    this.body = { "result" : "subcontractor loaded", "subcontractor" : subcontractorToLoad };
   }
 })
 
