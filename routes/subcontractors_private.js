@@ -99,7 +99,7 @@ module.exports = require('koa-router')()
 // update a subcontractor
 .put('/subcontractors/:subcontractor_id', function *(next) {
   let data = this.request.body;
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
   subcontractorToLoad.load();
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
