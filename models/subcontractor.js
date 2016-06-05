@@ -12,12 +12,12 @@ var Subcontractor = function(properties) {
 
 // set id to the subcontracgtor obejct, call load to populate the rest of the properties
 Subcontractor.prototype.load = function () {
-  // console.log("id: " + this.id);
-  var foundSubcontractor = db.subcontractors.findOneSync(this.id);
-  // console.log("subcontractor: " + JSON.stringify(foundSubcontractor));
+  // console.log(this);
+  var foundSubcontractor = db.subcontractors.findOneSync({id:this.id});
+  // console.log("subcontractor: ");
+  // console.log(foundSubcontractor);
   if(foundSubcontractor) {
     _.assign(this, foundSubcontractor);
-    // console.log(":" + JSON.stringify(this));
     return this;
   } else {
     return null;// this is error
