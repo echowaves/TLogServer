@@ -9,6 +9,7 @@
   "author": "Dmitry Amelchenko",
   "license": "echowaves",
   "dependencies": {
+    "massive": "2.3.0",
     "async": "2.0.0-rc.5",
     "bcrypt": "0.8.6",
     "koa-bodyparser": "2.2.0",
@@ -19,7 +20,6 @@
     "koa-router": "5.4.0",
     "koa-static-folder": "0.1.6",
     "lodash": "4.13.1",
-    "massive": "2.1.0",
     "uuid": "2.0.2",
     "moment": "2.13.0",
     "sendgrid": "2.0.0",

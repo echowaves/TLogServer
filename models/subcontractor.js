@@ -14,8 +14,9 @@ var Subcontractor = function(properties) {
 Subcontractor.prototype.load = function () {
   // console.log(this);
   var foundSubcontractor = db.subcontractors.findOneSync({id:this.id});
-  // console.log("subcontractor: ");
-  // console.log(foundSubcontractor);
+  console.log("subcontractor: ");
+  console.log(foundSubcontractor);
+  
   if(foundSubcontractor) {
     _.assign(this, foundSubcontractor);
     return this;
