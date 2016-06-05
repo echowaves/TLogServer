@@ -154,7 +154,7 @@ module.exports = require('koa-router')()
 // update an employee
 .put('/employees/:employee_id', function *(next) {
   let data = this.request.body;
-  var employee = new Employee({ id: this.params.employee_id});
+  var employee = new Employee({ id: parseInt(this.params.employee_id)});
   employee.load();
 
   if(employee.user_id != this.state.user.id) {
@@ -163,8 +163,8 @@ module.exports = require('koa-router')()
   } else {
     employee.user_id = this.state.user.id;
     employee.name =  data.name;
-    employee,email = data.email;
-    employee.save();
+    employee.email = data.email;
+    employee.update();
 
     this.response.status = 200;
     this.body = { "result": "employee successfully updated"};
