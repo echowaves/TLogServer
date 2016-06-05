@@ -84,7 +84,7 @@ module.exports = require('koa-router')()
 
 // get subcontractor details
 .get('/subcontractors/:subcontractor_id', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
   subcontractorToLoad.load();
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
