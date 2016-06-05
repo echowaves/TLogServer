@@ -47,7 +47,7 @@ module.exports = require('koa-router')()
 //delete a subcontractor
 .delete('/subcontractors/:subcontractor_id', function *(next) {
   var subcontractorToLoad =
-    new Subcontractor({ id: this.params.subcontractor_id});
+    new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
   subcontractorToLoad.load();
   // check that the subcontractor exists and belongs to the user
   if(subcontractorToLoad.user_id != this.state.user.id) {
