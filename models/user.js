@@ -44,7 +44,7 @@ User.prototype.validateUserAndGenerateToken = function () {
 
 // set id to the user object, call load to populate the rest of the properties
 User.prototype.load = function () {
-  var foundUser = db.users.findOneSync({id: this.id});
+  var foundUser = db.users.findOneSync(this.id);
   if(foundUser) {
     _.assign(this, foundUser);
     delete this.password; // we do not want to return password

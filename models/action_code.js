@@ -23,7 +23,7 @@ ActionCode.prototype.loadAll = function () {
 
 // set id to the action_code obejct, call load to populate the rest of the properties
 ActionCode.prototype.load = function () {
-  var foundActionCode = db.action_codes.findOneSync({id: this.id});
+  var foundActionCode = db.action_codes.findOneSync(this.id);
   if(foundActionCode) {
     _.assign(this, foundActionCode);
     return this;

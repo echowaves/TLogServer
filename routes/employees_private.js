@@ -32,50 +32,49 @@ module.exports = require('koa-router')()
   this.body = { "result": "employee successfully added", "employee" : employee};
 })
 
+
 //activate an employee (create activation)
 .post('/employees/:employee_id/activation', function *(next) {
-  var employeeToLoad =
-    new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
-
+  var employee =
+    new Employee({ id: parseInt(this.params.employee_id)});
+  employee.load();
   // check that the employee exists and belongs to the user
-  if(employeeToLoad.user_id != this.state.user.id) {
+  if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     const activation_code = uuid.v4();
-    var employee =
+    var employee1 =
       new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
+        { id: parseInt(this.params.employee_id),
           activation_code: activation_code
         });
-    employee.save();
-
+    // employee.activation_code = activation_code;
+    employee1.update();
 
     var email = new sendgrid.Email();
-    email.addTo(employeeToLoad.email);
+    email.addTo(employee.email);
     email.subject = "TLog Activation";
     email.from = 'info@tlog.us';
-    email.text = "Install TLog application and Sign in on your smart phone by clickin on the following link: " + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code ;
-    email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your smart phone.</body></html>";
+    email.text = "Install TLog application and Sign in on your smart phone by clickin on the following link: " + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee1.activation_code ;
+    email.html = "<!DOCTYPE html><html><body>Install TLog application and <a href='" + TL_HOST + "/public/mobile_employee.html?activation_code=" + employee1.activation_code + "' style='background-color:#00C333;border:1px solid #00C333;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;'>Sign In</a> on your smart phone.</body></html>";
 
 
     if(TL_TEST_MODE == false) {// only send email in non test mode
       sendgrid.send(email, function(err, json) {
         if(err) {
-          console.log("error sending activation email through sendgrid to: " + employeeToLoad.email);
+          console.log("error sending activation email through sendgrid to: " + employee.email);
           console.log(err);
           console.log(err);
           console.log(json);
         } else {
-          console.log("successfully sent activation email to: " + employeeToLoad.email);
+          console.log("successfully sent activation email to: " + employee.email);
         }
       });
     };
 
     this.response.status = 200;
-    this.body = { "activation_code" : employee.activation_code};
+    this.body = { "activation_code" : employee1.activation_code};
   }
 })
 
@@ -155,20 +154,16 @@ module.exports = require('koa-router')()
 // update an employee
 .put('/employees/:employee_id', function *(next) {
   let data = this.request.body;
-  var employeeToLoad = new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  var employee = new Employee({ id: this.params.employee_id});
+  employee.load();
 
-  if(employeeToLoad.user_id != this.state.user.id) {
+  if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
-    var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          name: data.name,
-          email: data.email
-        });
+    employee.user_id = this.state.user.id;
+    employee.name =  data.name;
+    employee,email = data.email;
     employee.save();
 
     this.response.status = 200;
@@ -179,19 +174,14 @@ module.exports = require('koa-router')()
 
 // add employee to subcontractor
 .post('/employees/:employee_id/subcontractor/:subcontractor_id', function *(next) {
-  var employeeToLoad = new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  var employee = new Employee({ id: this.params.employee_id});
+  employee.load();
 
-  if(employeeToLoad.user_id != this.state.user.id) {
+  if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
-    var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          subcontractor_id: this.params.subcontractor_id
-        });
+    employee.subcontractor_id = this.params.subcontractor_id;
     employee.save();
 
     this.response.status = 200;
@@ -201,19 +191,14 @@ module.exports = require('koa-router')()
 
 // delete employee from a subcontractor
 .delete('/employees/:employee_id/subcontractor', function *(next) {
-  var employeeToLoad = new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  var employee = new Employee({ id: this.params.employee_id});
+  employee.load();
 
-  if(employeeToLoad.user_id != this.state.user.id) {
+  if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
-    var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          subcontractor_id: null
-        });
+    employee.subcontractor_id = null;
     employee.save();
 
     this.response.status = 200;

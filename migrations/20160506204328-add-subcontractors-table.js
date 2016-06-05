@@ -5,7 +5,7 @@ var async = require('async');
 exports.up = function(db, callback) {
   db.createTable('subcontractors', {
      id:              { type: 'int', primaryKey: true, autoIncrement: true },
-     name:            {type: 'string', notNull: true,  unique: false },
+     name:            { type: 'string', notNull: true,  unique: false },
      user_id:         { type: 'int',    notNull: true, unique: false },
      coi_expires_at:  { type: 'timestamp with time zone' },
    }, createIndexes);

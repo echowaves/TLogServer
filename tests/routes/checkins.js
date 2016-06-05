@@ -53,8 +53,9 @@ describe('/checkins routes testing', function() {
     yield request.post('/employees')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
-    .send({email: email, name: "John Smith"})
+    .send({email:email,name:"John Smith"})
     .end();
+
 
     // and activate the employee
     const response1 =
@@ -62,6 +63,8 @@ describe('/checkins routes testing', function() {
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
+    // console.log("response1.body");
+    // console.log(response1.body);
     activation_code = response1.body.activation_code;
 
   });
@@ -453,6 +456,9 @@ describe('/checkins routes testing', function() {
       .end();
       // const checkin_id = response.body.result.id;
     }
+
+    // console.log(444444);
+    // console.log(activation_code);
 
     // default page
     const response1 =

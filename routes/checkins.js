@@ -17,7 +17,7 @@ module.exports = require('koa-router')()
   var page_size = data.page_size;
 
   if(page_number == null) {page_number = '0'};
-  if(page_size == null) {page_size = '100'};
+  if(page_size == null)  {page_size = '100'};
 
   var employee =
     new Employee({ activation_code: this.params.activation_code});
@@ -60,14 +60,14 @@ module.exports = require('koa-router')()
       this.response.status = 403;
       this.body = { "error" : 'unable to create more then 7 days old checkin'};
     } else {
-      var employee =
-        new Employee({ activation_code: this.params.activation_code});
-      employee.loadByActivationCode();
+      var employee1 = new Employee();
+      employee1.activation_code = this.params.activation_code;
+      employee1.loadByActivationCode();
 
       var checkin = new Checkin(
         {
-          email: employee.email,
-          user_id: employee.user_id,
+          email: employee1.email,
+          user_id: employee1.user_id,
           checked_in_at: checked_in_at,
           duration: 0,//always create with duration 0, can modify later by updating checkin
           action_code_id: action_code_id
@@ -131,9 +131,9 @@ module.exports = require('koa-router')()
 
       let data = this.request.body;
 
-      let checked_in_at = data.checked_in_at;
-      let duration = data.duration;
-      let action_code_id = data.action_code_id;
+      let checked_in_at   = data.checked_in_at;
+      let duration        = parseInt(data.duration);
+      let action_code_id  = parseInt(data.action_code_id);
 
       checkin.checked_in_at = checked_in_at;
       checkin.duration = duration;
@@ -147,7 +147,7 @@ module.exports = require('koa-router')()
         this.response.status = 403;
         this.body = { "error" : 'unable to update to more then 7 days old checkin'};
       } else {
-        checkin.save();
+        checkin.update();
 
         this.response.status = 200;
         this.body = { "checkin" : checkin };
