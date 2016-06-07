@@ -116,7 +116,7 @@ describe('/subcontractors private routes testing', function() {
   });
 
 
-  it('should be able to load a subcontractor by id', function*() {
+  it.only('should be able to load a subcontractor by id', function*() {
     // add a subcontractor to a user
     const coi_expires_at = moment().add(1, 'd').format();
     const response =
@@ -126,7 +126,7 @@ describe('/subcontractors private routes testing', function() {
     .send({name: "John Smith", coi_expires_at: coi_expires_at})
     .end();
 
-    var subcontractor_id = response.body.subcontractor.id;
+    var subcontractor_id = response.body.subcontractor.id;    
     // try to load subcontractor
     const response3 =
       yield request.get("/subcontractors/" + subcontractor_id)
