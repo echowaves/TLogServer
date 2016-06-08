@@ -17,45 +17,58 @@ var Subcontractor = function(properties) {
 
 
 // set id to the subcontracgtor obejct, call load to populate the rest of the properties
+
 Subcontractor.prototype.load = function () {
-  var findOneSub = thunkify(db.subcontractors.findOne);
+  var findOne = thunkify(db.subcontractors.findOne);
 
   co(function *() {
-    try {
-      var res = yield findOneSub({id:this.id});
-    } catch (err) {
-      console.log(err);
-    }
+    var res = yield findOne({id:this.id});
     console.log(res);
-  })();
+    return res;
+  }).then(function (value) {
+    console.log(value);
+  }, function (err) {
+    console.error(err.stack);
+  });
 }
 
-// try {
-//   console.log(33333);
-//   var res = yield findOne({id:this.id});
-//   console.log(44444);
-// } catch (err) {
-//   console.log(55555);
-//   console.log(err);
-//  throw err;
-// }
-// console.log(66666);
 //
-// console.log(res);
-
-  // , function(err, res){
-  //   //full product with new id returned
-  //   // console.log("subcontractor: ");
-  //   // console.log(res);
-  //   if(res) {
-  //     _.assign(this, res);
-  //     next();
-  //   } else {
-  //     next();
-  //     // return null;// this is error
-  //   }
-  // });
+// // return function (done) {
+//   db.subcontractors.findOne({id:this.id}, function(err, res){
+//     if(err) {
+//       console.log("error");
+//       console.log(err);
+//       return;
+//       // done(err);
+//     }
+//     //full product with new id returned
+//     if(res) {
+//       _.assign(this, res);
+//     }
+//     console.log(res);
+//     // done(err, res);
+//   });
+// // }
 // }
+
+//   var promise = new Promise(function(resolve, reject) {
+//     db.subcontractors.findOne({id:this.id}, function(err, res){
+//       if(err) {
+//         console.log("error");
+//         console.log(err);
+//         reject(Error(err));
+//       } else {
+//       //full product with new id returned
+//         _.assign(this, res);
+//         resolve(res);
+//       }
+//     });
+//   });
+//   var subcontractor = yield promise;
+//   console.log(subcontractor);
+//
+// }
+
 
 //load all subcontractors for user
 Subcontractor.prototype.loadAllForUser = function (user_id) {
