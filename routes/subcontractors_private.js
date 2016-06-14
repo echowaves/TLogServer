@@ -2,6 +2,7 @@
 
 var AWS = require('aws-sdk');
 var s3Stream = require('s3-upload-stream')(new AWS.S3());
+var thunkify = require('thunkify');
 
 var CoAWS = require('co-aws-sdk');
 var co = require('co');
@@ -89,9 +90,11 @@ module.exports = require('koa-router')()
   console.log("next: ", next);
   var res = yield function (cb) { 
     subcontractorToLoad.load(function (err, res) {
-       cb();
+       cb(err, res);
     })
   };
+  // the next line should work too.. bud doesn't. still trying to figure out why
+  //var res = yield thunkify(subcontractorToLoad.load)();
   console.log(11111);
   console.log(subcontractorToLoad);
   console.log("-----------");
