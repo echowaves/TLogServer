@@ -4,7 +4,6 @@ var AWS = require('aws-sdk');
 var s3Stream = require('s3-upload-stream')(new AWS.S3());
 
 var CoAWS = require('co-aws-sdk');
-var co = require('co');
 
 var fs = require('fs');
 var zlib = require('zlib');
@@ -87,25 +86,14 @@ module.exports = require('koa-router')()
   var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
 
   var res = yield subcontractorToLoad.load.bind(subcontractorToLoad);
-  console.log(11111);
-  console.log(subcontractorToLoad);
-  console.log("-----------");
-  console.log(this.state.user.id);
-  console.log("result:", res);
-  console.log(33333, subcontractorToLoad.user_id, this.state.user.id);
+
   if (subcontractorToLoad.user_id != this.state.user.id) {
-    console.log("returning 403");
-    console.log(subcontractorToLoad);
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-    console.log("returning 200");
     this.response.status = 200;
-    console.log("set status to 200 like i wanted");
     this.body = { "result" : "subcontractor loaded", "subcontractor" : subcontractorToLoad };
-    console.log("set body to something");
   }
-  console.log("done!");
 })
 
 // update a subcontractor

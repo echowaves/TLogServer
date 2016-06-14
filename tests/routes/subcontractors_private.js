@@ -116,7 +116,7 @@ describe('/subcontractors private routes testing', function() {
   });
 
 
-  it.only('should be able to load a subcontractor by id', function*() {
+  it('should be able to load a subcontractor by id', function*() {
     // add a subcontractor to a user
     const coi_expires_at = moment().add(1, 'd').format();
     const response =
@@ -133,9 +133,6 @@ describe('/subcontractors private routes testing', function() {
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
-
-    //console.log("respons:", response3);
-
     expect(response3.status).to.equal(200, response3.text);
     expect(response3.body).to.be.an('object');
     expect(response3.body).to.be.json;

@@ -9,7 +9,6 @@
   "author": "Dmitry Amelchenko",
   "license": "echowaves",
   "dependencies": {
-    "synchronize": "0.9.15",
     "massive": "2.3.0",
     "async": "2.0.0-rc.5",
     "bcrypt": "0.8.6",
