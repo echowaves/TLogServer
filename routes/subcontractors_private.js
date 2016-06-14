@@ -86,20 +86,36 @@ module.exports = require('koa-router')()
 .get('/subcontractors/:subcontractor_id', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
 
-  var res = subcontractorToLoad.load();
-
-console.log(11111);
-console.log(subcontractorToLoad);
-console.log(this.state.user.id);
-console.log(res);
-console.log(222222);
-  if(subcontractorToLoad.user_id != this.state.user.id) {
-    this.response.status = 403;
-    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
-  } else {
-    this.response.status = 200;
-    this.body = { "result" : "subcontractor loaded", "subcontractor" : subcontractorToLoad };
-  }
+console.log("next: ", next);
+var that = this;
+  var res = subcontractorToLoad.load(function (err, res) {
+    console.log(11111);
+    console.log(subcontractorToLoad);
+    console.log("-----------");
+    console.log(that.state.user.id);
+    console.log("result:", res);
+    console.log(33333, subcontractorToLoad.user_id, that.state.user.id);
+      if(subcontractorToLoad.user_id != that.state.user.id) {
+        console.log("returning 403");
+        console.log(subcontractorToLoad);
+        that.response.status = 403;
+        that.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+        //next(403, res);
+      } else {
+        console.log("returning 200");
+        that.response.status = 200;
+        console.log("set status to 200 like i wanted");
+        that.body = { "result" : "subcontractor loaded", "subcontractor" : subcontractorToLoad };
+        console.log("set body to something");
+        //next(200, res);
+      }
+    console.log("done!");
+    //yield next;
+  });
+  yield next;
+  console.log("I AM ASYNC!");
+  //this.response.status = 200;
+  //this.body = { "result" : "subcontractor loaded", "subcontractor" : subcontractorToLoad };
 })
 
 // update a subcontractor

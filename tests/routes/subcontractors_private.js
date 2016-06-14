@@ -126,13 +126,16 @@ describe('/subcontractors private routes testing', function() {
     .send({name: "John Smith", coi_expires_at: coi_expires_at})
     .end();
 
-    var subcontractor_id = response.body.subcontractor.id;    
+    var subcontractor_id = response.body.subcontractor.id;
     // try to load subcontractor
     const response3 =
       yield request.get("/subcontractors/" + subcontractor_id)
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
+
+    //console.log("respons:", response3);
+
     expect(response3.status).to.equal(200, response3.text);
     expect(response3.body).to.be.an('object');
     expect(response3.body).to.be.json;

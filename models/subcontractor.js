@@ -1,7 +1,8 @@
 'use strict';
 
-var co = require('co');
-var thunkify = require('thunkify');
+// var co = require('co');
+// var thunkify = require('thunkify');
+var sync = require('synchronize');
 
 var massive = require("massive");
 
@@ -18,19 +19,63 @@ var Subcontractor = function(properties) {
 
 // set id to the subcontracgtor obejct, call load to populate the rest of the properties
 
-Subcontractor.prototype.load = function () {
-  var findOne = thunkify(db.subcontractors.findOne);
-
-  co(function *() {
-    var res = yield findOne({id:this.id});
+Subcontractor.prototype.load = function (cb) {
+  console.log(1);
+  var sub = db.subcontractors;
+  // sync(sub, 'findOne');
+  console.log(2);
+  var that = this;
+// mbk
+  db.subcontractors.findOne({id:this.id}, function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      cb(err, res);
+      return;
+      // done(err);
+    }
+    //full product with new id returned
+    if(res) {
+      _.assign(that, res);
+      //console.log("that:", that);
+      //console.log("res:", res);
+    }
     console.log(res);
-    return res;
-  }).then(function (value) {
-    console.log(value);
-  }, function (err) {
-    console.error(err.stack);
-  });
-}
+    cb(err, res);
+  }
+)}
+// mbk
+
+  // sync.fiber(function(){
+  //   try {
+  //     console.log(3);
+  //
+  //     var res = sub.findOne({id:this.id});
+  //     console.log(222222);
+  //     console.log(res);
+  //     return res;
+  //   } catch (err) {
+  //     console.log(4);
+  //     console.log(err)
+  //   }
+  //
+  // })
+// }
+
+
+
+//   var findOne = thunkify(db.subcontractors.findOne);
+//
+//   co(function *() {
+//     var res = yield findOne({id:this.id});
+//     console.log(res);
+//     return res;
+//   }).then(function (value) {
+//     console.log(value);
+//   }, function (err) {
+//     console.error(err.stack);
+//   });
+// }
 
 //
 // // return function (done) {
