@@ -2,7 +2,6 @@
 
 var AWS = require('aws-sdk');
 var s3Stream = require('s3-upload-stream')(new AWS.S3());
-var thunkify = require('thunkify');
 
 var CoAWS = require('co-aws-sdk');
 var co = require('co');
@@ -87,14 +86,7 @@ module.exports = require('koa-router')()
 .get('/subcontractors/:subcontractor_id', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
 
-  console.log("next: ", next);
-  var res = yield function (cb) { 
-    subcontractorToLoad.load(function (err, res) {
-       cb(err, res);
-    })
-  };
-  // the next line should work too.. bud doesn't. still trying to figure out why
-  //var res = yield thunkify(subcontractorToLoad.load)();
+  var res = yield subcontractorToLoad.load.bind(subcontractorToLoad);
   console.log(11111);
   console.log(subcontractorToLoad);
   console.log("-----------");
