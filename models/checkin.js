@@ -34,22 +34,39 @@ Checkin.prototype.loadAll = function (page_number, page_size) {
 
 
 // upsert checkin
-Checkin.prototype.save = function () {
-  // console.log(11111);
-  // console.log(this);
-  var inserted = db.checkins.saveSync(this);
-    if(!this.id) {
-      this.id = inserted.id; // assign newly generated id to the object
-      _.assign(this, inserted);
-    };
+Checkin.prototype.save = function (callback) {
+  var that = this;
+  db.checkins.save(that, function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    if(res) {
+      _.assign(that, res);
+    }
+    callback(err, res);
+  });
 }
 
+
+
 // update checkin
-Checkin.prototype.update = function () {
-  // console.log(1111);
-  // console.log(this);
-  // var db1 = require('../consts').DB;
-  return db.checkins.updateSync(this);
+Checkin.prototype.update = function (callback) {
+  var that = this;
+  db.checkins.update(that.id, that, function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    if(res) {
+      _.assign(that, res);
+    }
+    callback(err, res);
+  });
 }
 
 

@@ -73,7 +73,8 @@ module.exports = require('koa-router')()
           action_code_id: action_code_id
         }
       );
-      checkin.save();
+      yield checkin.save.bind(checkin);
+
       this.response.status = 200;
       this.body = { "checkin" : checkin };
     }
@@ -113,6 +114,7 @@ module.exports = require('koa-router')()
       id: this.params.checkin_id
     }
   );
+
   checkin.load();
 
   if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
@@ -147,7 +149,7 @@ module.exports = require('koa-router')()
         this.response.status = 403;
         this.body = { "error" : 'unable to update to more then 7 days old checkin'};
       } else {
-        checkin.update();
+        yield checkin.update.bind(checkin);
 
         this.response.status = 200;
         this.body = { "checkin" : checkin };

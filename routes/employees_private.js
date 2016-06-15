@@ -26,7 +26,7 @@ module.exports = require('koa-router')()
         email: data.email,
         subcontractor_id: data.subcontractor_id
       });
-  employee.save();
+  yield employee.save.bind(employee);
 
   this.response.status = 200;
   this.body = { "result": "employee successfully added", "employee" : employee};
@@ -37,7 +37,9 @@ module.exports = require('koa-router')()
 .post('/employees/:employee_id/activation', function *(next) {
   var employee =
     new Employee({ id: parseInt(this.params.employee_id)});
-  employee.load();
+
+  yield employee.load.bind(employee);
+
   // check that the employee exists and belongs to the user
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -50,7 +52,7 @@ module.exports = require('koa-router')()
           activation_code: activation_code
         });
     // employee.activation_code = activation_code;
-    employee1.update();
+    yield employee1.update.bind(employee1);
 
     var email = new sendgrid.Email();
     email.addTo(employee.email);
@@ -82,8 +84,9 @@ module.exports = require('koa-router')()
 //deactivate an employee
 .delete('/employees/:employee_id/activation', function *(next) {
   var employeeToLoad =
-    new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+    new Employee({ id: parseInt(this.params.employee_id)});
+  yield employeeToLoad.load.bind(employeeToLoad);
+
   // check that the employee exists and belongs to the user
   if(employeeToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -91,11 +94,11 @@ module.exports = require('koa-router')()
   } else {
     var employee =
       new Employee(
-        { id: this.params.employee_id,
+        { id: parseInt(this.params.employee_id),
           user_id: this.state.user.id,
           activation_code: null
         });
-    employee.save();
+    yield employee.update.bind(employee);
 
     this.response.status = 200;
     this.body = { "result" : "employee deactivated"};
@@ -107,7 +110,7 @@ module.exports = require('koa-router')()
 .delete('/employees/:employee_id', function *(next) {
   var employeeToLoad =
     new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  employeeToLoad.load.bind(employeeToLoad);
   // check that the employee exists and belongs to the user
   if(employeeToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -140,7 +143,7 @@ module.exports = require('koa-router')()
 // get employee details
 .get('/employees/:employee_id', function *(next) {
   var employeeToLoad = new Employee({ id: this.params.employee_id});
-  employeeToLoad.load();
+  employeeToLoad.load.bind(employeeToLoad);
 
   if(employeeToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -155,7 +158,7 @@ module.exports = require('koa-router')()
 .put('/employees/:employee_id', function *(next) {
   let data = this.request.body;
   var employee = new Employee({ id: parseInt(this.params.employee_id)});
-  employee.load();
+  employee.load.bind(employee);
 
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -175,14 +178,14 @@ module.exports = require('koa-router')()
 // add employee to subcontractor
 .post('/employees/:employee_id/subcontractor/:subcontractor_id', function *(next) {
   var employee = new Employee({ id: this.params.employee_id});
-  employee.load();
+  employee.load.bind(employee);
 
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     employee.subcontractor_id = this.params.subcontractor_id;
-    employee.save();
+    yield employee.save.bind(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully added to subcontractor"};
@@ -192,14 +195,14 @@ module.exports = require('koa-router')()
 // delete employee from a subcontractor
 .delete('/employees/:employee_id/subcontractor', function *(next) {
   var employee = new Employee({ id: this.params.employee_id});
-  employee.load();
+  employee.load.bind(employee);
 
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     employee.subcontractor_id = null;
-    employee.save();
+    yield employee.save.bind(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully deleted from subcontractor"};

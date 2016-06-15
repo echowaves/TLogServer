@@ -66,7 +66,6 @@ describe('/checkins routes testing', function() {
     // console.log("response1.body");
     // console.log(response1.body);
     activation_code = response1.body.activation_code;
-
   });
 
   it('should not be able to create checkin with missing parameters', function*() {

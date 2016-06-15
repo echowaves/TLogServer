@@ -11,14 +11,18 @@ var Employee = function(properties) {
 
 
 // set id to the employee obejct, call load to populate the rest of the properties
-Employee.prototype.load = function () {
-  var foundEmployee = db.employees.findOneSync({id:this.id});
-  if(foundEmployee) {
-    _.assign(this, foundEmployee);
-    return this;
-  } else {
-    return null;// this is error
-  }
+Employee.prototype.load = function (callback) {
+  var that = this;
+  db.employees.findOne({id:that.id}, function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    _.assign(that, res);
+    callback(err, res);
+  });
 }
 
 // set activation_code to the employee object, call load to populate the rest of the properties
@@ -61,17 +65,37 @@ Employee.prototype.loadAllForUser = function (user_id) {
 }
 
 // upsert employee
-Employee.prototype.save = function () {
-  var inserted = db.employees.saveSync(this);
-  if(!this.id) {
-    this.id = inserted.id; // assign newly generated id to the object
-    _.assign(this, inserted);
-  };
+Employee.prototype.save = function (callback) {
+  var that = this;
+  db.employees.save(that, function(err, res) {
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+
+    _.assign(that, res);
+    callback(err, res);
+  });
 }
 
 // update employee
-Employee.prototype.update = function () {
-  return db.employees.updateSync(this);
+Employee.prototype.update = function (callback) {
+  var that = this;
+  db.employees.update({id: that.id}, that,  function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    //full product with new id returned
+    if(res) {
+      _.assign(that, res);
+    };
+    callback(err, res);
+  });
 }
 
 

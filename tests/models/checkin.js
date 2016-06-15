@@ -56,7 +56,7 @@ describe('Checkin model testing', function() {
         duration: duration,
         action_code_id: action_code_id
       });
-    checkin.save();
+    yield checkin.save.bind(checkin);
     assert(checkin.id);
   });
 
@@ -74,8 +74,7 @@ describe('Checkin model testing', function() {
         duration: duration,
         action_code_id: action_code_id
       });
-    checkin.save();
-
+    yield checkin.save.bind(checkin);
     var checkin1 =
       new Checkin({
         id: checkin.id
