@@ -46,7 +46,7 @@ describe('Employee model testing', function() {
         user_id: user.id,
         name: "John Smith",
         email: employeeEmail});
-    employee.save();
+    yield employee.save.bind(employee);
     assert(employee.id);
   });
 
@@ -58,7 +58,7 @@ describe('Employee model testing', function() {
         user_id: user.id,
         name: "John Smith",
         email: employeeEmail});
-    employee.save();
+    yield employee.save.bind(employee);
 
     var employeeEmail2 = uuid.v4() + "@example.com";
     var employee2 =
@@ -66,7 +66,7 @@ describe('Employee model testing', function() {
         user_id: user.id,
         name: "John Smith",
         email: employeeEmail2});
-    employee2.save();
+    yield employee2.save.bind(employee2);
 
     var employees = employee.loadAllForUser(user.id);
     assert(Array.isArray(employees), "must be array");

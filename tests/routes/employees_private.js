@@ -16,22 +16,23 @@ const request = supertest.agent(app.listen());
 var assert = require('assert');
 var User   = require('../../models/user');
     // Employee = require('../../models/employee');
-
+var Util   = require('../../models/util');
+var util = new Util();
 
 describe('/employees private routes testing', function() {
   var user, token;
 
   beforeEach(function *() {
     //cleanup users
-    db.users.destroySync({});
+    yield util.usersClean.bind(util);
     //cleanup employees
-    db.employees.destroySync({});
+    yield util.employeesClean.bind(util);
     //cleanup checkins
-    db.checkins.destroySync({});
+    yield util.checkinsClean.bind(util);
     //cleanup actioncodes
-    db.action_codes.destroySync({});
+    yield util.action_codesClean.bind(util);
     //cleanup subcontractors
-    db.subcontractors.destroySync({});
+    yield util.subcontractorsClean.bind(util);
 
 
     var userEmail = uuid.v4() + "@example.com";

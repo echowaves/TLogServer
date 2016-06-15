@@ -47,7 +47,7 @@ describe('Subcontractor model testing', function() {
         user_id: user.id,
         name: "John Smith",
         coi_expires_at: coiExpitersAt});
-    subcontractor.save();
+    yield subcontractor.save.bind(subcontractor);
     assert(subcontractor.id);
   });
 
@@ -59,7 +59,7 @@ describe('Subcontractor model testing', function() {
         user_id: user.id,
         name: "John Smith",
         coi_expires_at: coiExpitersAt});
-    subcontractor.save();
+        yield subcontractor.save.bind(subcontractor);
 
     var coiExpitersAt2 = moment().add(11, 'M').format();
     var subcontractor2 =
@@ -67,7 +67,7 @@ describe('Subcontractor model testing', function() {
         user_id: user.id,
         name: "John Smith",
         coi_expires_at: coiExpitersAt2});
-    subcontractor2.save();
+        yield subcontractor2.save.bind(subcontractor2);
 
     var subcontractors = subcontractor.loadAllForUser(user.id);
     assert(Array.isArray(subcontractors), "must be array");

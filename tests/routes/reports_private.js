@@ -17,6 +17,8 @@ var User   = require('../../models/user'),
 Employee   = require('../../models/employee'),
 ActionCode = require('../../models/action_code'),
 Checkin    = require('../../models/checkin');
+var Util   = require('../../models/util');
+var util = new Util();
 
 describe('/reports routes testing', function() {
   var activation_code, user, token;
@@ -25,13 +27,15 @@ describe('/reports routes testing', function() {
 
   before(function *() {
     //cleanup users
-    db.users.destroySync({});
+    yield util.usersClean.bind(util);
     //cleanup employees
-    db.employees.destroySync({});
+    yield util.employeesClean.bind(util);
     //cleanup checkins
-    db.checkins.destroySync({});
+    yield util.checkinsClean.bind(util);
     //cleanup actioncodes
-    db.action_codes.destroySync({});
+    yield util.action_codesClean.bind(util);
+    // //cleanup subcontractors
+    // yield util.subcontractorsClean.bind(util);
 
     for(var i = 0; i < actionCodes.length; i++) {
       actionCodes[i] = db.action_codes.saveSync({code: '000'+i, description: "this is a dummy action code"+i+" just for testing"});
@@ -60,7 +64,7 @@ describe('/reports routes testing', function() {
       .set('Authorization', 'Bearer ' + token)
       .send({
         email: "employee" + i + "@example.com",
-        name: "employee" + i + " name"        
+        name: "employee" + i + " name"
       })
       .end();
       employees[i] = response.body.employee;

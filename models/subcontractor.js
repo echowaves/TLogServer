@@ -48,14 +48,41 @@ Subcontractor.prototype.loadAllForUser = function (user_id) {
 }
 
 // upsert employee
-Subcontractor.prototype.save = function () {
-  // console.log(this);
-  var inserted = db.subcontractors.saveSync(this);
-
-    if(!this.id) {
-      this.id = inserted.id; // assign newly generated id to the object
+Subcontractor.prototype.save = function (callback) {
+  var that = this;
+  db.subcontractors.save(this, function(err, res) {
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
     }
+      if(res) {
+        _.assign(that, res);
+      }
+      callback(err, res);
+  });
 }
+
+// update employee
+Subcontractor.prototype.update = function (callback) {
+  var that = this;
+  db.subcontractors.update({id: that.id}, that,  function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    //full product with new id returned
+    if(res) {
+      _.assign(that, res);
+    };
+    callback(err, res);
+  });
+}
+
+
 
 //delete a subcontractor
 Subcontractor.prototype.delete = function () {

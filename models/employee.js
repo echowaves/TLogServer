@@ -27,10 +27,7 @@ Employee.prototype.load = function (callback) {
 
 // set activation_code to the employee object, call load to populate the rest of the properties
 Employee.prototype.loadByActivationCode = function () {
-  // console.log(123123123);
-  // console.log(this);
   var foundEmployee = db.employees.findOneSync({activation_code:this.activation_code});
-  // console.log(foundEmployee);
   if(foundEmployee) {
     _.assign(this, foundEmployee);
     return this;
@@ -74,7 +71,6 @@ Employee.prototype.save = function (callback) {
       callback(err, res);
       return;
     };
-
     _.assign(that, res);
     callback(err, res);
   });

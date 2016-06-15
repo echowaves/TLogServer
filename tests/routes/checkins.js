@@ -178,12 +178,11 @@ describe('/checkins routes testing', function() {
 
     // and activate the employee
     const response3 =
-    yield request.post("/employees/" + response2.body.id + "/activation")
+    yield request.post("/employees/" + response2.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
     const another_activation_code = response3.body.activation_code;
-
 
     const response4 =
     yield request.get('/employees/' + another_activation_code + '/checkins/' + checkin_id)
@@ -325,7 +324,7 @@ describe('/checkins routes testing', function() {
 
     // and activate the employee
     const response3 =
-    yield request.post("/employees/" + response2.body.id + "/activation")
+    yield request.post("/employees/" + response2.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -417,7 +416,7 @@ describe('/checkins routes testing', function() {
 
     // and activate the employee
     const response3 =
-    yield request.post("/employees/" + response2.body.id + "/activation")
+    yield request.post("/employees/" + response2.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();
@@ -510,7 +509,7 @@ describe('/checkins routes testing', function() {
 
     // and activate the employee
     const response3 =
-    yield request.post("/employees/" + response2.body.id + "/activation")
+    yield request.post("/employees/" + response2.body.employee.id + "/activation")
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer ' + token)
     .end();

@@ -15,7 +15,7 @@ var uuid = require('uuid');
 
 describe('ActionCode model testing', function() {
   before(function *() {
-    //clean all action codes first  
+    //clean all action codes first
     db.action_codes.destroySync({});
   })
 

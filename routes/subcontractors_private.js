@@ -32,10 +32,10 @@ module.exports = require('koa-router')()
   } else {
     var subcontractor =
     new Subcontractor(
-      { user_id: this.state.user.id,
+      { user_id: parseInt(this.state.user.id),
         name: name
       });
-      subcontractor.save();
+      yield subcontractor.save.bind(subcontractor);
 
       this.response.status = 200;
       this.body = { "result": "subcontractor successfully added", "subcontractor" : subcontractor};
@@ -47,7 +47,7 @@ module.exports = require('koa-router')()
 .delete('/subcontractors/:subcontractor_id', function *(next) {
   var subcontractorToLoad =
     new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
-  subcontractorToLoad.load();
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
   // check that the subcontractor exists and belongs to the user
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -100,29 +100,22 @@ module.exports = require('koa-router')()
 .put('/subcontractors/:subcontractor_id', function *(next) {
   let data = this.request.body;
   var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
-  subcontractorToLoad.load();
-
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
     var subcontractor =
       new Subcontractor(
-        { id: this.params.subcontractor_id,
-          user_id: this.state.user.id,
+        { id: parseInt(this.params.subcontractor_id),
+          user_id: parseInt(this.state.user.id),
           name: data.name,
           coi_expires_at: data.coi_expires_at
         });
-
-// console.log(subcontractor);
-
-    subcontractor.save();
-
+    yield subcontractor.update.bind(subcontractor);
     this.response.status = 200;
     this.body = { "result": "subcontractor successfully updated"};
   }
-
-
 })
 
 //upload COI
@@ -137,8 +130,6 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
     let subcontractor_id = this.params.subcontractor_id;
-    // console.log("subcontractor_id: " + subcontractor_id);
-    // console.log("body: " + body);
     var file = this.request.body.files.coi.path;
 
     var read = fs.createReadStream(file);
@@ -166,8 +157,6 @@ module.exports = require('koa-router')()
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-    // console.log("subcontractor_id: " + subcontractor_id);
-    // console.log("body: " + body);
 
     var s3 = new AWS.S3();
 
@@ -185,11 +174,9 @@ module.exports = require('koa-router')()
     on('data', function(d) {
     }).
     on('error', function() {
-      // console.log("not found.");
       that.response.status = 404;
     }).
     on('end', function() {
-      // console.log("done.");
       that.response.status = 200;
     });//fs.createReadStream(subcontractor_id.toString());
   }
@@ -205,8 +192,6 @@ module.exports = require('koa-router')()
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-    // console.log("subcontractor_id: " + subcontractor_id);
-    // console.log("body: " + body);
 
     var s3 = new AWS.S3();
 
@@ -233,7 +218,7 @@ module.exports = require('koa-router')()
 //check if COI existin in s3
 .get('/subcontractors/:subcontractor_id/coi_exists', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  subcontractorToLoad.load();
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
@@ -251,14 +236,10 @@ module.exports = require('koa-router')()
 
     try {
       var result = yield s3.headObject(params);
-      // console.log("result");
-      // console.log(result);
       this.response.status = 200;
       this.body = { "result" : "COI uploaded"};
       // yield next;
     } catch (err) {
-      // console.error("err");
-      // console.error(err);
       if(err.code == "NotFound") {
         this.response.status = 404;
         this.body = { "error" : err};
