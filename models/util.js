@@ -15,7 +15,7 @@ var Util = function(properties) {
 Util.prototype.usersClean = function (callback) {
   db.users.destroy({}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Util.prototype.usersClean");
       console.log(err);
       callback(err, res);
       return;
@@ -27,7 +27,7 @@ Util.prototype.usersClean = function (callback) {
 Util.prototype.employeesClean = function (callback) {
   db.employees.destroy({}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Util.prototype.employeesClean");
       console.log(err);
       callback(err, res);
       return;
@@ -39,7 +39,7 @@ Util.prototype.employeesClean = function (callback) {
 Util.prototype.checkinsClean = function (callback) {
   db.checkins.destroy({}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Util.prototype.checkinsClean");
       console.log(err);
       callback(err, res);
       return;
@@ -51,7 +51,7 @@ Util.prototype.checkinsClean = function (callback) {
 Util.prototype.action_codesClean = function (callback) {
   db.action_codes.destroy({}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Util.prototype.action_codesClean");
       console.log(err);
       callback(err, res);
       return;
@@ -63,7 +63,7 @@ Util.prototype.action_codesClean = function (callback) {
 Util.prototype.subcontractorsClean = function (callback) {
   db.subcontractors.destroy({}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Util.prototype.subcontractorsClean");
       console.log(err);
       callback(err, res);
       return;

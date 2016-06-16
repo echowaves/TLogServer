@@ -62,7 +62,7 @@ User.prototype.save = function (callback) {
 
   db.users.save(this, function(err, res) {
     if(err) {
-      console.log("error");
+      console.log("error User.prototype.save");
       console.log(err);
       callback(err, res);
       return;
@@ -81,7 +81,7 @@ User.prototype.update = function (callback) {
 
   db.users.update({id: that.id}, that,  function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error User.prototype.update");
       console.log(err);
       callback(err, res);
       return;

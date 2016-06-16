@@ -38,7 +38,7 @@ Checkin.prototype.save = function (callback) {
   var that = this;
   db.checkins.save(that, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Checkin.prototype.save");
       console.log(err);
       callback(err, res);
       return;
@@ -57,7 +57,7 @@ Checkin.prototype.update = function (callback) {
   var that = this;
   db.checkins.update(that.id, that, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Checkin.prototype.update");
       console.log(err);
       callback(err, res);
       return;

@@ -21,7 +21,7 @@ Subcontractor.prototype.load = function (callback) {
 // mbk
   db.subcontractors.findOne({id:this.id}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Subcontractor.prototype.load");
       console.log(err);
       callback(err, res);
       return;
@@ -52,7 +52,7 @@ Subcontractor.prototype.save = function (callback) {
   var that = this;
   db.subcontractors.save(this, function(err, res) {
     if(err) {
-      console.log("error");
+      console.log("error Subcontractor.prototype.save");
       console.log(err);
       callback(err, res);
       return;
@@ -69,7 +69,7 @@ Subcontractor.prototype.update = function (callback) {
   var that = this;
   db.subcontractors.update({id: that.id}, that,  function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Subcontractor.prototype.update");
       console.log(err);
       callback(err, res);
       return;

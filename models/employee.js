@@ -15,7 +15,7 @@ Employee.prototype.load = function (callback) {
   var that = this;
   db.employees.findOne({id:that.id}, function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Employee.prototype.load");
       console.log(err);
       callback(err, res);
       return;
@@ -66,7 +66,7 @@ Employee.prototype.save = function (callback) {
   var that = this;
   db.employees.save(that, function(err, res) {
     if(err) {
-      console.log("error");
+      console.log("error Employee.prototype.save");
       console.log(err);
       callback(err, res);
       return;
@@ -81,7 +81,7 @@ Employee.prototype.update = function (callback) {
   var that = this;
   db.employees.update({id: that.id}, that,  function(err, res){
     if(err) {
-      console.log("error");
+      console.log("error Employee.prototype.update");
       console.log(err);
       callback(err, res);
       return;
