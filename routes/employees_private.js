@@ -134,7 +134,7 @@ module.exports = require('koa-router')()
 // get all employess for current user
 .get('/employees', function *(next) {
   var employee = new Employee();
-  var employees = employee.loadAllForUser(this.state.user.id);
+  var employees = yield employee.loadAllForUser.bind(employee, this.state.user.id);
   this.response.status = 200;
   this.body = { "employees" : employees };
 })

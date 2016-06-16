@@ -69,7 +69,7 @@ describe('Subcontractor model testing', function() {
         coi_expires_at: coiExpitersAt2});
         yield subcontractor2.save.bind(subcontractor2);
 
-    var subcontractors = subcontractor.loadAllForUser(user.id);
+    var subcontractors = yield subcontractor.loadAllForUser.bind(subcontractor, user.id);
     assert(Array.isArray(subcontractors), "must be array");
     assert(subcontractors.length == 2, "array size must be 2");
   });

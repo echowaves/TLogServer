@@ -37,28 +37,42 @@ Employee.prototype.loadByActivationCode = function () {
 }
 
 // load all by subcontractor
-Employee.prototype.loadAllForSubcontractor = function () {
-  var foundEmployees = db.employees.findSync({subcontractor_id:this.subcontractor_id});
-  var employees = [];
-  foundEmployees.forEach(function(item){
-    var employee = new Employee();
-    _.assign(employee, item);
-    employees.push(employee);
+Employee.prototype.loadAllForSubcontractor = function (callback) {
+  db.employees.find({subcontractor_id:this.subcontractor_id}, function(err, foundEmployees) {
+    if(err) {
+      console.log("error Employee.prototype.loadAllForSubcontractor");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    var employees = [];
+    foundEmployees.forEach(function(item){
+      var employee = new Employee();
+      _.assign(employee, item);
+      employees.push(employee);
+    });
+    callback(err, employees);
   });
-  return employees;
 }
 
 
 //load all employees for user
-Employee.prototype.loadAllForUser = function (user_id) {
-  var foundEmployees = db.employees.findSync({user_id:user_id}, {order:"name asc"});
-  var employees = [];
-  foundEmployees.forEach(function(item){
-    var employee = new Employee();
-    _.assign(employee, item);
-    employees.push(employee);
+Employee.prototype.loadAllForUser = function (user_id, callback) {
+  db.employees.find({user_id:user_id}, {order:"name asc"}, function(err, foundEmployees) {
+    if(err) {
+      console.log("error Employee.prototype.loadAllForUser");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    var employees = [];
+    foundEmployees.forEach(function(item){
+      var employee = new Employee();
+      _.assign(employee, item);
+      employees.push(employee);
+    });
+    callback(err, employees);
   });
-  return employees;
 }
 
 // upsert employee

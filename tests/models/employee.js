@@ -68,7 +68,7 @@ describe('Employee model testing', function() {
         email: employeeEmail2});
     yield employee2.save.bind(employee2);
 
-    var employees = employee.loadAllForUser(user.id);
+    var employees = yield employee.loadAllForUser.bind(employee, user.id);
     assert(Array.isArray(employees), "must be array");
     assert(employees.length == 2, "array size must be 2");
   });

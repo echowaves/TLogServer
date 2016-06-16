@@ -15,7 +15,7 @@ ActionCode.prototype.lookup = function (lookupString, callback) {
   db.run("select * from action_codes where code ilike $1 or description ilike $1 limit 100", ['%' + lookupString + '%'],
   function(err, actionCodesRes) {
     if(err) {
-      console.log("error ActionCode.prototype.loadAllForEmployee");
+      console.log("error ActionCode.prototype.lookup");
       console.log(err);
       callback(err, res);
       return;
@@ -26,8 +26,16 @@ ActionCode.prototype.lookup = function (lookupString, callback) {
 
 
 // loadAll
-ActionCode.prototype.loadAll = function () {
-  return db.action_codes.findSync();
+ActionCode.prototype.loadAll = function (callback) {
+  db.action_codes.find(function(err, actionCodesRes) {
+    if(err) {
+      console.log("error ActionCode.prototype.loadAll");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    callback(err, actionCodesRes);
+  });
 }
 
 

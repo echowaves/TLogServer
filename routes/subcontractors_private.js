@@ -56,7 +56,7 @@ module.exports = require('koa-router')()
     //check if there are any employees assigned to this subcontractor
     var employee = new Employee();
     employee.subcontractor_id = subcontractorToLoad.id;
-    var employees = employee.loadAllForSubcontractor();
+    var employees = yield employee.loadAllForSubcontractor.bind(employee);
 
     if(employees.length > 0) {
       this.response.status = 422;
@@ -75,7 +75,7 @@ module.exports = require('koa-router')()
 // get all subcontractors for current user
 .get('/subcontractors', function *(next) {
   var subcontractor = new Subcontractor();
-  var subcontractors = subcontractor.loadAllForUser(this.state.user.id);
+  var subcontractors = yield subcontractor.loadAllForUser.bind(subcontractor, this.state.user.id);
   this.response.status = 200;
   this.body = { "subcontractors" : subcontractors };
 })

@@ -36,15 +36,23 @@ Subcontractor.prototype.load = function (callback) {
 // mbk
 
 //load all subcontractors for user
-Subcontractor.prototype.loadAllForUser = function (user_id) {
-  var foundSubcontractors = db.subcontractors.findSync({user_id: user_id}, {order: "name asc"});
-  var subcontractors = [];
-  foundSubcontractors.forEach(function(item){
-    var subcontractor = new Subcontractor();
-    _.assign(subcontractor, item);
-    subcontractors.push(subcontractor);
+Subcontractor.prototype.loadAllForUser = function (user_id, callback) {
+  db.subcontractors.find({user_id: user_id}, {order: "name asc"} , function(err, foundSubcontractors) {
+    if(err) {
+      console.log("error Subcontractor.prototype.loadAllForUser");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+
+    var subcontractors = [];
+    foundSubcontractors.forEach(function(item){
+      var subcontractor = new Subcontractor();
+      _.assign(subcontractor, item);
+      subcontractors.push(subcontractor);
+    });
+    callback(err, subcontractors);
   });
-  return subcontractors;
 }
 
 // upsert employee

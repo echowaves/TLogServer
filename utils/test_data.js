@@ -11,8 +11,8 @@ var User       = require('../models/user'),
 var names = require('names');
 
 //find all action codes
-
-var actionCodes = new ActionCode().loadAll();
+var actionCode = new ActionCode();
+var actionCodes = yield actionCode.loadAll.bind(actionCode);
 
 //create few users
 for (var i = 0; i < 10; i++) {

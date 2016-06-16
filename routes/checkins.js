@@ -29,7 +29,7 @@ module.exports = require('koa-router')()
   } else {
 
     var checkinTemplate = new Checkin({email: employee.email});
-    var checkins = checkinTemplate.loadAll(page_number, page_size);
+    var checkins = yield checkinTemplate.loadAll.bind(checkinTemplate, page_number, page_size);
 
     this.response.status = 200;
     this.body = {

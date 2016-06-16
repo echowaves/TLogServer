@@ -24,12 +24,24 @@ Checkin.prototype.load = function () {
 }
 
 // set email address  to the checkin object (test covered only by route test)
-Checkin.prototype.loadAll = function (page_number, page_size) {
-  if(this.email == null)          { return null;};
+Checkin.prototype.loadAll = function (page_number, page_size, callback) {
+  if(this.email == null)          {
+    callback("email is missin", null);
+    return;
+  };
   if(page_number == null)   { page_number = '0';};
   if(page_size == null)     { page_size = '100';};
 
-  return db.runSync("SELECT c.id, c.email, c.user_id, c.checked_in_at, c.duration, c.action_code_id, a.code, a.description FROM checkins c INNER JOIN action_codes a ON c.action_code_id = a.id WHERE c.email=$1 ORDER BY c.checked_in_at desc LIMIT $2 OFFSET $3", [this.email, parseInt(page_size), parseInt(page_number) * parseInt(page_size)]);
+  db.run("SELECT c.id, c.email, c.user_id, c.checked_in_at, c.duration, c.action_code_id, a.code, a.description FROM checkins c INNER JOIN action_codes a ON c.action_code_id = a.id WHERE c.email=$1 ORDER BY c.checked_in_at desc LIMIT $2 OFFSET $3", [this.email, parseInt(page_size), parseInt(page_number) * parseInt(page_size)],
+  function(err, checkinsRes) {
+    if(err) {
+      console.log("error Checkin.prototype.loadAll");
+      console.log(err);
+      callback(err, checkinsRes);
+      return;
+    };
+    callback(err, checkinsRes);
+  });
 }
 
 
