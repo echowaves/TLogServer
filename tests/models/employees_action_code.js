@@ -51,7 +51,9 @@ describe('EmployeesActionCode model testing', function() {
   });
 
   it('should load ActionCodes for employee', function *() {
-    assert(new ActionCode().loadAllForEmployee(employee_id).length == 0);
+    var actionCode = new ActionCode();
+    var actionCodes = yield actionCode.loadAllForEmployee.bind(actionCode, employee_id);
+    assert(actionCodes.length == 0);
 
     var description = "testing action code";
     var actionCode =
@@ -69,7 +71,9 @@ describe('EmployeesActionCode model testing', function() {
         action_code_id: action_code_id
       });
     employeesActionCode.save();
-    assert(new ActionCode().loadAllForEmployee(employee_id).length == 1);
+    var actonCode = new ActionCode();
+    var actionCodes = yield actonCode.loadAllForEmployee.bind(actonCode, employee_id);
+    assert(actionCodes.length == 1);
   });
 
 

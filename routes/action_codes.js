@@ -34,8 +34,8 @@ module.exports = require('koa-router')()
 
 // list all action codes specific to employee
 .get('/employees/:employee_id/actioncodes', function *(next) {
-  var results = new ActionCode().loadAllForEmployee(this.params.employee_id);
-
+  var actionCode = new ActionCode();
+  var results = yield actionCode.loadAllForEmployee.bind(actionCode, this.params.employee_id);
   this.response.status = 200;
   this.body = { "actionCodes" : results };
 })
