@@ -92,7 +92,7 @@ describe('/actioncodes route testing', function() {
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
     user = new User({email: userEmail, password: password});
-    user.save();
+    yield user.save.bind(user);
 
     //authenticate and obtain a token
     const resp =

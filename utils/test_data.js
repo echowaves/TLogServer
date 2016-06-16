@@ -19,7 +19,7 @@ for (var i = 0; i < 10; i++) {
   var randomName = names();
   var userEmail = randomName.replace(/\s+/g, '-').toLowerCase() + "@example.com";
   var user = new User({email: userEmail, password: 'password'});
-  user.save();
+  yield user.save.bind(user);
 
   // http://localhost:3000/public/mobile_employee.html?activation_code=f880edc5-de0c-4d6e-940c-0a71b644ad36
 
@@ -38,7 +38,7 @@ for (var i = 0; i < 10; i++) {
           email: employeeEmail,
           activation_code: activation_code
         });
-    employee.save();
+    yield employee.save.bind(employee);
     console.log("Employee: " + employee.id);
 
 
@@ -59,7 +59,7 @@ for (var i = 0; i < 10; i++) {
             action_code_id: actionCode.id
           }
         );
-        checkin.save();
+        yield checkin.save.bind(checkin);
       }
     }
   }

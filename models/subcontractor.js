@@ -64,7 +64,7 @@ Subcontractor.prototype.save = function (callback) {
   });
 }
 
-// update employee
+// update
 Subcontractor.prototype.update = function (callback) {
   var that = this;
   db.subcontractors.update({id: that.id}, that,  function(err, res){

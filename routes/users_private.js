@@ -23,7 +23,7 @@ module.exports = require('koa-router')()
 
 //update a user
 .put('/users', function *(next) {
-  let data = this.request.body; 
+  let data = this.request.body;
   let jwtUser = this.state.user;
   var user = new User({id: jwtUser.id})
   if(data.email) {
@@ -32,7 +32,7 @@ module.exports = require('koa-router')()
   if(data.password) {
     user.password = data.password;
   }
-  user.save();
+  yield user.update.bind(user);
 
   this.response.status = 200;
   this.body = { 'result': 'user updated, must sign in again'};

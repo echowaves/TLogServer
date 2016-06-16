@@ -17,10 +17,10 @@ var uuid = require('uuid');
 describe('Subcontractor model testing', function() {
   var user;
 
-  beforeEach(function () {
+  beforeEach(function *() {
     var userEmail = uuid.v4() + "@example.com";
     user = new User({email: userEmail, password: 'secret'});
-    user.save();
+    yield user.save.bind(user);
   });
 
   it('should create a subcontractor', function *() {

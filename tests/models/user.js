@@ -28,14 +28,14 @@ describe('User model testing', function() {
   it('should assign id after being saved', function *() {
     var userEmail = uuid.v4() + "@example.com";
     var user = new User({email: userEmail, password: 'secret'});
-    user.save();
+    yield user.save.bind(user);
     assert(user.id);
   });
 
   it('should hash a password after save', function *() {
     var userEmail = uuid.v4() + "@example.com";
     var user = new User({email: userEmail, password: 'secret',});
-    user.save();
+    yield user.save.bind(user);
     assert.notEqual(user.password, 'secret');
   });
 
@@ -53,21 +53,21 @@ describe('User model testing', function() {
   it('should validate correct password', function *() {
     var userEmail = uuid.v4() + "@example.com";
     var user = new User({password: 'secret', email: userEmail});
-    user.save();
+    yield user.save.bind(user);
     assert(user.comparePassword('secret'));
   });
 
   it('should not validate wrong password', function *() {
     var userEmail = uuid.v4() + "@example.com";
     var user = new User({password: 'secretwrong', email: userEmail});
-    user.save();
+    yield user.save.bind(user);
     assert(!user.comparePassword('secret'));
   });
 
   it('should validate user by email and password', function *() {
     var userEmail = uuid.v4() + "@example.com";
     var user = new User({password: 'secret', email: userEmail});
-    user.save();
+    yield user.save.bind(user);
 
     var validUser = new User({password: 'secret', email: userEmail});
     var invalidUserEmail = new User({password: 'secret', email: '1' + userEmail});
@@ -81,7 +81,7 @@ describe('User model testing', function() {
   it('should generate jwt while validating user by email and password', function *() {
     var userEmail = uuid.v4() + "@example.com";
     var user = new User({password: 'secret', email: userEmail});
-    user.save();
+    yield user.save.bind(user);
 
     var validUser = new User({password: 'secret', email: userEmail});
 

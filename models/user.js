@@ -55,13 +55,45 @@ User.prototype.load = function () {
 }
 
 // upsert user
-User.prototype.save = function () {
+User.prototype.save = function (callback) {
+  var that = this;
+
   this.hashPassword();
-  var inserted = db.users.saveSync(this);
-    if(!this.id) {
-      this.id = inserted.id; // assign newly generated id to the object
+
+  db.users.save(this, function(err, res) {
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
     }
+      if(res) {
+        _.assign(that, res);
+      }
+      callback(err, res);
+  });
 }
+
+// update
+User.prototype.update = function (callback) {
+  var that = this;
+  this.hashPassword();
+
+  db.users.update({id: that.id}, that,  function(err, res){
+    if(err) {
+      console.log("error");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    //full product with new id returned
+    if(res) {
+      _.assign(that, res);
+    };
+    callback(err, res);
+  });
+}
+
 
 // //delete a user (no user should ever be deleted)
 // User.prototype.delete = function () {

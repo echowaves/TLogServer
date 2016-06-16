@@ -45,7 +45,7 @@ describe('/reports routes testing', function() {
     var userEmail = "user@example.com";
     var password = 'secret';
     user = new User({email: userEmail, password: password});
-    user.save();
+    yield user.save.bind(user);
 
     //authenticate user and obtain a token
     const resp =

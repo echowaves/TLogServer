@@ -36,7 +36,7 @@ describe('/checkins routes testing', function() {
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
     user = new User({email: userEmail, password: password});
-    user.save();
+    yield user.save.bind(user);
 
     //authenticate user and obtain a token
     const resp =
