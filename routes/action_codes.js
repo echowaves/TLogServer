@@ -26,7 +26,8 @@ module.exports = require('koa-router')()
 
 // lookup
 .get('/actioncodes/lookup/:lookup_string', function *(next) {
-  var results = new ActionCode().lookup(this.params.lookup_string);
+  var actionCode = new ActionCode();
+  var results = yield actionCode.lookup.bind(actionCode, this.params.lookup_string);
 
   this.response.status = 200;
   this.body = { "actionCodes" : results };

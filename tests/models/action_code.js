@@ -92,12 +92,12 @@ describe('ActionCode model testing', function() {
       });
     actionCode3.save();
 
-    var foundCodes = actionCode.lookup("car");
+    var foundCodes = yield actionCode.lookup.bind(actionCode, "car");
     assert(foundCodes.length == 2);
     assert(foundCodes[0].code == "5403");
     assert(foundCodes[1].code == "5432");
 
-    foundCodes = actionCode.lookup("225");
+    foundCodes = yield actionCode.lookup.bind(actionCode, "225");
     assert(foundCodes.length == 1);
     assert(foundCodes[0].code == "5225");
   });

@@ -11,9 +11,19 @@ var ActionCode = function(properties) {
 
 
 // lookup action codes by code and/or description
-ActionCode.prototype.lookup = function (lookupString) {
-  return db.runSync("select * from action_codes where code ilike $1 or description ilike $1 limit 100", ['%' + lookupString + '%']);
+ActionCode.prototype.lookup = function (lookupString, callback) {
+  db.run("select * from action_codes where code ilike $1 or description ilike $1 limit 100", ['%' + lookupString + '%'],
+  function(err, actionCodesRes) {
+    if(err) {
+      console.log("error ActionCode.prototype.loadAllForEmployee");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    callback(err, actionCodesRes);
+  });
 }
+
 
 // loadAll
 ActionCode.prototype.loadAll = function () {
