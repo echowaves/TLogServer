@@ -18,7 +18,7 @@ module.exports = require('koa-router')()
 // get action code by id
 .get('/actioncodes/:action_code_id', function *(next) {
   var actionCodeToLoad = new ActionCode({ id: parseInt(this.params.action_code_id)});
-  actionCodeToLoad.load();
+  yield actionCodeToLoad.load.bind(actionCodeToLoad);
 
   this.response.status = 200;
   this.body = { "result" : actionCodeToLoad };

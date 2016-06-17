@@ -46,7 +46,7 @@ describe('EmployeesActionCode model testing', function() {
         employee_id: employee_id,
         action_code_id: action_code_id
       });
-    actionCode.save();
+    yield actionCode.save.bind(actionCode);
     assert(actionCode.id);
   });
 
@@ -61,7 +61,7 @@ describe('EmployeesActionCode model testing', function() {
         code: "001",
         description: description
       });
-    actionCode.save();
+    yield actionCode.save.bind(actionCode);
 
     var employee_id = 3;
     var action_code_id = actionCode.id;
@@ -70,7 +70,7 @@ describe('EmployeesActionCode model testing', function() {
         employee_id: employee_id,
         action_code_id: action_code_id
       });
-    employeesActionCode.save();
+    yield employeesActionCode.save.bind(employeesActionCode);
     var actonCode = new ActionCode();
     var actionCodes = yield actonCode.loadAllForEmployee.bind(actonCode, employee_id);
     assert(actionCodes.length == 1);

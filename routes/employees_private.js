@@ -122,7 +122,7 @@ module.exports = require('koa-router')()
           user_id: this.state.user.id,
           activation_code: null
         });
-    employee.delete();
+    yield employee.delete.bind(employee);
 
     this.response.status = 200;
     this.body = { "result" : "employee deleted"};
@@ -219,7 +219,7 @@ module.exports = require('koa-router')()
           employee_id: this.params.employee_id,
           action_code_id: this.params.action_code_id
         });
-    employeesActionCode.save();
+    yield employeesActionCode.save.bind(employeesActionCode);
 
     this.response.status = 200;
     this.body = { "result": "employeesActionCode successfully created"};
@@ -233,7 +233,7 @@ module.exports = require('koa-router')()
         employee_id: this.params.employee_id,
         action_code_id: this.params.action_code_id
       });
-  employeesActionCode.delete();
+  yield employeesActionCode.delete.bind(employeesActionCode);
 
   this.response.status = 200;
   this.body = { "result": "employeesActionCode successfully deleted"};

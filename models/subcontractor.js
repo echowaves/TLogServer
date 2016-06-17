@@ -93,8 +93,17 @@ Subcontractor.prototype.update = function (callback) {
 
 
 //delete a subcontractor
-Subcontractor.prototype.delete = function () {
-  db.subcontractors.destroySync({id: this.id});
+Subcontractor.prototype.delete = function (callback) {
+  db.subcontractors.destroy({id: this.id}, function(err, res){
+    if(err) {
+      console.log("error Subcontractor.prototype.delete");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    callback(err, res);
+  });
 }
+
 
 module.exports = Subcontractor;

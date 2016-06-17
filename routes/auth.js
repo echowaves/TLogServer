@@ -13,7 +13,7 @@ module.exports = require('koa-router')()
   let data = this.request.body;
   var user = new User({email: data.email, password: data.password});
 
-  var token = user.validateUserAndGenerateToken();
+  var token = yield user.validateUserAndGenerateToken.bind(user);
 
   if (token == null) {
     this.response.status = 401;

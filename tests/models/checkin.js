@@ -79,7 +79,7 @@ describe('Checkin model testing', function() {
       new Checkin({
         id: checkin.id
       });
-    checkin1.load();
+    yield checkin1.load.bind(checkin1);
     assert.deepEqual(checkin, checkin1);
   });
 

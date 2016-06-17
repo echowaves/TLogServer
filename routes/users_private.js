@@ -11,7 +11,7 @@ module.exports = require('koa-router')()
     let data = this.request.body;
     let jwtUser = this.state.user;
     var user = new User({id: jwtUser.id});
-    var success = user.load();
+    var success = yield user.load.bind(user);
     if(!success) {
       this.response.status = 404;
       this.body = { "error" : "User not found"};

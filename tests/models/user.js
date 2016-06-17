@@ -73,9 +73,9 @@ describe('User model testing', function() {
     var invalidUserEmail = new User({password: 'secret', email: '1' + userEmail});
     var invalidUserPasword = new User({password: 'secret1', email: userEmail});
 
-    assert.notEqual(validUser.validateUserAndGenerateToken(), null);
-    assert.equal(invalidUserEmail.validateUserAndGenerateToken(), null);
-    assert.equal(invalidUserPasword.validateUserAndGenerateToken(), null);
+    assert.notEqual(yield validUser.validateUserAndGenerateToken.bind(validUser), null);
+    assert.equal(yield invalidUserEmail.validateUserAndGenerateToken.bind(invalidUserEmail), null);
+    assert.equal(yield invalidUserPasword.validateUserAndGenerateToken.bind(invalidUserPasword), null);
   });
 
   it('should generate jwt while validating user by email and password', function *() {
@@ -85,7 +85,7 @@ describe('User model testing', function() {
 
     var validUser = new User({password: 'secret', email: userEmail});
 
-    var token = validUser.validateUserAndGenerateToken();
+    var token = yield validUser.validateUserAndGenerateToken.bind(validUser);
 
     assert(token.length > 10);
 

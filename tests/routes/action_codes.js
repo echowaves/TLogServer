@@ -28,19 +28,19 @@ describe('/actioncodes route testing', function() {
         code: "5225",
         description: "Reinforcing Steel Installation"
       });
-    actionCode1.save();
+    yield actionCode1.save.bind(actionCode1);
     var actionCode2 =
       new ActionCode({
         code: "5403",
         description: "Carpentry–low wage"
       });
-    actionCode2.save();
+    yield actionCode2.save.bind(actionCode2);
     var actionCode3 =
       new ActionCode({
         code: "5432",
         description: "Carpentry–high wage"
       });
-    actionCode3.save();
+    yield actionCode3.save.bind(actionCode3);
   });
 
 // this should not be exposed

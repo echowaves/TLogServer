@@ -147,8 +147,8 @@ describe('/checkins routes testing', function() {
     const response1 =
     yield request.get('/employees/' + activation_code + '/checkins/' + checkin_id)
     .set('Content-Type', 'application/json')
-    .send({checked_in_at: checked_in_at, action_code_id: 1 })
     .end();
+
     expect(response.status).to.equal(200, response.text);
     expect(response.body).to.contain.keys('checkin');
     expect(response.body.checkin.id).to.equal(response1.body.checkin.id);
@@ -527,7 +527,7 @@ describe('/checkins routes testing', function() {
     const response5 =
     yield request.get('/employees/' + 'non_existing_code' + '/checkins' )
     .set('Content-Type', 'application/json')
-    .send({checked_in_at: checked_in_at, action_code_id: 1 })
+    // .send({checked_in_at: checked_in_at, action_code_id: 1 })
     .end();
     expect(response5.status).to.equal(404, response5.text);
     expect(response5.body).to.contain.keys('error');

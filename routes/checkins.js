@@ -21,13 +21,11 @@ module.exports = require('koa-router')()
 
   var employee =
     new Employee({ activation_code: this.params.activation_code});
-  employee = employee.loadByActivationCode();
-
+  employee = yield employee.loadByActivationCode.bind(employee);
   if(employee == null) {
     this.response.status = 404;
     this.body = { "error" : 'employee not found' };
   } else {
-
     var checkinTemplate = new Checkin({email: employee.email});
     var checkins = yield checkinTemplate.loadAll.bind(checkinTemplate, page_number, page_size);
 
@@ -62,7 +60,7 @@ module.exports = require('koa-router')()
     } else {
       var employee1 = new Employee();
       employee1.activation_code = this.params.activation_code;
-      employee1.loadByActivationCode();
+      yield employee1.loadByActivationCode.bind(employee1);
 
       var checkin = new Checkin(
         {
@@ -74,7 +72,6 @@ module.exports = require('koa-router')()
         }
       );
       yield checkin.save.bind(checkin);
-
       this.response.status = 200;
       this.body = { "checkin" : checkin };
     }
@@ -85,14 +82,14 @@ module.exports = require('koa-router')()
 .get('/employees/:activation_code/checkins/:checkin_id', function *(next) {
     var employee =
       new Employee({ activation_code: this.params.activation_code});
-    employee.loadByActivationCode();
 
+    yield employee.loadByActivationCode.bind(employee);
     var checkin = new Checkin(
       {
-        id: this.params.checkin_id
+        id: parseInt(this.params.checkin_id)
       }
     );
-    checkin.load();
+    yield checkin.load.bind(checkin);
 
     if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
       this.response.status = 404;
@@ -107,7 +104,7 @@ module.exports = require('koa-router')()
 .put('/employees/:activation_code/checkins/:checkin_id', function *(next) {
   var employee =
     new Employee({ activation_code: this.params.activation_code});
-  employee.loadByActivationCode();
+  yield employee.loadByActivationCode.bind(employee);
 
   var checkin = new Checkin(
     {
@@ -115,7 +112,7 @@ module.exports = require('koa-router')()
     }
   );
 
-  checkin.load();
+  yield checkin.load.bind(checkin);
 
   if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
     this.response.status = 404;
@@ -162,14 +159,14 @@ module.exports = require('koa-router')()
 .delete('/employees/:activation_code/checkins/:checkin_id', function *(next) {
   var employee =
     new Employee({ activation_code: this.params.activation_code});
-  employee.loadByActivationCode();
+  yield employee.loadByActivationCode.bind(employee);
 
   var checkin = new Checkin(
     {
       id: this.params.checkin_id
     }
   );
-  checkin.load();
+  yield checkin.load.bind(checkin);
 
   if(employee == null || employee.email != checkin.email || employee.user_id != checkin.user_id) {
     this.response.status = 404;
@@ -185,7 +182,7 @@ module.exports = require('koa-router')()
       this.response.status = 403;
       this.body = { "error" : 'unable to delete more then 7 days old checkin'};
     } else {
-      checkin.delete();
+      yield checkin.delete.bind(checkin);
       this.response.status = 200;
       this.body = { "result" : 'checkin deleted' };
     }

@@ -24,34 +24,52 @@ User.prototype.comparePassword = function (password) {
 }
 
 // return token if user is found by email and password
-User.prototype.validateUserAndGenerateToken = function () {
-  var foundUser = db.users.findOneSync({email: this.email});
-  if(foundUser == null) {
-    return null;
-  }
-  var jwtUser = {
-    id: foundUser.id,
-    email: foundUser.email
-  };
-  var user = new User(foundUser);
-  var passwordsMatch = user.comparePassword(this.password);
+User.prototype.validateUserAndGenerateToken = function (callback) {
+  var that = this;
+  var foundUser = db.users.findOne({email: this.email}, function(err, res){
+    if(err) {
+      console.log("error User.prototype.validateUserAndGenerateToken");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    //full product with new id returned
+    if(res == null) {
+      callback(err, res);
+      return;
+    }
+    var jwtUser = {
+      id: res.id,
+      email: res.email
+    };
+    var user = new User(res);
+    var passwordsMatch = user.comparePassword(that.password);
 
-  if(passwordsMatch) {
-    return jwt.sign(jwtUser, SECRET, { expiresIn: '30d' });
-  };
-  return null;
+    if(passwordsMatch) {
+      callback(null, jwt.sign(jwtUser, SECRET, { expiresIn: '30d' }));
+      return;
+    };
+    callback(err, null);
+  });
 }
 
 // set id to the user object, call load to populate the rest of the properties
-User.prototype.load = function () {
-  var foundUser = db.users.findOneSync(this.id);
-  if(foundUser) {
-    _.assign(this, foundUser);
-    delete this.password; // we do not want to return password
-    return this;
-  } else {
-    return null;// this is error
-  }
+User.prototype.load = function (callback) {
+  var that = this;
+  db.users.findOne(this.id, function(err, res){
+    if(err) {
+      console.log("error User.prototype.load");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    //full product with new id returned
+    if(res) {
+      _.assign(that, res);
+      delete that.password;
+    }
+    callback(err, res);
+  });
 }
 
 // upsert user

@@ -13,14 +13,18 @@ var Checkin = function(properties) {
 
 
 // set id to the checkin object, call load to populate the rest of the properties
-Checkin.prototype.load = function () {
-  var found = db.checkins.findOneSync({id:this.id});
-  if(found) {
-    _.assign(this, found);
-    return this;
-  } else {
-    return null;// this is error
-  }
+Checkin.prototype.load = function (callback) {
+  var that = this;
+  db.checkins.findOne({id:this.id}, function(err, checkinRes) {
+    if(err) {
+      console.log("error Checkin.prototype.load");
+      console.log(err);
+      callback(err, checkinRes);
+      return;
+    };
+    _.assign(that, checkinRes);
+    callback(err, checkinRes);
+  });
 }
 
 // set email address  to the checkin object (test covered only by route test)
@@ -65,7 +69,7 @@ Checkin.prototype.save = function (callback) {
 
 
 // update checkin
-Checkin.prototype.update = function (callback) {
+Checkin.prototype.update = function(callback) {
   var that = this;
   db.checkins.update(that.id, that, function(err, res){
     if(err) {
@@ -83,8 +87,17 @@ Checkin.prototype.update = function (callback) {
 
 
 //delete checkin
-Checkin.prototype.delete = function () {
-  db.checkins.destroySync({id: this.id});
+Checkin.prototype.delete = function (callback) {
+  db.checkins.destroy({id: this.id}, function(err, res){
+    if(err) {
+      console.log("error Checkin.prototype.delete");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    callback(err, res);
+  });
 }
+
 
 module.exports = Checkin;

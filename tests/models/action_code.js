@@ -44,7 +44,7 @@ describe('ActionCode model testing', function() {
         code: code,
         description: description
       });
-    actionCode.save();
+    yield actionCode.save.bind(actionCode);
     assert(actionCode.id);
   });
 
@@ -56,13 +56,13 @@ describe('ActionCode model testing', function() {
         code: code,
         description: description
       });
-    actionCode.save();
+    yield actionCode.save.bind(actionCode);
 
     var actionCode1 =
       new ActionCode({
         id: actionCode.id
       });
-    actionCode1.load();
+    yield actionCode1.load.bind(actionCode1);
     assert.deepEqual(actionCode, actionCode1);
 
   });
@@ -71,26 +71,26 @@ describe('ActionCode model testing', function() {
     //clean all action codes first
     var actionCode =
       new ActionCode({});
-    actionCode.delete();
+    yield actionCode.delete.bind(actionCode);
 
     var actionCode1 =
       new ActionCode({
         code: "5225",
         description: "Reinforcing Steel Installation"
       });
-    actionCode1.save();
+    yield actionCode1.save.bind(actionCode1);
     var actionCode2 =
       new ActionCode({
         code: "5403",
         description: "Carpentry–low wage"
       });
-    actionCode2.save();
+    yield actionCode2.save.bind(actionCode2);
     var actionCode3 =
       new ActionCode({
         code: "5432",
         description: "Carpentry–high wage"
       });
-    actionCode3.save();
+    yield actionCode3.save.bind(actionCode3);
 
     var foundCodes = yield actionCode.lookup.bind(actionCode, "car");
     assert(foundCodes.length == 2);

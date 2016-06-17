@@ -10,16 +10,31 @@ var EmployeesActionCode = function(properties) {
 }
 
 // upsert EmployeesActionCode
-EmployeesActionCode.prototype.save = function () {
-  var inserted = db.employees_action_codes.saveSync(this);
-    if(!this.id) {
-      this.id = inserted.id; // assign newly generated id to the object
-    }
+EmployeesActionCode.prototype.save = function (callback) {
+  var that = this;
+  var inserted = db.employees_action_codes.save(this, function(err, res) {
+    if(err) {
+      console.log("error EmployeesActionCode.prototype.save");
+      console.log(err);
+      callback(err, res);
+      return;
+    };
+    _.assign(that, res);
+    callback(err, res);
+  });
 }
 
 //delete a EmployeesActionCode
-EmployeesActionCode.prototype.delete = function () {
-  db.employees_action_codes.destroySync(this);
+EmployeesActionCode.prototype.delete = function (callback) {
+  db.employees_action_codes.destroy(this, function(err, res){
+    if(err) {
+      console.log("error EmployeesActionCode.prototype.delete");
+      console.log(err);
+      callback(err, res);
+      return;
+    }
+    callback(err, res);
+  });
 }
 
 module.exports = EmployeesActionCode;

@@ -8,7 +8,8 @@ module.exports = require('koa-router')()
 
 // get all years checkins available for current user
 .get('/reports/years', function *(next) {
-  const years = new Report().yearsForUser(this.state.user.id);
+  var report = new Report();
+  const years = yield report.yearsForUser.bind(report, parseInt(this.state.user.id));
   this.response.status = 200;
   this.body = { "years" : years };
 })
@@ -16,7 +17,8 @@ module.exports = require('koa-router')()
 // get all years checkins available for current user
 .get('/reports/months/:year', function *(next) {
   let year = this.params.year;
-  const months = new Report().monthsForUserAndYear(this.state.user.id, year);
+  var report = new Report();
+  const months = yield report.monthsForUserAndYear.bind(report, parseInt(this.state.user.id), year);
   this.response.status = 200;
   this.body = { "months" : months };
 })
@@ -25,7 +27,8 @@ module.exports = require('koa-router')()
 .get('/reports/action_codes/:year/:month', function *(next) {
   let year = this.params.year;
   let month = this.params.month;
-  const action_codes = new Report().actionCodesDurationsByYearMonthForUser(this.state.user.id, year, month);
+  var report = new Report();
+  const action_codes = yield report.actionCodesDurationsByYearMonthForUser.bind(report, this.state.user.id, year, month);
   this.response.status = 200;
   this.body = { "action_codes" : action_codes };
 })
@@ -35,7 +38,8 @@ module.exports = require('koa-router')()
 .get('/reports/employees/:year/:month', function *(next) {
   let year = this.params.year;
   let month = this.params.month;
-  const employees = new Report().employeesDurationsByYearMonthForUser(this.state.user.id, year, month);
+  var report = new Report();
+  const employees = yield report.employeesDurationsByYearMonthForUser.bind(report, this.state.user.id, year, month);
   this.response.status = 200;
   this.body = { "employees" : employees };
 })

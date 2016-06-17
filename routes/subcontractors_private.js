@@ -62,7 +62,7 @@ module.exports = require('koa-router')()
       this.response.status = 422;
       this.body = { "error" : "subcontractor can not be deleted, because it has active employees"};
     } else {
-      subcontractorToLoad.delete();
+      yield subcontractorToLoad.delete.bind(subcontractorToLoad);
 
       this.response.status = 200;
       this.body = { "result" : "subcontractor deleted"};
@@ -123,7 +123,7 @@ module.exports = require('koa-router')()
   var body = JSON.stringify(this.request.body, null, 2)
 
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  subcontractorToLoad.load();
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -150,7 +150,7 @@ module.exports = require('koa-router')()
 //get COI
 .get('/subcontractors/:subcontractor_id/coi', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  subcontractorToLoad.load();
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
@@ -185,7 +185,7 @@ module.exports = require('koa-router')()
 //delete COI
 .delete('/subcontractors/:subcontractor_id/coi', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  subcontractorToLoad.load();
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
