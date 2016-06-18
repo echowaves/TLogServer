@@ -83,7 +83,7 @@ Employee.prototype.loadAllForUser = function (user_id, callback) {
 // upsert employee
 Employee.prototype.save = function (callback) {
   var that = this;
-  db.employees.save(that, function(err, res) {
+  db.employees.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res) {
     if(err) {
       console.log("error Employee.prototype.save");
       console.log(err);
@@ -91,24 +91,6 @@ Employee.prototype.save = function (callback) {
       return;
     };
     _.assign(that, res);
-    callback(err, res);
-  });
-}
-
-// update employee
-Employee.prototype.update = function (callback) {
-  var that = this;
-  db.employees.update({id: that.id}, that,  function(err, res){
-    if(err) {
-      console.log("error Employee.prototype.update");
-      console.log(err);
-      callback(err, res);
-      return;
-    };
-    //full product with new id returned
-    if(res) {
-      _.assign(that, res);
-    };
     callback(err, res);
   });
 }

@@ -78,7 +78,7 @@ User.prototype.save = function (callback) {
 
   this.hashPassword();
 
-  db.users.save(this, function(err, res) {
+  db.users.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res) {
     if(err) {
       console.log("error User.prototype.save");
       console.log(err);
@@ -91,27 +91,6 @@ User.prototype.save = function (callback) {
       callback(err, res);
   });
 }
-
-// update
-User.prototype.update = function (callback) {
-  var that = this;
-  this.hashPassword();
-
-  db.users.update({id: that.id}, that,  function(err, res){
-    if(err) {
-      console.log("error User.prototype.update");
-      console.log(err);
-      callback(err, res);
-      return;
-    };
-    //full product with new id returned
-    if(res) {
-      _.assign(that, res);
-    };
-    callback(err, res);
-  });
-}
-
 
 // //delete a user (no user should ever be deleted)
 // User.prototype.delete = function () {

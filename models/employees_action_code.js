@@ -12,7 +12,7 @@ var EmployeesActionCode = function(properties) {
 // upsert EmployeesActionCode
 EmployeesActionCode.prototype.save = function (callback) {
   var that = this;
-  var inserted = db.employees_action_codes.save(this, function(err, res) {
+  var inserted = db.employees_action_codes.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res) {
     if(err) {
       console.log("error EmployeesActionCode.prototype.save");
       console.log(err);

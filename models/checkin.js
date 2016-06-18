@@ -52,28 +52,9 @@ Checkin.prototype.loadAll = function (page_number, page_size, callback) {
 // upsert checkin
 Checkin.prototype.save = function (callback) {
   var that = this;
-  db.checkins.save(that, function(err, res){
+  db.checkins.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res){
     if(err) {
       console.log("error Checkin.prototype.save");
-      console.log(err);
-      callback(err, res);
-      return;
-    }
-    if(res) {
-      _.assign(that, res);
-    }
-    callback(err, res);
-  });
-}
-
-
-
-// update checkin
-Checkin.prototype.update = function(callback) {
-  var that = this;
-  db.checkins.update(that.id, that, function(err, res){
-    if(err) {
-      console.log("error Checkin.prototype.update");
       console.log(err);
       callback(err, res);
       return;

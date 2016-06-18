@@ -214,7 +214,7 @@ describe('/checkins routes testing', function() {
     const checkin_id = response.body.checkin.id;
 
     checked_in_at = moment().subtract(15, 'm').format();
-    const duration = moment.duration(3, 'hours').asMilliseconds();
+    const duration = moment.duration(3, 'hours').asSeconds();
 
     const response1 =
     yield request.put('/employees/' + activation_code + '/checkins/' + checkin_id)
@@ -224,7 +224,7 @@ describe('/checkins routes testing', function() {
     expect(response1.status).to.equal(200, response1.text);
     expect(response1.body).to.contain.keys('checkin');
     expect(moment(response1.body.checkin.checked_in_at).format()).to.equal(checked_in_at);
-    expect(moment.duration(response1.body.checkin.duration).asMilliseconds()).to.equal(duration);
+    expect(moment.duration(response1.body.checkin.duration).asSeconds()).to.equal(duration);
     expect(response1.body.checkin.action_code_id).to.equal(2);
   });
 
@@ -439,11 +439,9 @@ describe('/checkins routes testing', function() {
     expect(response5.status).to.equal(404, response5.text);
     expect(response5.body).to.contain.keys('error');
     expect(response5.body.error).to.equal('checkin not found');
-
   });
 
-
-  it.only('should be able to get checkins for an employee', function*() {
+  it('should be able to get checkins for an employee', function*() {
     // let's create 100 checkins
     for(var i = 0; i < 110; i++) {
       const checked_in_at = moment().subtract( i, 's').format();

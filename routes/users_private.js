@@ -32,7 +32,7 @@ module.exports = require('koa-router')()
   if(data.password) {
     user.password = data.password;
   }
-  yield user.update.bind(user);
+  yield user.save.bind(user);
 
   this.response.status = 200;
   this.body = { 'result': 'user updated, must sign in again'};

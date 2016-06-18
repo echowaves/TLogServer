@@ -110,7 +110,7 @@ module.exports = require('koa-router')()
           name: data.name,
           coi_expires_at: data.coi_expires_at
         });
-    yield subcontractor.update.bind(subcontractor);
+    yield subcontractor.save.bind(subcontractor);
     this.response.status = 200;
     this.body = { "result": "subcontractor successfully updated"};
   }

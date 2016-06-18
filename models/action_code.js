@@ -60,7 +60,7 @@ ActionCode.prototype.load = function (callback) {
 // upsert actionCode
 ActionCode.prototype.save = function (callback) {
   var that = this;
-  var inserted = db.action_codes.save(this, function(err, res){
+  var inserted = db.action_codes.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res){
     if(err) {
       console.log("error ActionCode.prototype.save");
       console.log(err);

@@ -59,7 +59,7 @@ Subcontractor.prototype.loadAllForUser = function (user_id, callback) {
 // upsert employee
 Subcontractor.prototype.save = function (callback) {
   var that = this;
-  db.subcontractors.save(this, function(err, res) {
+  db.subcontractors.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res) {
     if(err) {
       console.log("error Subcontractor.prototype.save");
       console.log(err);
@@ -72,25 +72,6 @@ Subcontractor.prototype.save = function (callback) {
       callback(err, res);
   });
 }
-
-// update
-Subcontractor.prototype.update = function (callback) {
-  var that = this;
-  db.subcontractors.update({id: that.id}, that,  function(err, res){
-    if(err) {
-      console.log("error Subcontractor.prototype.update");
-      console.log(err);
-      callback(err, res);
-      return;
-    };
-    //full product with new id returned
-    if(res) {
-      _.assign(that, res);
-    };
-    callback(err, res);
-  });
-}
-
 
 
 //delete a subcontractor

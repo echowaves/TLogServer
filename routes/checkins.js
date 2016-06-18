@@ -1,7 +1,10 @@
 'use strict';
 
+var _ = require('lodash');
+
 var uuid = require('uuid');
 var moment = require('moment');
+
 
 var Utils      = require('../utils/utils');
 
@@ -28,6 +31,23 @@ module.exports = require('koa-router')()
   } else {
     var checkinTemplate = new Checkin({email: employee.email});
     var checkins = yield checkinTemplate.loadAll.bind(checkinTemplate, page_number, page_size);
+
+    let momentCheckedInAt = moment(checkins[0].checked_in_at);
+    let momentNow = moment(new Date());
+    let duration = moment.duration(momentNow.diff(momentCheckedInAt));
+    let days = duration.asDays();
+
+    // delete checkin that is 7 days old but not checked out
+    if(days > 7 && _.isEmpty(checkins[0].duration)) {
+      var checkin = new Checkin(
+        {
+          id: checkins[0].id
+        }
+      );
+      yield checkin.delete.bind(checkin);
+      checkins.splice(0,1);
+    }
+
 
     this.response.status = 200;
     this.body = {
@@ -104,8 +124,7 @@ module.exports = require('koa-router')()
 .put('/employees/:activation_code/checkins/:checkin_id', function *(next) {
   var employee =
     new Employee({ activation_code: this.params.activation_code});
-  yield employee.loadByActivationCode.bind(employee);
-
+  employee = yield employee.loadByActivationCode.bind(employee);
   var checkin = new Checkin(
     {
       id: this.params.checkin_id
@@ -146,7 +165,7 @@ module.exports = require('koa-router')()
         this.response.status = 403;
         this.body = { "error" : 'unable to update to more then 7 days old checkin'};
       } else {
-        yield checkin.update.bind(checkin);
+        yield checkin.save.bind(checkin);
 
         this.response.status = 200;
         this.body = { "checkin" : checkin };

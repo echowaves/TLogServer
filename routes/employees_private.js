@@ -52,7 +52,7 @@ module.exports = require('koa-router')()
           activation_code: activation_code
         });
     // employee.activation_code = activation_code;
-    yield employee1.update.bind(employee1);
+    yield employee1.save.bind(employee1);
 
     var email = new sendgrid.Email();
     email.addTo(employee.email);
@@ -98,7 +98,7 @@ module.exports = require('koa-router')()
           user_id: this.state.user.id,
           activation_code: null
         });
-    yield employee.update.bind(employee);
+    yield employee.save.bind(employee);
 
     this.response.status = 200;
     this.body = { "result" : "employee deactivated"};
@@ -166,7 +166,7 @@ module.exports = require('koa-router')()
     employee.user_id = this.state.user.id;
     employee.name =  data.name;
     employee.email = data.email;
-    yield employee.update.bind(employee);
+    yield employee.save.bind(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully updated"};
@@ -184,7 +184,7 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     employee.subcontractor_id = parseInt(this.params.subcontractor_id);
-    yield employee.update.bind(employee);
+    yield employee.save.bind(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully added to subcontractor"};
@@ -201,7 +201,7 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     employee.subcontractor_id = null;
-    yield employee.update.bind(employee);
+    yield employee.save.bind(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully deleted from subcontractor"};
