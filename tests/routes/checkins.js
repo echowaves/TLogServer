@@ -443,7 +443,7 @@ describe('/checkins routes testing', function() {
   });
 
 
-  it('should be able to get checkins for an employee', function*() {
+  it.only('should be able to get checkins for an employee', function*() {
     // let's create 100 checkins
     for(var i = 0; i < 110; i++) {
       const checked_in_at = moment().subtract( i, 's').format();
