@@ -16,23 +16,24 @@ var Subcontractor = function(properties) {
 // set id to the subcontracgtor obejct, call load to populate the rest of the properties
 
 Subcontractor.prototype.load = function (callback) {
-  // var sub = db.subcontractors;
   var that = this;
 // mbk
-  db.subcontractors.findOne({id:this.id}, function(err, res){
+  db.subcontractors.findOne({id:parseInt(this.id)}, function(err, res){
     if(err) {
       console.log("error Subcontractor.prototype.load");
       console.log(err);
       callback(err, res);
       return;
-    }
+    };
     //full product with new id returned
     if(res) {
+      // res = _.pickBy(res);
       _.assign(that, res);
-    }
+      // console.log("res", res)
+    };
     callback(err, res);
-  }
-)}
+  });
+}
 // mbk
 
 //load all subcontractors for user

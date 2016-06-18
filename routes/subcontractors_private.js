@@ -83,10 +83,8 @@ module.exports = require('koa-router')()
 
 // get subcontractor details
 .get('/subcontractors/:subcontractor_id', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
-
-  var res = yield subcontractorToLoad.load.bind(subcontractorToLoad);
-
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
   if (subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
