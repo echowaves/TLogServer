@@ -73,5 +73,30 @@ describe('Employee model testing', function() {
     assert(employees.length == 2, "array size must be 2");
   });
 
+  it('should return all employess that belong to a subcontractor', function *() {
+    var employeeEmail = uuid.v4() + "@example.com";
+    var employee =
+      new Employee({
+        user_id: user.id,
+        name: "John Smith",
+        email: employeeEmail,
+        subcontractor_id: 111});
+    yield employee.save.bind(employee);
+
+    var employeeEmail2 = uuid.v4() + "@example.com";
+    var employee2 =
+      new Employee({
+        user_id: user.id,
+        name: "John Smith",
+        email: employeeEmail2,
+        subcontractor_id: 111});
+    yield employee2.save.bind(employee2);
+
+    var employeeTemplate  = new Employee({subcontractor_id:111});
+    var employees = yield employeeTemplate.loadAllForSubcontractor.bind(employeeTemplate);
+    assert(Array.isArray(employees), "must be array");
+    assert(employees.length == 2, "array size must be 2");
+  });
+
 
 });

@@ -180,6 +180,24 @@ module.exports = require('koa-router')()
   }
 })
 
+//get employees
+.get('/subcontractors/:subcontractor_id/employees', function *(next) {
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractor_id = subcontractorToLoad.id;
+
+  if(subcontractorToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+  } else {
+    var employee = new Employee({subcontractor_id: subcontractor_id});
+    var employees = yield employee.loadAllForSubcontractor.bind(employee);
+    this.response.status = 200;
+    this.body = { "employees" : employees };
+  }
+})
+
+
 //delete COI
 .delete('/subcontractors/:subcontractor_id/coi', function *(next) {
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});

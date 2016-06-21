@@ -324,6 +324,88 @@ describe('/subcontractors private routes testing', function() {
 
   });
 
+  it('should be able to get employees for subcontractor', function*() {
+    const coi_expires_at = moment().add(2, 'd').format();
+    // add a subcontractor
+    const response =
+    yield request.post('/subcontractors')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({name: "John Smith", coi_expires_at: coi_expires_at})
+    .end();
+
+    var email = uuid.v4() + "@example.com";
+    const response1 =
+      yield request.post('/employees')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({email: email, name: "Joe Doh", subcontractor_id: response.body.subcontractor.id})
+    .end();
+
+    const response2 =
+    yield request.get("/subcontractors/" + response.body.subcontractor.id + "/employees")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response2.status).to.equal(200, response2.text);
+    expect(response2.body).to.be.json;
+    expect(response2.body).to.contain.keys('employees');
+    expect(response2.body.employees.length).to.equal(1);
+
+  });
+
+
+  it('should not be able to get employees for subcontractor which does not belong to current user', function*() {
+    // add a subcontractor to a first user
+    var coi_expires_at = moment().add(2, 'd').format();
+    const response =
+    yield request.post('/subcontractors')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .send({name: "John Smith", coi_expires_at: coi_expires_at})
+    .end();
+
+    // register and authenticate another user
+    var anotherUserEmail = uuid.v4() + "@example.com";
+    var anotherUserPassword = 'secret';
+    const anotherUserResponse =
+    yield request.post('/users')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+
+    var anotherUserId = anotherUserResponse.body.id;
+
+    //authenticate and obtain a another token
+    const resp =
+    yield request.post('/auth')
+    .set('Content-Type', 'application/json')
+    .send({email: anotherUserEmail, password: anotherUserPassword })
+    .end();
+    var anotherToken = resp.body.token;
+
+    // add a subcontractor to another user
+    coi_expires_at = moment().add(3, 'd').format();
+    const anotherResponse =
+    yield request.post('/subcontractors')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + anotherToken)
+    .send({name: "John Smith", coi_expires_at: coi_expires_at})
+    .end();
+
+    // try to get employees for a wrong subconstractor
+    const response3 =
+    yield request.get("/subcontractors/" + anotherResponse.body.subcontractor.id + "/employees")
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer ' + token)
+    .end();
+    expect(response3.status).to.equal(403, response.text);
+    expect(response3.body).to.be.an('object');
+    expect(response3.body).to.be.json;
+    expect(response3.body).to.contain.keys('error');
+
+  });
+
 
   it('should not be able to delete a subcontractor which does not belong to current user', function*() {
     // add a subcontractor to a first user
