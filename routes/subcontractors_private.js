@@ -13,6 +13,9 @@ var S3_BUCKET = require('../consts').S3_BUCKET;
 var S3_OPTIONS = require('../consts').S3_OPTIONS;
 // var S3_CLIENT_OPTIONS = require('../consts').S3_CLIENT_OPTIONS;
 
+var base64 = require('base64-js')
+var streamify = require('stream-array')
+var stream = require('stream');
 
 var moment = require('moment');
 
@@ -116,9 +119,16 @@ module.exports = require('koa-router')()
   }
 })
 
-//upload COI
-.post('/subcontractors/:subcontractor_id/coi', function *(next) {
-  var body = JSON.stringify(this.request.body, null, 2)
+//upload COI from IOS
+.post('/subcontractors/:subcontractor_id/coi_ios', function *(next) {
+  console.log("inside upload")
+  var body =
+  JSON.stringify(this.request.body, null, 2)
+  // JSON.stringify(this.request.body)
+
+  console.log("request: ", this.request)
+  console.log("body: ", body)
+
 
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
   yield subcontractorToLoad.load.bind(subcontractorToLoad);
@@ -129,6 +139,7 @@ module.exports = require('koa-router')()
   } else {
     let subcontractor_id = this.params.subcontractor_id;
     var file = this.request.body.files.coi.path;
+    console.log("typeof: ", typeof this.request.body)
 
     var read = fs.createReadStream(file);
     var upload = s3Stream.upload({
@@ -144,6 +155,50 @@ module.exports = require('koa-router')()
   }
 })
 
+
+//upload COI from android
+.post('/subcontractors/:subcontractor_id/coi_android', function *(next) {
+  // console.log("inside upload")
+  var body =
+  JSON.stringify(this.request.body, null, 2)
+  // JSON.stringify(this.request.body)
+
+  // console.log("request: ", this.request)
+  // console.log("body: ", body)
+
+
+  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
+  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+
+  if(subcontractorToLoad.user_id != this.state.user.id) {
+    this.response.status = 403;
+    this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
+  } else {
+    let subcontractor_id = this.params.subcontractor_id;
+    var contents = this.request.body.coi;
+    // console.log("typeof: ", typeof contents)
+
+    const buf = new Buffer(contents, 'base64')
+
+    var upload = s3Stream.upload({
+      Bucket: S3_BUCKET,
+      Key: 'i/' + subcontractor_id + '.png'
+    });
+    upload.concurrentParts(10);
+
+    // Initiate the source
+    var bufferStream = new stream.PassThrough();
+    // Write your buffer
+    bufferStream.end(buf);
+
+    // Pipe it to something else  (i.e. stdout)
+    bufferStream.pipe(upload)
+
+    this.response.status = 200;
+    this.body = { "result": "subcontractor CIO successfully uploaded"};
+
+  }
+})
 
 //get COI
 .get('/subcontractors/:subcontractor_id/coi', function *(next) {

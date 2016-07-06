@@ -12,7 +12,6 @@
     "massive": "2.3.0",
     "async": "2.0.0-rc.5",
     "bcrypt": "0.8.6",
-    "koa-bodyparser": "2.2.0",
     "koa-body": "1.4.0",
     "db-migrate": "0.9.25",
     "koa": "1.2.0",
@@ -25,7 +24,9 @@
     "sendgrid": "2.0.0",
     "aws-sdk": "2.3.17",
     "co-aws-sdk": "0.0.3",
-    "s3-upload-stream": "1.0.7"
+    "s3-upload-stream": "1.0.7",
+    "koa-req-trace": "0.0.2",
+    "base64-js": "1.1.2"
   },
   "devDependencies": {
     "pug": "2.0.0-beta2",
