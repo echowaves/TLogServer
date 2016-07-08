@@ -13,7 +13,6 @@ var S3_BUCKET = require('../consts').S3_BUCKET;
 var S3_OPTIONS = require('../consts').S3_OPTIONS;
 // var S3_CLIENT_OPTIONS = require('../consts').S3_CLIENT_OPTIONS;
 
-var base64 = require('base64-js')
 var streamify = require('stream-array')
 var stream = require('stream');
 
