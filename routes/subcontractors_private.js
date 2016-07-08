@@ -123,8 +123,8 @@ module.exports = require('koa-router')()
   JSON.stringify(this.request.body, null, 2)
   // JSON.stringify(this.request.body)
 
-  console.log("request: ", this.request)
-  console.log("body: ", body)
+  // console.log("request: ", this.request)
+  // console.log("body: ", body)
 
 
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
