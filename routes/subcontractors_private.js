@@ -125,8 +125,8 @@ module.exports = require('koa-router')()
   JSON.stringify(this.request.body, null, 2)
   // JSON.stringify(this.request.body)
 
-  // console.log("request: ", this.request)
-  // console.log("body: ", body)
+  console.log("request: ", this.request)
+  console.log("body: ", body)
 
 
   var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
@@ -137,12 +137,13 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
     let subcontractor_id = this.params.subcontractor_id;
-    var file = this.request.body.files.coi.path;
+    var file     = this.request.body.files.coi.path;
+    var fileName = this.request.body.files.coi.name;
 
     var read = fs.createReadStream(file);
     var upload = s3Stream.upload({
       Bucket: S3_BUCKET,
-      Key: 'i/' + subcontractor_id + '.png'
+      Key: 'i/' + fileName
     });
     upload.concurrentParts(10);
     read.pipe(upload);
