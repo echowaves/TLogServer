@@ -32,21 +32,24 @@ module.exports = require('koa-router')()
     var checkinTemplate = new Checkin({email: employee.email});
     var checkins = yield checkinTemplate.loadAll.bind(checkinTemplate, page_number, page_size);
 
-    let momentCheckedInAt = moment(checkins[0].checked_in_at);
-    let momentNow = moment(new Date());
-    let duration = moment.duration(momentNow.diff(momentCheckedInAt));
-    let days = duration.asDays();
+    if(checkins.length > 0) {
+      let momentCheckedInAt = moment(checkins[0].checked_in_at);
+      let momentNow = moment(new Date());
+      let duration = moment.duration(momentNow.diff(momentCheckedInAt));
+      let days = duration.asDays();
 
-    // delete checkin that is 7 days old but not checked out
-    if(days > 7 && _.isEmpty(checkins[0].duration)) {
-      var checkin = new Checkin(
-        {
-          id: checkins[0].id
-        }
-      );
-      yield checkin.delete.bind(checkin);
-      checkins.splice(0,1);
+      // delete checkin that is 7 days old but not checked out
+      if(days > 7 && _.isEmpty(checkins[0].duration)) {
+        var checkin = new Checkin(
+          {
+            id: checkins[0].id
+          }
+        );
+        yield checkin.delete.bind(checkin);
+        checkins.splice(0,1);
+      }      
     }
+
 
 
     this.response.status = 200;
