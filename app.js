@@ -1,5 +1,8 @@
 'use strict';
 
+require("babel-core/register");
+
+
 var jwt = require('koa-jwt');
 
 var SECRET = require('./consts').SECRET;
