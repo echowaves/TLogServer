@@ -1,4 +1,4 @@
-import ActionCode from '../models/action_code';
+import ActionCode from '../../models/action_code';
 
 
 console.log(ActionCode);
