@@ -4,32 +4,32 @@
   "description": "Trades Log API",
   "main": "app.js",
   "scripts": {
-    "test": "mocha  $(find tests -name \"*.js\")"
+    "test": "mocha $(find tests -name \"*.js\") --compilers js:babel-core/register"
   },
   "author": "Dmitry Amelchenko",
   "license": "echowaves",
   "dependencies": {
-    "massive": "2.3.0",
     "async": "2.0.0-rc.5",
+    "aws-sdk": "2.3.17",
+    "babel-core": "6.13.2",
+    "babel-preset-es2015-node": "6.1.0",
     "bcrypt": "0.8.6",
-    "koa-body": "1.4.0",
+    "co-aws-sdk": "0.0.3",
     "db-migrate": "0.9.25",
     "koa": "1.2.0",
+    "koa-body": "1.4.0",
     "koa-jwt": "1.2.0",
+    "koa-req-trace": "0.0.2",
     "koa-router": "5.4.0",
     "koa-static-folder": "0.1.6",
     "lodash": "4.13.1",
-    "uuid": "2.0.2",
+    "massive": "2.3.0",
     "moment": "2.13.0",
-    "sendgrid": "2.0.0",
-    "aws-sdk": "2.3.17",
-    "co-aws-sdk": "0.0.3",
     "s3-upload-stream": "1.0.7",
-    "koa-req-trace": "0.0.2"
+    "sendgrid": "2.0.0",
+    "uuid": "2.0.2"
   },
   "devDependencies": {
-    "babel-core": "^6.13.2",
-    "babel-preset-es2015-node4": "^2.1.0",
     "chai": "3.5.0",
     "co-mocha": "1.1.2",
     "co-supertest": "0.0.10",

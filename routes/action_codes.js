@@ -1,7 +1,9 @@
-'use strict';
 var uuid = require('uuid');
 
 var ActionCode   = require('../models/action_code');
+
+import ActionCode from '../models/action_code';
+
 
 module.exports = require('koa-router')()
 
@@ -17,17 +19,15 @@ module.exports = require('koa-router')()
 
 // get action code by id
 .get('/actioncodes/:action_code_id', function *(next) {
-  var actionCodeToLoad = new ActionCode({ id: parseInt(this.params.action_code_id)});
-  yield actionCodeToLoad.load.bind(actionCodeToLoad);
+  var results = yield ActionCode.load({ id: parseInt(this.params.action_code_id)});
 
   this.response.status = 200;
-  this.body = { "result" : actionCodeToLoad };
+  this.body = { "result" : results };
 })
 
 // lookup
 .get('/actioncodes/lookup/:lookup_string', function *(next) {
-  var actionCode = new ActionCode();
-  var results = yield actionCode.lookup.bind(actionCode, this.params.lookup_string);
+  var results = yield ActionCode.lookup(this.params.lookup_string);
 
   this.response.status = 200;
   this.body = { "actionCodes" : results };
@@ -35,8 +35,7 @@ module.exports = require('koa-router')()
 
 // list all action codes specific to employee
 .get('/employees/:employee_id/actioncodes', function *(next) {
-  var actionCode = new ActionCode();
-  var results = yield actionCode.loadAllForEmployee.bind(actionCode, this.params.employee_id);
+  var results = yield actionCode.loadAllForEmployee(this.params.employee_id);
   this.response.status = 200;
   this.body = { "actionCodes" : results };
 })

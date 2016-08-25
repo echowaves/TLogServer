@@ -1,12 +1,17 @@
-'use strict';
+import ActionCode from '../models/action_code';
+
+
+console.log(ActionCode);
+console.log(ActionCode.save);
+
 
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 var db = require('../../consts').DB;
 
 
-var assert   = require('assert'),
-    ActionCode = require('../../models/action_code');
+var assert   = require('assert');
+
 
 require('co-mocha');
 var uuid = require('uuid');
@@ -19,33 +24,15 @@ describe('ActionCode model testing', function() {
     db.action_codes.destroySync({});
   })
 
-  it('should create an action_code', function *() {
-    var actionCode = new ActionCode();
-    assert.equal(typeof actionCode, 'object');
-  });
 
-  it('should store properties passed when instantiated', function *() {
+  it.only('should assign id after being saved', function *() {
     var code = uuid.v4();
     var description = uuid.v4();
-    var actionCode =
-      new ActionCode({
-        code: code,
-        description: description
-      });
-    assert.equal(actionCode.code, code);
-    assert.equal(actionCode.description, description);
-  });
-
-  it('should assign id after being saved', function *() {
-    var code = uuid.v4();
-    var description = uuid.v4();
-    var actionCode =
-      new ActionCode({
-        code: code,
-        description: description
-      });
-    yield actionCode.save.bind(actionCode);
-    assert(actionCode.id);
+    let results = yield ActionCode.save({
+      code: code,
+      description: description
+    });
+    assert(results.id);
   });
 
   it('should load by id after being saved', function *() {
@@ -71,7 +58,7 @@ describe('ActionCode model testing', function() {
     //clean all action codes first
     var actionCode =
       new ActionCode({});
-    yield actionCode.delete.bind(actionCode);
+    yield actionCode.destroy.bind(actionCode);
 
     var actionCode1 =
       new ActionCode({
