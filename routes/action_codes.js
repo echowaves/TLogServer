@@ -1,8 +1,6 @@
 var uuid = require('uuid');
 
-var ActionCode   = require('../models/action_code');
-
-import ActionCode from '../models/action_code';
+import * as ActionCode from '../models/action_code';
 
 
 module.exports = require('koa-router')()
@@ -35,7 +33,7 @@ module.exports = require('koa-router')()
 
 // list all action codes specific to employee
 .get('/employees/:employee_id/actioncodes', function *(next) {
-  var results = yield actionCode.loadAllForEmployee(this.params.employee_id);
+  var results = yield ActionCode.loadAllForEmployee({employee_id: this.params.employee_id});
   this.response.status = 200;
   this.body = { "actionCodes" : results };
 })

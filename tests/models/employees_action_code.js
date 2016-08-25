@@ -1,15 +1,12 @@
-'use strict';
-
 process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 
 var db = require('../../consts').DB;
 
+import * as ActionCode from '../../models/action_code';
 
 var assert   = require('assert'),
-    EmployeesActionCode = require('../../models/employees_action_code'),
-    ActionCode = require('../../models/action_code');
-
+EmployeesActionCode = require('../../models/employees_action_code');
 require('co-mocha');
 var uuid = require('uuid');
 
@@ -30,10 +27,10 @@ describe('EmployeesActionCode model testing', function() {
 
   it('should store properties passed when instantiated', function *() {
     var actionCode =
-      new EmployeesActionCode({
-        employee_id: 1,
-        action_code_id: 2
-      });
+    new EmployeesActionCode({
+      employee_id: 1,
+      action_code_id: 2
+    });
     assert.equal(actionCode.employee_id, 1);
     assert.equal(actionCode.action_code_id, 2);
   });
@@ -42,39 +39,31 @@ describe('EmployeesActionCode model testing', function() {
     var employee_id = 3;
     var action_code_id = 4;
     var actionCode =
-      new EmployeesActionCode({
-        employee_id: employee_id,
-        action_code_id: action_code_id
-      });
+    new EmployeesActionCode({
+      employee_id: employee_id,
+      action_code_id: action_code_id
+    });
     yield actionCode.save.bind(actionCode);
     assert(actionCode.id);
   });
 
   it('should load ActionCodes for employee', function *() {
-    var actionCode = new ActionCode();
-    var actionCodes = yield actionCode.loadAllForEmployee.bind(actionCode, employee_id);
-    assert(actionCodes.length == 0);
-
     var description = "testing action code";
     var actionCode =
-      new ActionCode({
-        code: "001",
-        description: description
-      });
-    yield actionCode.save.bind(actionCode);
+    yield ActionCode.save({
+      code: "001",
+      description: description
+    });
 
     var employee_id = 3;
     var action_code_id = actionCode.id;
     var employeesActionCode =
-      new EmployeesActionCode({
-        employee_id: employee_id,
-        action_code_id: action_code_id
-      });
+    new EmployeesActionCode({
+      employee_id: employee_id,
+      action_code_id: action_code_id
+    });
     yield employeesActionCode.save.bind(employeesActionCode);
-    var actonCode = new ActionCode();
-    var actionCodes = yield actonCode.loadAllForEmployee.bind(actonCode, employee_id);
+    var actionCodes = yield ActionCode.loadAllForEmployee({employee_id});
     assert(actionCodes.length == 1);
   });
-
-
 });

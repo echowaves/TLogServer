@@ -1,5 +1,3 @@
-'use strict';
-
 const supertest = require('co-supertest'); // SuperAgent-driven library for testing HTTP servers
 const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
@@ -13,8 +11,9 @@ var db = require('../../consts').DB;
 
 const request = supertest.agent(app.listen());
 
-var assert = require('assert'),
-    ActionCode   = require('../../models/action_code');
+var assert = require('assert');
+
+import * as ActionCode from '../../models/action_code';
 
 
 describe('/actioncodes route testing', function() {
@@ -24,23 +23,20 @@ describe('/actioncodes route testing', function() {
     db.action_codes.destroySync({});
 
     var actionCode1 =
-      new ActionCode({
-        code: "5225",
-        description: "Reinforcing Steel Installation"
-      });
-    yield actionCode1.save.bind(actionCode1);
+    yield ActionCode.save({
+      code: "5225",
+      description: "Reinforcing Steel Installation"
+    });
     var actionCode2 =
-      new ActionCode({
-        code: "5403",
-        description: "Carpentry–low wage"
-      });
-    yield actionCode2.save.bind(actionCode2);
+    yield ActionCode.save({
+      code: "5403",
+      description: "Carpentry–low wage"
+    });
     var actionCode3 =
-      new ActionCode({
-        code: "5432",
-        description: "Carpentry–high wage"
-      });
-    yield actionCode3.save.bind(actionCode3);
+    yield ActionCode.save({
+      code: "5432",
+      description: "Carpentry–high wage"
+    });
   });
 
 // this should not be exposed

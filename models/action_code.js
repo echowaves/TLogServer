@@ -8,10 +8,11 @@ var db = require('../consts').DB;
 //   _.assign(this, properties);
 // }
 
-export default class ActionCode {
 
-  // lookup action codes by code and/or description
-  lookup(lookupString, callback) {
+
+// lookup action codes by code and/or description
+export function lookup(lookupString) {
+  return function(callback) {
     db.run("select * from action_codes where code ilike $1 or description ilike $1 limit 100", ['%' + lookupString + '%'],
     function(err, actionCodesRes) {
       if(err) {
@@ -23,10 +24,12 @@ export default class ActionCode {
       callback(err, actionCodesRes);
     });
   }
+}
 
 
-  // loadAll
-  loadAll(callback) {
+// loadAll
+export function loadAll() {
+  return function(callback) {
     db.action_codes.find(function(err, actionCodesRes) {
       if(err) {
         console.log("error ActionCode.prototype.loadAll");
@@ -37,40 +40,41 @@ export default class ActionCode {
       callback(err, actionCodesRes);
     });
   }
+}
 
-
-  // set id to the action_code obejct, call load to populate the rest of the properties
-  load(params) {
-    return function(callback) {
-      db.action_codes.findOne({id:params.id}, function(err, res){
-        if(err) {
-          console.log("error ActionCode.prototype.load");
-          console.log(err);
-          callback(err, res);
-          return;
-        }
+// set id to the action_code obejct, call load to populate the rest of the properties
+export function load(params) {
+  return function(callback) {
+    db.action_codes.findOne({id:params.id}, function(err, res){
+      if(err) {
+        console.log("error ActionCode.prototype.load");
+        console.log(err);
         callback(err, res);
-      })
-    }
+        return;
+      }
+      callback(err, res);
+    })
   }
+}
 
-  // upsert actionCode
-  static save(params) {
-    return function(callback) {
-      var inserted = db.action_codes.save(params, function(err, res){
-        if(err) {
-          console.log("error ActionCode.prototype.save");
-          console.log(err);
-          callback(err, res);
-          return;
-        }
+// upsert actionCode
+export function save(params) {
+  return function(callback) {
+    var inserted = db.action_codes.save(params, function(err, res){
+      if(err) {
+        console.log("error ActionCode.prototype.save");
+        console.log(err);
         callback(err, res);
-      });
-    }
+        return;
+      }
+      callback(err, res);
+    });
   }
+}
 
-  //delete a actionCode
-  destroy(params, callback) {
+//delete a actionCode
+export function destroy(params) {
+  return function(callback) {
     db.action_codes.destroy(params, function(err, res){
       if(err) {
         console.log("error ActionCode.prototype.delete");
@@ -81,9 +85,11 @@ export default class ActionCode {
       callback(err, res);
     });
   }
+}
 
-  // load all ActionCodes for employee
-  loadAllForEmployee(params, callback) {
+// load all ActionCodes for employee
+export function loadAllForEmployee(params) {
+  return function(callback) {
     db.run("select * from action_codes where id in (select action_code_id from employees_action_codes where employee_id  = $1)", [params.employee_id], function(err, actionCodesRes) {
       if(err) {
         console.log("error ActionCode.prototype.loadAllForEmployee");
@@ -94,5 +100,4 @@ export default class ActionCode {
       callback(err, actionCodesRes);
     });
   }
-
 }
