@@ -1,5 +1,3 @@
-'use strict';
-
 const supertest = require('co-supertest'); // SuperAgent-driven library for testing HTTP servers
 const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
@@ -14,8 +12,7 @@ const request = supertest.agent(app.listen());
 
 var assert = require('assert');
 var User   = require('../../models/user'),
-Employee   = require('../../models/employee'),
-ActionCode = require('../../models/action_code');
+Employee   = require('../../models/employee');
 
 describe('/checkins routes testing', function() {
   var activation_code, user, token, actionCode;

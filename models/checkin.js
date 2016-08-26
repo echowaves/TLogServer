@@ -33,7 +33,7 @@ export function loadAll(email, page_number, page_size) {
     db.run("SELECT c.id, c.email, c.user_id, c.checked_in_at, c.duration, c.action_code_id, a.code, a.description FROM checkins c INNER JOIN action_codes a ON c.action_code_id = a.id WHERE c.email=$1 ORDER BY c.checked_in_at desc LIMIT $2 OFFSET $3", [email, parseInt(page_size), parseInt(page_number) * parseInt(page_size)],
     function(err, checkinsRes) {
       if(err) {
-        console.log("error Checkin.prototype.loadAll");
+        console.log("error Checkin.loadAll");
         console.log(err);
         callback(err, checkinsRes);
         return;
