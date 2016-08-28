@@ -55,9 +55,7 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
     //check if there are any employees assigned to this subcontractor
-    var employee = new Employee();
-    employee.subcontractor_id = subcontractorToLoad.id;
-    var employees = yield employee.loadAllForSubcontractor.bind(employee);
+    var employees = yield Employee.loadAllForSubcontractor(subcontractorToLoad.id);
 
     if(employees.length > 0) {
       this.response.status = 422;
@@ -198,8 +196,7 @@ module.exports = require('koa-router')()
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
-    var employee = new Employee({subcontractor_id: subcontractor_id});
-    var employees = yield employee.loadAllForSubcontractor.bind(employee);
+    var employees = yield Employee.loadAllForSubcontractor(subcontractor_id);
     this.response.status = 200;
     this.body = { "employees" : employees };
   }

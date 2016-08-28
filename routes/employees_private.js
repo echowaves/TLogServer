@@ -2,7 +2,8 @@
 
 var uuid = require('uuid');
 
-var Employee   = require('../models/employee');
+import * as Employee from '../models/employee';
+
 var EmployeesActionCode   = require('../models/employees_action_code');
 var Subcontractor   = require('../models/subcontractor');
 
@@ -20,14 +21,11 @@ module.exports = require('koa-router')()
 .post('/employees', function *(next) {
   let data = this.request.body;
   var employee =
-    new Employee(
-      { user_id: this.state.user.id,
-        name: data.name,
-        email: data.email,
-        subcontractor_id: data.subcontractor_id
-      });
-
-  yield employee.save.bind(employee);
+  yield Employee.save({ user_id: this.state.user.id,
+    name: data.name,
+    email: data.email,
+    subcontractor_id: data.subcontractor_id
+  });
 
   this.response.status = 200;
   this.body = { "result": "employee successfully added", "employee" : employee};
@@ -37,8 +35,7 @@ module.exports = require('koa-router')()
 //activate an employee (create activation)
 .post('/employees/:employee_id/activation', function *(next) {
   var employee =
-    new Employee({ id: parseInt(this.params.employee_id)});
-  yield employee.load.bind(employee);
+  yield Employee.load({ id: parseInt(this.params.employee_id)});
 
   // check that the employee exists and belongs to the user
   if(employee.user_id != this.state.user.id) {
@@ -47,12 +44,10 @@ module.exports = require('koa-router')()
   } else {
     const activation_code = uuid.v4();
     var employee1 =
-      new Employee(
-        { id: parseInt(this.params.employee_id),
-          activation_code: activation_code
-        });
     // employee.activation_code = activation_code;
-    yield employee1.save.bind(employee1);
+    yield Employee.save({ id: parseInt(this.params.employee_id),
+      activation_code: activation_code
+    });
 
     var email = new sendgrid.Email();
     email.addTo(employee.email);
@@ -84,8 +79,7 @@ module.exports = require('koa-router')()
 //deactivate an employee
 .delete('/employees/:employee_id/activation', function *(next) {
   var employeeToLoad =
-    new Employee({ id: parseInt(this.params.employee_id)});
-  yield employeeToLoad.load.bind(employeeToLoad);
+  yield Employee.load({ id: parseInt(this.params.employee_id)});
 
   // check that the employee exists and belongs to the user
   if(employeeToLoad.user_id != this.state.user.id) {
@@ -93,12 +87,10 @@ module.exports = require('koa-router')()
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     var employee =
-      new Employee(
-        { id: parseInt(this.params.employee_id),
-          user_id: this.state.user.id,
-          activation_code: null
-        });
-    yield employee.save.bind(employee);
+    yield Employee.save({ id: parseInt(this.params.employee_id),
+      user_id: this.state.user.id,
+      activation_code: null
+    });
 
     this.response.status = 200;
     this.body = { "result" : "employee deactivated"};
@@ -109,20 +101,17 @@ module.exports = require('koa-router')()
 //delete an employee
 .delete('/employees/:employee_id', function *(next) {
   var employeeToLoad =
-    new Employee({ id: this.params.employee_id});
-  yield employeeToLoad.load.bind(employeeToLoad);
+  yield Employee.load({ id: this.params.employee_id});
   // check that the employee exists and belongs to the user
   if(employeeToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     var employee =
-      new Employee(
-        { id: this.params.employee_id,
-          user_id: this.state.user.id,
-          activation_code: null
-        });
-    yield employee.delete.bind(employee);
+    yield Employee.destroy({ id: this.params.employee_id,
+      user_id: this.state.user.id,
+      activation_code: null
+    });
 
     this.response.status = 200;
     this.body = { "result" : "employee deleted"};
@@ -133,8 +122,7 @@ module.exports = require('koa-router')()
 
 // get all employess for current user
 .get('/employees', function *(next) {
-  var employee = new Employee();
-  var employees = yield employee.loadAllForUser.bind(employee, this.state.user.id);
+  var employees = yield Employee.loadAllForUser(this.state.user.id);
   this.response.status = 200;
   this.body = { "employees" : employees };
 })
@@ -142,8 +130,8 @@ module.exports = require('koa-router')()
 
 // get employee details
 .get('/employees/:employee_id', function *(next) {
-  var employeeToLoad = new Employee({ id: parseInt(this.params.employee_id)});
-  yield employeeToLoad.load.bind(employeeToLoad);
+  var employeeToLoad =
+  yield Employee.load({ id: parseInt(this.params.employee_id)});
   if(employeeToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
@@ -156,8 +144,8 @@ module.exports = require('koa-router')()
 // update an employee
 .put('/employees/:employee_id', function *(next) {
   let data = this.request.body;
-  var employee = new Employee({ id: parseInt(this.params.employee_id)});
-  yield employee.load.bind(employee);
+  var employee =
+  yield Employee.load({ id: parseInt(this.params.employee_id)});
 
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -166,7 +154,7 @@ module.exports = require('koa-router')()
     employee.user_id = this.state.user.id;
     employee.name =  data.name;
     employee.email = data.email;
-    yield employee.save.bind(employee);
+    yield Employee.save(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully updated"};
@@ -176,15 +164,15 @@ module.exports = require('koa-router')()
 
 // add employee to subcontractor
 .post('/employees/:employee_id/subcontractor/:subcontractor_id', function *(next) {
-  var employee = new Employee({ id: parseInt(this.params.employee_id)});
-  yield employee.load.bind(employee);
+  var employee =
+  yield Employee.load({ id: parseInt(this.params.employee_id)});
 
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     employee.subcontractor_id = parseInt(this.params.subcontractor_id);
-    yield employee.save.bind(employee);
+    yield Employee.save(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully added to subcontractor"};
@@ -193,15 +181,15 @@ module.exports = require('koa-router')()
 
 // delete employee from a subcontractor
 .delete('/employees/:employee_id/subcontractor', function *(next) {
-  var employee = new Employee({ id: parseInt(this.params.employee_id)});
-  yield employee.load.bind(employee);
+  var employee =
+  yield Employee.load({ id: parseInt(this.params.employee_id)});
 
   if(employee.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the employee does not belong to currenty authenticated user"};
   } else {
     employee.subcontractor_id = null;
-    yield employee.save.bind(employee);
+    yield Employee.save(employee);
 
     this.response.status = 200;
     this.body = { "result": "employee successfully deleted from subcontractor"};
@@ -209,30 +197,27 @@ module.exports = require('koa-router')()
 })
 
 
-
 //employee specific action codes
 // add action code to employee
 .post('/employees/:employee_id/actioncodes/:action_code_id', function *(next) {
-    var employeesActionCode =
-      new EmployeesActionCode(
-        {
-          employee_id: this.params.employee_id,
-          action_code_id: this.params.action_code_id
-        });
-    yield employeesActionCode.save.bind(employeesActionCode);
+  var employeesActionCode =
+  new EmployeesActionCode({
+    employee_id: this.params.employee_id,
+    action_code_id: this.params.action_code_id
+  });
+  yield employeesActionCode.save.bind(employeesActionCode);
 
-    this.response.status = 200;
-    this.body = { "result": "employeesActionCode successfully created"};
+  this.response.status = 200;
+  this.body = { "result": "employeesActionCode successfully created"};
 })
 
 // delete action code from employee
 .delete('/employees/:employee_id/actioncodes/:action_code_id', function *(next) {
   var employeesActionCode =
-    new EmployeesActionCode(
-      {
-        employee_id: this.params.employee_id,
-        action_code_id: this.params.action_code_id
-      });
+  new EmployeesActionCode({
+    employee_id: this.params.employee_id,
+    action_code_id: this.params.action_code_id
+  });
   yield employeesActionCode.delete.bind(employeesActionCode);
 
   this.response.status = 200;

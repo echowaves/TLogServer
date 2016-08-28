@@ -13,10 +13,12 @@ var db = require('../../consts').DB;
 const request = supertest.agent(app.listen());
 
 var assert = require('assert');
-var User   = require('../../models/user'),
-Employee   = require('../../models/employee'),
-ActionCode = require('../../models/action_code'),
-Checkin    = require('../../models/checkin');
+var User   = require('../../models/user');
+
+// import * as Employee from '../../models/employee';
+// import * as ActionCode from '../../models/action_code';
+// import * as Checkin from '../../models/checkin';
+
 var Util   = require('../../models/util');
 var util = new Util();
 

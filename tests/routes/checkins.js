@@ -11,8 +11,9 @@ var db = require('../../consts').DB;
 const request = supertest.agent(app.listen());
 
 var assert = require('assert');
-var User   = require('../../models/user'),
-Employee   = require('../../models/employee');
+var User   = require('../../models/user');
+
+// import * as Employee from '../../models/employee';
 
 describe('/checkins routes testing', function() {
   var activation_code, user, token, actionCode;
