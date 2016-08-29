@@ -3,8 +3,8 @@
 var uuid = require('uuid');
 
 import * as Employee from '../models/employee';
+import * as EmployeesActionCode from '../models/employees_action_code';
 
-var EmployeesActionCode   = require('../models/employees_action_code');
 var Subcontractor   = require('../models/subcontractor');
 
 var SEND_GRID_API_USER     = require('../consts').SEND_GRID_API_USER;
@@ -201,11 +201,10 @@ module.exports = require('koa-router')()
 // add action code to employee
 .post('/employees/:employee_id/actioncodes/:action_code_id', function *(next) {
   var employeesActionCode =
-  new EmployeesActionCode({
+  yield EmployeesActionCode.save({
     employee_id: this.params.employee_id,
     action_code_id: this.params.action_code_id
   });
-  yield employeesActionCode.save.bind(employeesActionCode);
 
   this.response.status = 200;
   this.body = { "result": "employeesActionCode successfully created"};
@@ -213,12 +212,10 @@ module.exports = require('koa-router')()
 
 // delete action code from employee
 .delete('/employees/:employee_id/actioncodes/:action_code_id', function *(next) {
-  var employeesActionCode =
-  new EmployeesActionCode({
+  yield EmployeesActionCode.destroy({
     employee_id: this.params.employee_id,
     action_code_id: this.params.action_code_id
   });
-  yield employeesActionCode.delete.bind(employeesActionCode);
 
   this.response.status = 200;
   this.body = { "result": "employeesActionCode successfully deleted"};
