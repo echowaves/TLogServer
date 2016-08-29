@@ -1,5 +1,3 @@
-'use strict';
-
 var uuid = require('uuid');
 
 import * as Report from '../models/report';

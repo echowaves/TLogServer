@@ -5,8 +5,6 @@ var uuid = require('uuid');
 import * as Employee from '../models/employee';
 import * as EmployeesActionCode from '../models/employees_action_code';
 
-var Subcontractor   = require('../models/subcontractor');
-
 var SEND_GRID_API_USER     = require('../consts').SEND_GRID_API_USER;
 var SEND_GRID_API_PASSWORD = require('../consts').SEND_GRID_API_PASSWORD;
 

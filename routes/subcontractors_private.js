@@ -17,8 +17,9 @@ var stream = require('stream');
 
 var moment = require('moment');
 
-var Subcontractor   = require('../models/subcontractor');
-var Employee   = require('../models/employee');
+import * as Subcontractor from '../models/subcontractor';
+import * as Employee from '../models/employee';
+
 
 module.exports = require('koa-router')()
 
@@ -32,23 +33,23 @@ module.exports = require('koa-router')()
     this.body = { "error": "missing parameter"};
   } else {
     var subcontractor =
-    new Subcontractor(
-      { user_id: parseInt(this.state.user.id),
+    yield Subcontractor.save(
+      {
+        user_id: parseInt(this.state.user.id),
         name: name
-      });
-      yield subcontractor.save.bind(subcontractor);
+      }
+    );
 
-      this.response.status = 200;
-      this.body = { "result": "subcontractor successfully added", "subcontractor" : subcontractor};
-    }
-  })
+    this.response.status = 200;
+    this.body = { "result": "subcontractor successfully added", "subcontractor" : subcontractor};
+  }
+})
 
 
 //delete a subcontractor
 .delete('/subcontractors/:subcontractor_id', function *(next) {
   var subcontractorToLoad =
-    new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  yield Subcontractor.load({ id: parseInt(this.params.subcontractor_id)});
   // check that the subcontractor exists and belongs to the user
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -61,7 +62,7 @@ module.exports = require('koa-router')()
       this.response.status = 422;
       this.body = { "error" : "subcontractor can not be deleted, because it has active employees"};
     } else {
-      yield subcontractorToLoad.delete.bind(subcontractorToLoad);
+      yield Subcontractor.destroy(subcontractorToLoad);
 
       this.response.status = 200;
       this.body = { "result" : "subcontractor deleted"};
@@ -73,8 +74,7 @@ module.exports = require('koa-router')()
 
 // get all subcontractors for current user
 .get('/subcontractors', function *(next) {
-  var subcontractor = new Subcontractor();
-  var subcontractors = yield subcontractor.loadAllForUser.bind(subcontractor, this.state.user.id);
+  var subcontractors = yield Subcontractor.loadAllForUser(this.state.user.id);
   this.response.status = 200;
   this.body = { "subcontractors" : subcontractors };
 })
@@ -82,8 +82,8 @@ module.exports = require('koa-router')()
 
 // get subcontractor details
 .get('/subcontractors/:subcontractor_id', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: this.params.subcontractor_id});
   if (subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
@@ -96,20 +96,18 @@ module.exports = require('koa-router')()
 // update a subcontractor
 .put('/subcontractors/:subcontractor_id', function *(next) {
   let data = this.request.body;
-  var subcontractorToLoad = new Subcontractor({ id: parseInt(this.params.subcontractor_id)});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: parseInt(this.params.subcontractor_id)});
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
     this.body = { "error" : "the subcontractor does not belong to currenty authenticated user"};
   } else {
     var subcontractor =
-      new Subcontractor(
-        { id: parseInt(this.params.subcontractor_id),
-          user_id: parseInt(this.state.user.id),
-          name: data.name,
-          coi_expires_at: data.coi_expires_at
-        });
-    yield subcontractor.save.bind(subcontractor);
+    yield Subcontractor.save({ id: parseInt(this.params.subcontractor_id),
+      user_id: parseInt(this.state.user.id),
+      name: data.name,
+      coi_expires_at: data.coi_expires_at
+    });
     this.response.status = 200;
     this.body = { "result": "subcontractor successfully updated"};
   }
@@ -125,8 +123,8 @@ module.exports = require('koa-router')()
   // console.log("body: ", body)
 
 
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: this.params.subcontractor_id});
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
     this.response.status = 403;
@@ -146,15 +144,14 @@ module.exports = require('koa-router')()
 
     this.response.status = 200;
     this.body = { "result": "subcontractor CIO successfully uploaded"};
-
   }
 })
 
 
 //get COI
 .get('/subcontractors/:subcontractor_id/coi', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: this.params.subcontractor_id});
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
@@ -188,8 +185,8 @@ module.exports = require('koa-router')()
 
 //get employees
 .get('/subcontractors/:subcontractor_id/employees', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: this.params.subcontractor_id});
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
@@ -205,8 +202,8 @@ module.exports = require('koa-router')()
 
 //delete COI
 .delete('/subcontractors/:subcontractor_id/coi', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: this.params.subcontractor_id});
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {
@@ -238,8 +235,8 @@ module.exports = require('koa-router')()
 
 //check if COI existin in s3
 .get('/subcontractors/:subcontractor_id/coi_exists', function *(next) {
-  var subcontractorToLoad = new Subcontractor({ id: this.params.subcontractor_id});
-  yield subcontractorToLoad.load.bind(subcontractorToLoad);
+  var subcontractorToLoad =
+  yield Subcontractor.load({ id: this.params.subcontractor_id});
   var subcontractor_id = subcontractorToLoad.id;
 
   if(subcontractorToLoad.user_id != this.state.user.id) {

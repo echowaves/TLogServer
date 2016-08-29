@@ -7,85 +7,64 @@ var _ = require('lodash');
 var db = require('../consts').DB;
 
 
-
-var Subcontractor = function(properties) {
-  _.assign(this, properties);
-}
-
-
 // set id to the subcontracgtor obejct, call load to populate the rest of the properties
 
-Subcontractor.prototype.load = function (callback) {
-  var that = this;
-// mbk
-  db.subcontractors.findOne({id:parseInt(this.id)}, function(err, res){
-    if(err) {
-      console.log("error Subcontractor.prototype.load");
-      console.log(err);
+export function load(params) {
+  return function(callback) {
+    db.subcontractors.findOne(params, function(err, res){
+      if(err) {
+        console.log("error Subcontractor.load");
+        console.log(err);
+        callback(err, res);
+        return;
+      };
+      //full product with new id returned
       callback(err, res);
-      return;
-    };
-    //full product with new id returned
-    if(res) {
-      // res = _.pickBy(res);
-      _.assign(that, res);
-      // console.log("res", res)
-    };
-    callback(err, res);
-  });
+    });
+  }
 }
-// mbk
 
 //load all subcontractors for user
-Subcontractor.prototype.loadAllForUser = function (user_id, callback) {
-  db.subcontractors.find({user_id: user_id}, {order: "name asc"} , function(err, foundSubcontractors) {
-    if(err) {
-      console.log("error Subcontractor.prototype.loadAllForUser");
-      console.log(err);
-      callback(err, res);
-      return;
-    };
-
-    var subcontractors = [];
-    foundSubcontractors.forEach(function(item){
-      var subcontractor = new Subcontractor();
-      _.assign(subcontractor, item);
-      subcontractors.push(subcontractor);
+export function loadAllForUser(user_id) {
+  return function(callback) {
+    db.subcontractors.find({user_id}, {order: "name asc"} , function(err, foundSubcontractors) {
+      if(err) {
+        console.log("error Subcontractor.loadAllForUser");
+        console.log(err);
+        callback(err, foundSubcontractors);
+        return;
+      };
+      callback(err, foundSubcontractors);
     });
-    callback(err, subcontractors);
-  });
+  }
 }
 
 // upsert employee
-Subcontractor.prototype.save = function (callback) {
-  var that = this;
-  db.subcontractors.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res) {
-    if(err) {
-      console.log("error Subcontractor.prototype.save");
-      console.log(err);
-      callback(err, res);
-      return;
-    }
-      if(res) {
-        _.assign(that, res);
+export function save(params) {
+  return function(callback) {
+    db.subcontractors.save(params, function(err, res) {
+      if(err) {
+        console.log("error Subcontractor.save");
+        console.log(err);
+        callback(err, res);
+        return;
       }
       callback(err, res);
-  });
+    });
+  }
 }
-
 
 //delete a subcontractor
-Subcontractor.prototype.delete = function (callback) {
-  db.subcontractors.destroy({id: this.id}, function(err, res){
-    if(err) {
-      console.log("error Subcontractor.prototype.delete");
-      console.log(err);
+export function destroy(params) {
+  return function(callback) {
+    db.subcontractors.destroy(params, function(err, res){
+      if(err) {
+        console.log("error Subcontractor.delete");
+        console.log(err);
+        callback(err, res);
+        return;
+      }
       callback(err, res);
-      return;
-    }
-    callback(err, res);
-  });
+    });
+  }
 }
-
-
-module.exports = Subcontractor;
