@@ -2,14 +2,13 @@
 
 var uuid = require('uuid');
 
-var Report   = require('../models/report');
+import * as Report from '../models/report';
 
 module.exports = require('koa-router')()
 
 // get all years checkins available for current user
 .get('/reports/years', function *(next) {
-  var report = new Report();
-  const years = yield report.yearsForUser.bind(report, parseInt(this.state.user.id));
+  const years = yield Report.yearsForUser(parseInt(this.state.user.id));
   this.response.status = 200;
   this.body = { "years" : years };
 })
@@ -17,8 +16,7 @@ module.exports = require('koa-router')()
 // get all years checkins available for current user
 .get('/reports/months/:year', function *(next) {
   let year = this.params.year;
-  var report = new Report();
-  const months = yield report.monthsForUserAndYear.bind(report, parseInt(this.state.user.id), year);
+  const months = yield Report.monthsForUserAndYear(parseInt(this.state.user.id), year);
   this.response.status = 200;
   this.body = { "months" : months };
 })
@@ -27,8 +25,7 @@ module.exports = require('koa-router')()
 .get('/reports/action_codes/:year/:month', function *(next) {
   let year = this.params.year;
   let month = this.params.month;
-  var report = new Report();
-  const action_codes = yield report.actionCodesDurationsByYearMonthForUser.bind(report, this.state.user.id, year, month);
+  const action_codes = yield Report.actionCodesDurationsByYearMonthForUser(this.state.user.id, year, month);
   this.response.status = 200;
   this.body = { "action_codes" : action_codes };
 })
@@ -38,13 +35,10 @@ module.exports = require('koa-router')()
 .get('/reports/employees/:year/:month', function *(next) {
   let year = this.params.year;
   let month = this.params.month;
-  var report = new Report();
-  const employees = yield report.employeesDurationsByYearMonthForUser.bind(report, this.state.user.id, year, month);
+  const employees = yield Report.employeesDurationsByYearMonthForUser(this.state.user.id, year, month);
   this.response.status = 200;
   this.body = { "employees" : employees };
 })
-
-
 
 
 .routes();
