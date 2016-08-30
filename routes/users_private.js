@@ -1,8 +1,7 @@
-'use strict';
 var jwt = require('koa-jwt');
 var SECRET = require('../consts').SECRET;
 
-var User   = require('../models/user');
+import * as User from '../models/user';
 
 module.exports = require('koa-router')()
 
@@ -10,9 +9,8 @@ module.exports = require('koa-router')()
 .get('/users', function *(next) {
     let data = this.request.body;
     let jwtUser = this.state.user;
-    var user = new User({id: jwtUser.id});
-    var success = yield user.load.bind(user);
-    if(!success) {
+    var user = yield User.load({id: jwtUser.id});
+    if(!user) {
       this.response.status = 404;
       this.body = { "error" : "User not found"};
     } else {
@@ -25,14 +23,14 @@ module.exports = require('koa-router')()
 .put('/users', function *(next) {
   let data = this.request.body;
   let jwtUser = this.state.user;
-  var user = new User({id: jwtUser.id})
+  var user = {id: jwtUser.id}
   if(data.email) {
     user.email = data.email;
   }
   if(data.password) {
     user.password = data.password;
   }
-  yield user.save.bind(user);
+  yield User.save(user);
 
   this.response.status = 200;
   this.body = { 'result': 'user updated, must sign in again'};

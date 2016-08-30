@@ -1,10 +1,9 @@
-'use strict';
-
 var uuid = require('uuid');
 var moment = require('moment');
 
-var User       = require('../models/user'),
-    Employee   = require('../models/employee'),
+import * as User from '../models/user';
+
+var Employee   = require('../models/employee'),
     ActionCode = require('../models/action_code'),
     Checkin    = require('../models/checkin');
 
@@ -18,8 +17,8 @@ var actionCodes = yield actionCode.loadAll.bind(actionCode);
 for (var i = 0; i < 10; i++) {
   var randomName = names();
   var userEmail = randomName.replace(/\s+/g, '-').toLowerCase() + "@example.com";
-  var user = new User({email: userEmail, password: 'password'});
-  yield user.save.bind(user);
+  var user =
+  yield User.save({email: userEmail, password: 'password'});
 
   // http://localhost:3000/public/mobile_employee.html?activation_code=f880edc5-de0c-4d6e-940c-0a71b644ad36
 

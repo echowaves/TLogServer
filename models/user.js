@@ -61,7 +61,7 @@ export function load(params) {
       }
       //full product with new id returned
       if(res) {
-        delete params.password;
+        delete res.password;
       }
       callback(err, res);
     });

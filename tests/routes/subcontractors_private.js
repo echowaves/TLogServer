@@ -14,8 +14,8 @@ const app = require('../../app.js');
 const request = supertest.agent(app.listen());
 
 var assert = require('assert');
-var User   = require('../../models/user');
-    // Employee = require('../../models/employee');
+
+import * as User from '../../models/user';
 
 
 describe('/subcontractors private routes testing', function() {
@@ -32,8 +32,8 @@ describe('/subcontractors private routes testing', function() {
 
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
-    user = new User({email: userEmail, password: password});
-    yield user.save.bind(user);
+    user =
+    yield User.save({email: userEmail, password: password});
 
     //authenticate and obtain a token
     const resp =

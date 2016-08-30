@@ -2,9 +2,9 @@ process.env.NODE_ENV = 'test'
 const app = require('../../app.js');
 
 
-var assert   = require('assert'),
-    User     = require('../../models/user');
+var assert   = require('assert');
 
+import * as User from '../../models/user';
 import * as Employee from '../../models/employee';
 
 require('co-mocha');
@@ -17,8 +17,8 @@ describe('Employee model testing', function() {
 
   beforeEach(function *() {
     var userEmail = uuid.v4() + "@example.com";
-    user = new User({email: userEmail, password: 'secret'});
-    yield user.save.bind(user);
+    user =
+    yield User.save({email: userEmail, password: 'secret'});
   });
 
 

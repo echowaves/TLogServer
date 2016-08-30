@@ -69,8 +69,8 @@ describe('User model testing', function() {
 
   it('should generate jwt while validating user by email and password', function *() {
     var userEmail = uuid.v4() + "@example.com";
-    var user = {password: 'secret', email: userEmail};
-    user = yield User.save(user);
+    var user =
+    yield User.save({password: 'secret', email: userEmail});
 
     var validUser = {password: 'secret', email: userEmail};
 

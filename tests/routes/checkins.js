@@ -11,7 +11,8 @@ var db = require('../../consts').DB;
 const request = supertest.agent(app.listen());
 
 var assert = require('assert');
-var User   = require('../../models/user');
+
+import * as User from '../../models/user';
 
 // import * as Employee from '../../models/employee';
 
@@ -33,8 +34,8 @@ describe('/checkins routes testing', function() {
 
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
-    user = new User({email: userEmail, password: password});
-    yield user.save.bind(user);
+    user =
+    yield User.save({email: userEmail, password: password});
 
     //authenticate user and obtain a token
     const resp =

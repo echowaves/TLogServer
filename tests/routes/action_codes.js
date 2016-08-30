@@ -2,7 +2,8 @@ const supertest = require('co-supertest'); // SuperAgent-driven library for test
 const expect    = require('chai').expect;  // BDD/TDD assertion library
 require('co-mocha');                     // enable support for generators in mocha tests using co
 var uuid = require('uuid');
-var User   = require('../../models/user');
+
+import * as User from '../../models/user';
 
 
 process.env.NODE_ENV = 'test'
@@ -87,8 +88,8 @@ describe('/actioncodes route testing', function() {
 
     var userEmail = uuid.v4() + "@example.com";
     var password = 'secret';
-    user = new User({email: userEmail, password: password});
-    yield user.save.bind(user);
+    user =
+    yield User.save({email: userEmail, password: password});
 
     //authenticate and obtain a token
     const resp =

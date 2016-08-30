@@ -13,7 +13,8 @@ var db = require('../../consts').DB;
 const request = supertest.agent(app.listen());
 
 var assert = require('assert');
-var User   = require('../../models/user');
+
+import * as User from '../../models/user';
 
 // import * as Employee from '../../models/employee';
 // import * as ActionCode from '../../models/action_code';
@@ -46,8 +47,8 @@ describe('/reports routes testing', function() {
 
     var userEmail = "user@example.com";
     var password = 'secret';
-    user = new User({email: userEmail, password: password});
-    yield user.save.bind(user);
+    user =
+    yield User.save({email: userEmail, password: password});
 
     //authenticate user and obtain a token
     const resp =

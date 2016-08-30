@@ -3,9 +3,9 @@ const app = require('../../app.js');
 
 var moment = require('moment');
 
-var assert   = require('assert'),
-    User     = require('../../models/user');
+var assert   = require('assert');
 
+import * as User from '../../models/user';
 import * as Subcontractor from '../../models/subcontractor';
 
 require('co-mocha');
@@ -18,8 +18,8 @@ describe('Subcontractor model testing', function() {
 
   beforeEach(function *() {
     var userEmail = uuid.v4() + "@example.com";
-    user = new User({email: userEmail, password: 'secret'});
-    yield user.save.bind(user);
+    user =
+    yield User.save({email: userEmail, password: 'secret'});
   });
 
 

@@ -1,6 +1,4 @@
-'use strict';
-
-var User   = require('../models/user');
+import * as User from '../models/user';
 
 var jwt = require('koa-jwt');
 
@@ -11,9 +9,9 @@ module.exports = require('koa-router')()
 // create new auth token
 .post('/auth', function *(next) {
   let data = this.request.body;
-  var user = new User({email: data.email, password: data.password});
+  var user = {email: data.email, password: data.password};
 
-  var token = yield user.validateUserAndGenerateToken.bind(user);
+  var token = yield User.validateUserAndGenerateToken(user);
 
   if (token == null) {
     this.response.status = 401;
