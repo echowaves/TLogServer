@@ -1,5 +1,3 @@
-'use strict';
-
 var _ = require('lodash');
 var massive = require("massive");
 var bcrypt  = require('bcrypt');
@@ -8,93 +6,90 @@ var SECRET = require('../consts').SECRET;
 
 var db = require('../consts').DB;
 
-var User = function(properties) {
-  _.assign(this, properties);
-}
 
 // only hash password if it's not yet hashed
-User.prototype.hashPassword = function () {
-  if(!this.id) {//hash only on insert
-    this.password = bcrypt.hashSync(this.password, 10);
-  }
+export function hashPassword(password) {
+  // if(!this.id) {//hash only on insert
+  return bcrypt.hashSync(password, 10);
+  // }
 }
 
-User.prototype.comparePassword = function (password) {
-  return bcrypt.compareSync(password, this.password);
+export function comparePassword(plainText, password) {
+  return bcrypt.compareSync(plainText, password);
 }
 
 // return token if user is found by email and password
-User.prototype.validateUserAndGenerateToken = function (callback) {
-  var that = this;
-  var foundUser = db.users.findOne({email: this.email}, function(err, res){
-    if(err) {
-      console.log("error User.prototype.validateUserAndGenerateToken");
-      console.log(err);
-      callback(err, res);
-      return;
-    }
-    //full product with new id returned
-    if(res == null) {
-      callback(err, res);
-      return;
-    }
-    var jwtUser = {
-      id: res.id,
-      email: res.email
-    };
-    var user = new User(res);
-    var passwordsMatch = user.comparePassword(that.password);
+export function validateUserAndGenerateToken(params) {
+  return function(callback) {
+    var foundUser = db.users.findOne({email: params.email}, function(err, res){
+      if(err) {
+        console.log("error User.prototype.validateUserAndGenerateToken");
+        console.log(err);
+        callback(err, res);
+        return;
+      }
+      //full product with new id returned
+      if(res == null) {
+        callback(err, res);
+        return;
+      }
+      var jwtUser = {
+        id: res.id,
+        email: res.email
+      };
 
-    if(passwordsMatch) {
-      callback(null, jwt.sign(jwtUser, SECRET, { expiresIn: '30d' }));
-      return;
-    };
-    callback(err, null);
-  });
+      var passwordsMatch = comparePassword(params.password, res.password);
+
+      if(passwordsMatch) {
+        callback(null, jwt.sign(jwtUser, SECRET, { expiresIn: '30d' }));
+        return;
+      };
+      callback(err, null);
+    });
+  }
 }
 
 // set id to the user object, call load to populate the rest of the properties
-User.prototype.load = function (callback) {
-  var that = this;
-  db.users.findOne(this.id, function(err, res){
-    if(err) {
-      console.log("error User.prototype.load");
-      console.log(err);
+export function load(params) {
+  return function(callback) {
+    db.users.findOne(params.id, function(err, res){
+      if(err) {
+        console.log("error User.prototype.load");
+        console.log(err);
+        callback(err, res);
+        return;
+      }
+      //full product with new id returned
+      if(res) {
+        delete params.password;
+      }
       callback(err, res);
-      return;
-    }
-    //full product with new id returned
-    if(res) {
-      _.assign(that, res);
-      delete that.password;
-    }
-    callback(err, res);
-  });
+    });
+  }
 }
 
 // upsert user
-User.prototype.save = function (callback) {
-  var that = this;
-
-  this.hashPassword();
-
-  db.users.save(_.omit(that, _.keys(_.pickBy(that,_.isFunction))), function(err, res) {
-    if(err) {
-      console.log("error User.prototype.save");
-      console.log(err);
-      callback(err, res);
-      return;
+export function save(params) {
+  return function(callback) {
+    //if this is an insert
+    if(!params.id) {
+      params.password = hashPassword(params.password);
     }
-      if(res) {
-        _.assign(that, res);
+
+    db.users.save(params, function(err, res) {
+      if(err) {
+        console.log("error User.prototype.save");
+        console.log(err);
+        callback(err, res);
+        return;
       }
       callback(err, res);
-  });
+    });
+  }
 }
+
 
 // //delete a user (no user should ever be deleted)
 // User.prototype.delete = function () {
 //   db.users.destroySync({id: this.id});
 // }
-
-module.exports = User;
