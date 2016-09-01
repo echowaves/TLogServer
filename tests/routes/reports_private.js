@@ -15,13 +15,11 @@ const request = supertest.agent(app.listen());
 var assert = require('assert');
 
 import * as User from '../../models/user';
+import * as Util from '../../models/util';
 
 // import * as Employee from '../../models/employee';
 // import * as ActionCode from '../../models/action_code';
 // import * as Checkin from '../../models/checkin';
-
-var Util   = require('../../models/util');
-var util = new Util();
 
 describe('/reports routes testing', function() {
   var activation_code, user, token;
@@ -30,13 +28,13 @@ describe('/reports routes testing', function() {
 
   before(function *() {
     //cleanup users
-    yield util.usersClean.bind(util);
+    yield Util.usersClean();
     //cleanup employees
-    yield util.employeesClean.bind(util);
+    yield Util.employeesClean();
     //cleanup checkins
-    yield util.checkinsClean.bind(util);
+    yield Util.checkinsClean();
     //cleanup actioncodes
-    yield util.action_codesClean.bind(util);
+    yield Util.action_codesClean();
     // //cleanup subcontractors
     // yield util.subcontractorsClean.bind(util);
 
