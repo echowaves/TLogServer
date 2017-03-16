@@ -123,7 +123,7 @@ describe('/checkins routes testing', function() {
 
 
   it('should not be able to create checkin with date more than 7 days in the past', function*() {
-    const checked_in_at = moment().subtract(7, 'd').subtract(1, 's').format();
+    const checked_in_at = moment().subtract(8, 'd').format();
     const response =
     yield request.post('/employees/' + activation_code + '/checkins')
     .set('Content-Type', 'application/json')
